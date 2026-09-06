@@ -1,47 +1,64 @@
 package com.codehijackers.guldnet
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.codehijackers.guldnet.ui.theme.GuldNetTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.codehijackers.guldnet.ui.GuildnetApp
+import com.codehijackers.guldnet.ui.theme.GuildnetTheme
+import com.codehijackers.guldnet.viewmodel.AppViewModel
 
 class MainActivity : ComponentActivity() {
+
+    companion object {
+        private const val TAG = "Guildnet.MainActivity"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
+        Log.d(TAG, "MainActivity onCreate")
+
         setContent {
-            GuldNetTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+
+            val appViewModel: AppViewModel = viewModel()
+
+            GuildnetTheme {
+                GuildnetApp(
+                    viewModel = appViewModel
+                )
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+    override fun onStart() {
+        super.onStart()
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    GuldNetTheme {
-        Greeting("Android")
+        Log.d(TAG, "MainActivity onStart")
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        Log.d(TAG, "MainActivity onResume")
+    }
+
+    override fun onPause() {
+        Log.d(TAG, "MainActivity onPause")
+
+        super.onPause()
+    }
+
+    override fun onStop() {
+        Log.d(TAG, "MainActivity onStop")
+
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        Log.d(TAG, "MainActivity onDestroy")
+
+        super.onDestroy()
     }
 }
