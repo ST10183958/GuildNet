@@ -12,6 +12,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+/**
+ * Guildnet authentication screen.
+ *
+ * The SSO authentication system will be integrated here
+ * during the authentication development phase.
+ */
 @Composable
 fun LoginScreen(
     onLoginClicked: () -> Unit
@@ -39,7 +45,9 @@ fun LoginScreen(
             onClick = onLoginClicked,
             modifier = Modifier.padding(top = 24.dp)
         ) {
-            Text("Sign in with SSO")
+            Text(
+                text = "Sign in with SSO"
+            )
         }
     }
 }
