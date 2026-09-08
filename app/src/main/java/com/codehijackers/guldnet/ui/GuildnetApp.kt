@@ -14,17 +14,14 @@ fun GuildnetApp(
 ) {
     val isAuthenticated by viewModel.isUserAuthenticated.collectAsState()
 
-    val navController = rememberNavController()
+    if (isAuthenticated) {
+        GuildnetAuthenticatedApp()
+    } else {
+        val navController = rememberNavController()
 
-    val startDestination =
-        if (isAuthenticated) {
-            GuildnetRoutes.Home.route
-        } else {
-            GuildnetRoutes.Login.route
-        }
-
-    GuildnetNavHost(
-        navController = navController,
-        startDestination = startDestination
-    )
+        GuildnetNavHost(
+            navController = navController,
+            startDestination = GuildnetRoutes.Login.route
+        )
+    }
 }
