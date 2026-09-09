@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation.compose.rememberNavController
+
 import com.codehijackers.guldnet.ui.navigation.GuildnetNavHost
 import com.codehijackers.guldnet.ui.navigation.GuildnetRoutes
 import com.codehijackers.guldnet.viewmodel.AppViewModel
@@ -12,11 +13,16 @@ import com.codehijackers.guldnet.viewmodel.AppViewModel
 fun GuildnetApp(
     viewModel: AppViewModel
 ) {
-    val isAuthenticated by viewModel.isUserAuthenticated.collectAsState()
+
+    val isAuthenticated by
+    viewModel.isUserAuthenticated.collectAsState()
 
     if (isAuthenticated) {
+
         GuildnetAuthenticatedApp()
+
     } else {
+
         val navController = rememberNavController()
 
         GuildnetNavHost(

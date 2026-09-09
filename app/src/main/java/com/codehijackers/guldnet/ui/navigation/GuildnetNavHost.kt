@@ -4,9 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+
 import com.codehijackers.guldnet.ui.screens.auth.LoginScreen
 import com.codehijackers.guldnet.ui.screens.home.HomeScreen
-import com.codehijackers.guldnet.ui.screens.communities.CommunitiesScreen
+import com.codehijackers.guldnet.ui.screens.guilds.GuildsScreen
+import com.codehijackers.guldnet.ui.screens.squads.SquadsScreen
+import com.codehijackers.guldnet.ui.screens.clans.ClansScreen
+import com.codehijackers.guldnet.ui.screens.lorevault.LoreVaultScreen
 import com.codehijackers.guldnet.ui.screens.search.SearchScreen
 import com.codehijackers.guldnet.ui.screens.profile.ProfileScreen
 
@@ -15,12 +19,17 @@ fun GuildnetNavHost(
     navController: NavHostController,
     startDestination: String
 ) {
+
     NavHost(
         navController = navController,
         startDestination = startDestination
     ) {
 
-        composable(GuildnetRoutes.Login.route) {
+        // Authentication
+
+        composable(
+            route = GuildnetRoutes.Login.route
+        ) {
             LoginScreen(
                 onLoginClicked = {
                     navController.navigate(
@@ -34,19 +43,47 @@ fun GuildnetNavHost(
             )
         }
 
-        composable(GuildnetRoutes.Home.route) {
+        // Main screens
+
+        composable(
+            route = GuildnetRoutes.Home.route
+        ) {
             HomeScreen()
         }
 
-        composable(GuildnetRoutes.Communities.route) {
-            CommunitiesScreen()
+        composable(
+            route = GuildnetRoutes.Guilds.route
+        ) {
+            GuildsScreen()
         }
 
-        composable(GuildnetRoutes.Search.route) {
+        composable(
+            route = GuildnetRoutes.Squads.route
+        ) {
+            SquadsScreen()
+        }
+
+        composable(
+            route = GuildnetRoutes.Clans.route
+        ) {
+            ClansScreen()
+        }
+
+        composable(
+            route = GuildnetRoutes.LoreVault.route
+        ) {
+            LoreVaultScreen()
+        }
+
+        composable(
+            route = GuildnetRoutes.Search.route
+        ) {
             SearchScreen()
         }
 
-        composable(GuildnetRoutes.Profile.route) {
+        composable(
+            route = GuildnetRoutes.Profile.route
+        ) {
             ProfileScreen()
         }
     }
