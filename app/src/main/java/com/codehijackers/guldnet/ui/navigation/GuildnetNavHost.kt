@@ -17,33 +17,23 @@ import com.codehijackers.guldnet.ui.screens.profile.ProfileScreen
 @Composable
 fun GuildnetNavHost(
     navController: NavHostController,
-    startDestination: String
+    startDestination: String,
+    onLoginSuccess: () -> Unit = {}
 ) {
-
     NavHost(
         navController = navController,
         startDestination = startDestination
     ) {
-
-        // Authentication
 
         composable(
             route = GuildnetRoutes.Login.route
         ) {
             LoginScreen(
                 onLoginClicked = {
-                    navController.navigate(
-                        GuildnetRoutes.Home.route
-                    ) {
-                        popUpTo(GuildnetRoutes.Login.route) {
-                            inclusive = true
-                        }
-                    }
+                    onLoginSuccess()
                 }
             )
         }
-
-        // Main screens
 
         composable(
             route = GuildnetRoutes.Home.route
