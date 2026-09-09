@@ -44,7 +44,13 @@ fun GuildnetNavHost(
         composable(
             route = GuildnetRoutes.Guilds.route
         ) {
-            GuildsScreen()
+            GuildsScreen(
+                onGuildClicked = { guildId ->
+                    navController.navigate(
+                        GuildnetRoutes.GuildDetails.createRoute(guildId)
+                    )
+                }
+            )
         }
 
         composable(

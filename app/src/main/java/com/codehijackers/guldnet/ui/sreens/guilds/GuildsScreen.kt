@@ -4,22 +4,30 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.codehijackers.guldnet.ui.screens.guilds.components.GuildCard
+import com.codehijackers.guldnet.viewmodel.GuildViewModel
 
 @Composable
-fun GuildsScreen() {
+fun GuildsScreen(
+    onGuildClicked: (String) -> Unit = {},
+    guildViewModel: GuildViewModel = viewModel()
+) {
+    val guilds by guildViewModel.guilds.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .padding(16.dp)
     ) {
 
         Text(
@@ -29,7 +37,32 @@ fun GuildsScreen() {
 
         Text(
             text = "Find and join gaming communities.",
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(top = 4.dp, bottom = 16.dp)
         )
+
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            items(
+                items = guilds,
+                key = { it.id }
+            ) { guild ->
+
+                GuildCard(
+                    guild = guild,
+                    onGuildClicked = {
+                        onGuildClicked(guild.id)
+                    },
+                    onJoinClicked = {
+                        if (guild.isJoined) {
+                            guildViewModel.leaveGuild(guild.id)
+                        } else {
+                            guildViewModel.joinGuild(guild.id)
+                        }
+                    }
+                )
+            }
+        }
     }
 }
