@@ -14,6 +14,10 @@ import com.codehijackers.guldnet.ui.screens.lorevault.LoreVaultScreen
 import com.codehijackers.guldnet.ui.screens.search.SearchScreen
 import com.codehijackers.guldnet.ui.screens.profile.ProfileScreen
 import com.codehijackers.guldnet.ui.screens.guilds.GuildDetailsScreen
+import com.codehijackers.guldnet.ui.screens.guilds.CreateGuildScreen
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.codehijackers.guldnet.viewmodel.GuildViewModel
+
 
 @Composable
 fun GuildnetNavHost(
@@ -49,6 +53,11 @@ fun GuildnetNavHost(
                 onGuildClicked = { guildId ->
                     navController.navigate(
                         GuildnetRoutes.GuildDetails.createRoute(guildId)
+                    )
+                },
+                onCreateGuildClicked = {
+                    navController.navigate(
+                        GuildnetRoutes.CreateGuild.route
                     )
                 }
             )
@@ -100,5 +109,29 @@ fun GuildnetNavHost(
         ) {
             ProfileScreen()
         }
+
+        composable(
+            route = GuildnetRoutes.CreateGuild.route
+        ) {
+            val guildViewModel: GuildViewModel = viewModel()
+
+            CreateGuildScreen(
+                onGuildCreated = { name, game, description ->
+
+                    guildViewModel.createGuild(
+                        name = name,
+                        game = game,
+                        description = description
+                    )
+
+                    navController.popBackStack()
+                },
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+
     }
 }

@@ -64,6 +64,23 @@ class GuildViewModel : ViewModel() {
         }
     }
 
+    fun createGuild(
+        name: String,
+        game: String,
+        description: String
+    ) {
+        val newGuild = Guild(
+            id = (_guilds.value.size + 1).toString(),
+            name = name,
+            game = game,
+            description = description,
+            memberCount = 1,
+            isJoined = true
+        )
+
+        _guilds.value = _guilds.value + newGuild
+    }
+
     fun getGuildById(guildId: String): Guild? {
         return _guilds.value.find { it.id == guildId }
     }
