@@ -14,8 +14,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.codehijackers.guldnet.viewmodel.GuildViewModel
 
 @Composable
 fun GuildDetailsScreen(
@@ -23,8 +27,39 @@ fun GuildDetailsScreen(
     onBackClicked: () -> Unit = {},
     onClansClicked: () -> Unit = {},
     onLoreVaultClicked: () -> Unit = {},
-    onPostsClicked: () -> Unit = {}
+    onPostsClicked: () -> Unit = {},
+    guildViewModel: GuildViewModel = viewModel()
 ) {
+    val guilds by guildViewModel.guilds.collectAsState()
+
+    val guild = guilds.find { it.id == guildId }
+
+    if (guild == null) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Guild not found",
+                style = MaterialTheme.typography.headlineMedium
+            )
+
+            Spacer(
+                modifier = Modifier.height(16.dp)
+            )
+
+            OutlinedButton(
+                onClick = onBackClicked
+            ) {
+                Text("Back")
+            }
+        }
+
+        return
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -32,17 +67,14 @@ fun GuildDetailsScreen(
     ) {
 
         Text(
-            text = "Guild Details",
+            text = guild.name,
             style = MaterialTheme.typography.headlineMedium
         )
 
-        Spacer(
-            modifier = Modifier.height(8.dp)
-        )
-
         Text(
-            text = "Guild ID: $guildId",
-            style = MaterialTheme.typography.bodyMedium
+            text = guild.game,
+            style = MaterialTheme.typography.labelLarge,
+            modifier = Modifier.padding(top = 4.dp)
         )
 
         Spacer(
@@ -57,15 +89,48 @@ fun GuildDetailsScreen(
             ) {
 
                 Text(
-                    text = "Guild",
-                    style = MaterialTheme.typography.headlineSmall
+                    text = guild.description,
+                    style = MaterialTheme.typography.bodyLarge
                 )
 
                 Text(
-                    text = "Selected gaming community",
-                    style = MaterialTheme.typography.bodyLarge,
+                    text = "${guild.memberCount} members",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(top = 12.dp)
+                )
+
+                Text(
+                    text = if (guild.isJoined) {
+                        "You are a member of this Guild"
+                    } else {
+                        "You are not a member of this Guild"
+                    },
+                    style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = 8.dp)
                 )
+
+                Spacer(
+                    modifier = Modifier.height(16.dp)
+                )
+
+                Button(
+                    onClick = {
+                        if (guild.isJoined) {
+                            guildViewModel.leaveGuild(guild.id)
+                        } else {
+                            guildViewModel.joinGuild(guild.id)
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = if (guild.isJoined) {
+                            "Leave Guild"
+                        } else {
+                            "Join Guild"
+                        }
+                    )
+                }
             }
         }
 
