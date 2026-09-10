@@ -63,4 +63,9 @@ class GuildViewModel : ViewModel() {
             }
         }
     }
+
+    fun getGuildById(guildId: String): Guild? {
+        return _guilds.value.find { it.id == guildId }
+    }
+
 }

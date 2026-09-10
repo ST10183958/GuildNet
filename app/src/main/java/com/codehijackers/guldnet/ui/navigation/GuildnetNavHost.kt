@@ -13,6 +13,7 @@ import com.codehijackers.guldnet.ui.screens.clans.ClansScreen
 import com.codehijackers.guldnet.ui.screens.lorevault.LoreVaultScreen
 import com.codehijackers.guldnet.ui.screens.search.SearchScreen
 import com.codehijackers.guldnet.ui.screens.profile.ProfileScreen
+import com.codehijackers.guldnet.ui.screens.guilds.GuildDetailsScreen
 
 @Composable
 fun GuildnetNavHost(
@@ -49,6 +50,23 @@ fun GuildnetNavHost(
                     navController.navigate(
                         GuildnetRoutes.GuildDetails.createRoute(guildId)
                     )
+                }
+            )
+        }
+
+        composable(
+            route = GuildnetRoutes.GuildDetails.route
+        ) { backStackEntry ->
+
+            val guildId = backStackEntry
+                .arguments
+                ?.getString("guildId")
+                ?: return@composable
+
+            GuildDetailsScreen(
+                guildId = guildId,
+                onBackClicked = {
+                    navController.popBackStack()
                 }
             )
         }
