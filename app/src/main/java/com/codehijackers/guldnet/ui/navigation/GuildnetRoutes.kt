@@ -80,4 +80,12 @@ sealed class GuildnetRoutes(
     // Notifications
     data object Notifications :
         GuildnetRoutes("notifications")
+
+    data object GuildPosts :
+        GuildnetRoutes("guild/{guildId}/posts") {
+
+        fun createRoute(guildId: String): String {
+            return "guild/$guildId/posts"
+        }
+    }
 }

@@ -17,7 +17,7 @@ import com.codehijackers.guldnet.ui.screens.guilds.GuildDetailsScreen
 import com.codehijackers.guldnet.ui.screens.guilds.CreateGuildScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codehijackers.guldnet.viewmodel.GuildViewModel
-
+import com.codehijackers.guldnet.ui.screens.posts.GuildPostsScreen
 
 @Composable
 fun GuildnetNavHost(
@@ -74,8 +74,15 @@ fun GuildnetNavHost(
 
             GuildDetailsScreen(
                 guildId = guildId,
+
                 onBackClicked = {
                     navController.popBackStack()
+                },
+
+                onPostsClicked = {
+                    navController.navigate(
+                        GuildnetRoutes.GuildPosts.createRoute(guildId)
+                    )
                 }
             )
         }
@@ -132,6 +139,23 @@ fun GuildnetNavHost(
             )
         }
 
+
+        composable(
+            route = GuildnetRoutes.GuildPosts.route
+        ) { backStackEntry ->
+
+            val guildId = backStackEntry
+                .arguments
+                ?.getString("guildId")
+                ?: return@composable
+
+            GuildPostsScreen(
+                guildId = guildId,
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
+        }
 
     }
 }
