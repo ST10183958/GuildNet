@@ -5,7 +5,7 @@ import com.codehijackers.guldnet.model.Clan
 import com.codehijackers.guldnet.repository.ClanRepository
 import kotlinx.coroutines.flow.StateFlow
 
-class ClanViewModel : ViewModel() {
+class lanViewModel : ViewModel() {
 
     private val repository = ClanRepository
 

@@ -45,7 +45,20 @@ sealed class GuildnetRoutes(
 
     // Clans
     data object Clans :
-        GuildnetRoutes("clans")
+        GuildnetRoutes("guild/{guildId}/clans") {
+
+        fun createRoute(guildId: String): String {
+            return "guild/$guildId/clans"
+        }
+    }
+
+    data object CreateClan :
+        GuildnetRoutes("guild/{guildId}/clans/create") {
+
+        fun createRoute(guildId: String): String {
+            return "guild/$guildId/clans/create"
+        }
+    }
 
     data object ClanDetails :
         GuildnetRoutes("clan/{clanId}") {
@@ -54,9 +67,6 @@ sealed class GuildnetRoutes(
             return "clan/$clanId"
         }
     }
-
-    data object CreateClan :
-        GuildnetRoutes("clan/create")
 
     // LoreVault
     data object LoreVault :
@@ -104,4 +114,6 @@ sealed class GuildnetRoutes(
             return "post/$postId"
         }
     }
+
+
 }

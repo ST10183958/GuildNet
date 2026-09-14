@@ -98,8 +98,31 @@ fun GuildnetNavHost(
 
         composable(
             route = GuildnetRoutes.Clans.route
-        ) {
-            ClansScreen()
+        ) { backStackEntry ->
+
+            val guildId =
+                backStackEntry.arguments?.getString("guildId")
+                    ?: return@composable
+
+            ClansScreen(
+                guildId = guildId,
+
+                onClanClicked = { clanId ->
+                    navController.navigate(
+                        GuildnetRoutes.ClanDetails.createRoute(clanId)
+                    )
+                },
+
+                onCreateClanClicked = {
+                    navController.navigate(
+                        GuildnetRoutes.CreateClan.createRoute(guildId)
+                    )
+                },
+
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
         }
 
         composable(
