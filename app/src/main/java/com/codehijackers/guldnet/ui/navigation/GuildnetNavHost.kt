@@ -22,6 +22,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codehijackers.guldnet.ui.screens.posts.CreatePostScreen
 import com.codehijackers.guldnet.viewmodel.PostViewModel
 import com.codehijackers.guldnet.ui.screens.posts.PostDetailsScreen
+import com.codehijackers.guldnet.ui.screens.clans.CreateClanScreen
+import com.codehijackers.guldnet.viewmodel.ClanViewModel
+import com.codehijackers.guldnet.ui.screens.clans.ClanDetailsScreen
 @Composable
 fun GuildnetNavHost(
     navController: NavHostController,
@@ -219,6 +222,54 @@ fun GuildnetNavHost(
 
                     navController.popBackStack()
                 },
+
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(
+            route = GuildnetRoutes.CreateClan.route
+        ) { backStackEntry ->
+
+            val guildId =
+                backStackEntry.arguments?.getString("guildId")
+                    ?: return@composable
+
+            val clanViewModel: ClanViewModel = viewModel()
+
+            CreateClanScreen(
+                guildId = guildId,
+
+                onClanCreated = { title, content ->
+
+                    clanViewModel.createClan(
+                        guildId = guildId,
+                        title = title,
+                        content = content,
+                        authorName = "You"
+                    )
+
+                    navController.popBackStack()
+                },
+
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(
+            route = GuildnetRoutes.ClanDetails.route
+        ) { backStackEntry ->
+
+            val clanId =
+                backStackEntry.arguments?.getString("clanId")
+                    ?: return@composable
+
+            ClanDetailsScreen(
+                clanId = clanId,
 
                 onBackClicked = {
                     navController.popBackStack()
