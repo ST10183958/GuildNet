@@ -88,4 +88,20 @@ sealed class GuildnetRoutes(
             return "guild/$guildId/posts"
         }
     }
+
+    data object CreatePost :
+        GuildnetRoutes("guild/{guildId}/posts/create") {
+
+        fun createRoute(guildId: String): String {
+            return "guild/$guildId/posts/create"
+        }
+    }
+
+    data object PostDetails :
+        GuildnetRoutes("post/{postId}") {
+
+        fun createRoute(postId: String): String {
+            return "post/$postId"
+        }
+    }
 }

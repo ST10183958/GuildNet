@@ -18,7 +18,10 @@ import com.codehijackers.guldnet.ui.screens.guilds.CreateGuildScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codehijackers.guldnet.viewmodel.GuildViewModel
 import com.codehijackers.guldnet.ui.screens.posts.GuildPostsScreen
-
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.codehijackers.guldnet.ui.screens.posts.CreatePostScreen
+import com.codehijackers.guldnet.viewmodel.PostViewModel
+import com.codehijackers.guldnet.ui.screens.posts.PostDetailsScreen
 @Composable
 fun GuildnetNavHost(
     navController: NavHostController,
@@ -144,13 +147,56 @@ fun GuildnetNavHost(
             route = GuildnetRoutes.GuildPosts.route
         ) { backStackEntry ->
 
-            val guildId = backStackEntry
-                .arguments
-                ?.getString("guildId")
-                ?: return@composable
+            val guildId =
+                backStackEntry.arguments?.getString("guildId")
+                    ?: return@composable
 
             GuildPostsScreen(
                 guildId = guildId,
+
+                onPostClicked = { postId ->
+                    navController.navigate(
+                        GuildnetRoutes.PostDetails.createRoute(postId)
+                    )
+                },
+
+                onCreatePostClicked = {
+                    navController.navigate(
+                        GuildnetRoutes.CreatePost.createRoute(guildId)
+                    )
+                },
+
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(
+            route = GuildnetRoutes.CreatePost.route
+        ) { backStackEntry ->
+
+            val guildId =
+                backStackEntry.arguments?.getString("guildId")
+                    ?: return@composable
+
+            val postViewModel: PostViewModel = viewModel()
+
+            CreatePostScreen(
+                guildId = guildId,
+
+                onPostCreated = { title, content ->
+
+                    postViewModel.createPost(
+                        guildId = guildId,
+                        title = title,
+                        content = content,
+                        authorName = "You"
+                    )
+
+                    navController.popBackStack()
+                },
+
                 onBackClicked = {
                     navController.popBackStack()
                 }

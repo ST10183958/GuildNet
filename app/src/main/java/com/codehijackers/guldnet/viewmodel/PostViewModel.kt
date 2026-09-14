@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 class PostViewModel : ViewModel() {
 
-    private val repository = PostRepository()
+    private val repository = PostRepository
 
     val posts: StateFlow<List<CommunityPost>> =
         repository.posts
