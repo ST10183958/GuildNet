@@ -148,11 +148,7 @@ fun GuildnetNavHost(
             )
         }
 
-        composable(
-            route = GuildnetRoutes.LoreVault.route
-        ) {
-            LoreVaultScreen()
-        }
+
 
         composable(
             route = GuildnetRoutes.Search.route
