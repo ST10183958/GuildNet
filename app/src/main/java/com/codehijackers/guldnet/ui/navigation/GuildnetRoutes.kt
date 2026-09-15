@@ -10,7 +10,6 @@ sealed class GuildnetRoutes(
     // Main navigation
     data object Home : GuildnetRoutes("home")
     data object Guilds : GuildnetRoutes("guilds")
-    data object Squads : GuildnetRoutes("squads")
     data object Search : GuildnetRoutes("search")
     data object Profile : GuildnetRoutes("profile")
 
@@ -25,6 +24,12 @@ sealed class GuildnetRoutes(
 
     data object CreateGuild :
         GuildnetRoutes("guild/create")
+
+    data object Squads :
+        GuildnetRoutes("squads")
+
+    data object CreateSquad :
+        GuildnetRoutes("squad/create")
 
     // Squads
     data object SquadDetails :

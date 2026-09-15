@@ -26,7 +26,11 @@ import com.codehijackers.guldnet.ui.screens.clans.ClanDetailsScreen
 import com.codehijackers.guldnet.ui.screens.lorevault.CreateGuideScreen
 import com.codehijackers.guldnet.ui.screens.lorevault.GuideDetailsScreen
 import com.codehijackers.guldnet.ui.screens.lorevault.LoreVaultScreen
+import com.codehijackers.guldnet.ui.screens.squads.CreateSquadScreen
+import com.codehijackers.guldnet.ui.screens.squads.SquadDetailsScreen
 import com.codehijackers.guldnet.viewmodel.GuideViewModel
+import com.codehijackers.guldnet.viewmodel.SquadViewModel
+
 @Composable
 fun GuildnetNavHost(
     navController: NavHostController,
@@ -100,7 +104,19 @@ fun GuildnetNavHost(
         composable(
             route = GuildnetRoutes.Squads.route
         ) {
-            SquadsScreen()
+            SquadsScreen(
+                onSquadClicked = { squadId ->
+                    navController.navigate(
+                        GuildnetRoutes.SquadDetails.createRoute(squadId)
+                    )
+                },
+
+                onCreateSquadClicked = {
+                    navController.navigate(
+                        GuildnetRoutes.CreateSquad.route
+                    )
+                }
+            )
         }
 
         composable(
@@ -364,6 +380,52 @@ fun GuildnetNavHost(
 
             GuideDetailsScreen(
                 guideId = guideId,
+
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(
+            route = GuildnetRoutes.CreateSquad.route
+        ) {
+            val squadViewModel: SquadViewModel = viewModel()
+
+            CreateSquadScreen(
+                onSquadCreated = { name, description ->
+
+                    squadViewModel.createSquad(
+                        name = name,
+                        description = description,
+                        ownerName = "You"
+                    )
+
+                    navController.popBackStack()
+                },
+
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(
+            route = GuildnetRoutes.SquadDetails.route
+        ) { backStackEntry ->
+
+            val squadId =
+                backStackEntry.arguments?.getString("squadId")
+                    ?: return@composable
+
+            SquadDetailsScreen(
+                squadId = squadId,
+
+                onChatClicked = {
+                    navController.navigate(
+                        GuildnetRoutes.Chat.createRoute(squadId)
+                    )
+                },
 
                 onBackClicked = {
                     navController.popBackStack()
