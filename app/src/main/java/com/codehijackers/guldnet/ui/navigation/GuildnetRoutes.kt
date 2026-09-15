@@ -70,7 +70,20 @@ sealed class GuildnetRoutes(
 
     // LoreVault
     data object LoreVault :
-        GuildnetRoutes("lorevault")
+        GuildnetRoutes("guild/{guildId}/lorevault") {
+
+        fun createRoute(guildId: String): String {
+            return "guild/$guildId/lorevault"
+        }
+    }
+
+    data object CreateGuide :
+        GuildnetRoutes("guild/{guildId}/lorevault/create") {
+
+        fun createRoute(guildId: String): String {
+            return "guild/$guildId/lorevault/create"
+        }
+    }
 
     data object GuideDetails :
         GuildnetRoutes("guide/{guideId}") {
@@ -79,9 +92,6 @@ sealed class GuildnetRoutes(
             return "guide/$guideId"
         }
     }
-
-    data object CreateGuide :
-        GuildnetRoutes("guide/create")
 
     // Profile / settings
     data object Settings :

@@ -18,18 +18,22 @@ import com.codehijackers.guldnet.ui.screens.guilds.CreateGuildScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codehijackers.guldnet.viewmodel.GuildViewModel
 import com.codehijackers.guldnet.ui.screens.posts.GuildPostsScreen
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codehijackers.guldnet.ui.screens.posts.CreatePostScreen
 import com.codehijackers.guldnet.viewmodel.PostViewModel
-import com.codehijackers.guldnet.ui.screens.posts.PostDetailsScreen
 import com.codehijackers.guldnet.ui.screens.clans.CreateClanScreen
 import com.codehijackers.guldnet.viewmodel.ClanViewModel
 import com.codehijackers.guldnet.ui.screens.clans.ClanDetailsScreen
+import com.codehijackers.guldnet.ui.screens.lorevault.CreateGuideScreen
+import com.codehijackers.guldnet.ui.screens.lorevault.GuideDetailsScreen
+import com.codehijackers.guldnet.ui.screens.lorevault.LoreVaultScreen
+import com.codehijackers.guldnet.viewmodel.GuideViewModel
 @Composable
 fun GuildnetNavHost(
     navController: NavHostController,
     startDestination: String,
-    onLoginSuccess: () -> Unit = {}
+    onLoginSuccess: () -> Unit = {},
+
+
 ) {
     NavHost(
         navController = navController,
@@ -192,9 +196,16 @@ fun GuildnetNavHost(
                     )
                 },
 
+                onLoreVaultClicked = {
+                    navController.navigate(
+                        GuildnetRoutes.LoreVault.createRoute(guildId)
+                    )
+                },
+
                 onBackClicked = {
                     navController.popBackStack()
                 }
+
             )
         }
 
@@ -270,6 +281,89 @@ fun GuildnetNavHost(
 
             ClanDetailsScreen(
                 clanId = clanId,
+
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(
+            route = GuildnetRoutes.LoreVault.route
+        ) { backStackEntry ->
+
+            val guildId =
+                backStackEntry.arguments?.getString("guildId")
+                    ?: return@composable
+
+            LoreVaultScreen(
+                guildId = guildId,
+
+                onGuideClicked = { guideId ->
+                    navController.navigate(
+                        GuildnetRoutes.GuideDetails.createRoute(guideId)
+                    )
+                },
+
+                onCreateGuideClicked = {
+                    navController.navigate(
+                        GuildnetRoutes.CreateGuide.createRoute(guildId)
+                    )
+                },
+
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(
+            route = GuildnetRoutes.CreateGuide.route
+        ) { backStackEntry ->
+
+            val guildId =
+                backStackEntry.arguments?.getString("guildId")
+                    ?: return@composable
+
+            val guideViewModel: GuideViewModel = viewModel()
+
+            CreateGuideScreen(
+                guildId = guildId,
+
+                onGuideCreated = {
+                        title,
+                        description,
+                        content,
+                        category ->
+
+                    guideViewModel.createGuide(
+                        guildId = guildId,
+                        title = title,
+                        description = description,
+                        content = content,
+                        category = category,
+                        authorName = "You"
+                    )
+
+                    navController.popBackStack()
+                },
+
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(
+            route = GuildnetRoutes.GuideDetails.route
+        ) { backStackEntry ->
+
+            val guideId =
+                backStackEntry.arguments?.getString("guideId")
+                    ?: return@composable
+
+            GuideDetailsScreen(
+                guideId = guideId,
 
                 onBackClicked = {
                     navController.popBackStack()

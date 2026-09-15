@@ -1,4 +1,4 @@
-package com.codehijackers.guldnet.ui.screens.posts
+package com.codehijackers.guldnet.ui.screens.lorevault
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,21 +15,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.codehijackers.guldnet.ui.screens.posts.components.PostCard
-import com.codehijackers.guldnet.viewmodel.PostViewModel
+import com.codehijackers.guldnet.ui.screens.lorevault.components.GuideCard
+import com.codehijackers.guldnet.viewmodel.GuideViewModel
 
 @Composable
-fun GuildPostsScreen(
+fun LoreVaultScreen(
     guildId: String,
-    onPostClicked: (String) -> Unit = {},
-    onCreatePostClicked: () -> Unit = {},
+    onGuideClicked: (String) -> Unit = {},
+    onCreateGuideClicked: () -> Unit = {},
     onBackClicked: () -> Unit = {},
-    postViewModel: PostViewModel = viewModel(),
-    onLoreVaultClicked: () -> Unit
+    guideViewModel: GuideViewModel = viewModel()
 ) {
-    val allPosts by postViewModel.posts.collectAsState()
+    val guides by guideViewModel.guides.collectAsState()
 
-    val posts = allPosts.filter {
+    val guildGuides = guides.filter {
         it.guildId == guildId
     }
 
@@ -38,23 +37,22 @@ fun GuildPostsScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-
         Text(
-            text = "Guild Posts",
+            text = "LoreVault",
             style = MaterialTheme.typography.headlineMedium
         )
 
         Text(
-            text = "Community discussions",
+            text = "Guides, tutorials and gaming knowledge.",
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(top = 4.dp)
         )
 
         Button(
-            onClick = onCreatePostClicked,
+            onClick = onCreateGuideClicked,
             modifier = Modifier.padding(top = 16.dp)
         ) {
-            Text("Create Post")
+            Text("Create Guide")
         }
 
         LazyColumn(
@@ -63,16 +61,15 @@ fun GuildPostsScreen(
                 .padding(top = 12.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-
             items(
-                items = posts,
+                items = guildGuides,
                 key = { it.id }
-            ) { post ->
+            ) { guide ->
 
-                PostCard(
-                    post = post,
-                    onPostClicked = {
-                        onPostClicked(post.id)
+                GuideCard(
+                    guide = guide,
+                    onGuideClicked = {
+                        onGuideClicked(guide.id)
                     }
                 )
             }
