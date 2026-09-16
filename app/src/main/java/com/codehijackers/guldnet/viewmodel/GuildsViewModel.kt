@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 class GuildViewModel : ViewModel() {
 
-    private val repository = GuildRepository()
+    private val repository = GuildRepository
 
     val guilds: StateFlow<List<Guild>> =
         repository.guilds

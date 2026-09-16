@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class GuildRepository {
+object GuildRepository {
 
     private val _guilds = MutableStateFlow(
         listOf(
@@ -39,7 +39,7 @@ class GuildRepository {
 
     fun joinGuild(guildId: String) {
         _guilds.value = _guilds.value.map { guild ->
-            if (guild.id == guildId) {
+            if (guild.id == guildId && !guild.isJoined) {
                 guild.copy(
                     isJoined = true,
                     memberCount = guild.memberCount + 1
@@ -52,7 +52,7 @@ class GuildRepository {
 
     fun leaveGuild(guildId: String) {
         _guilds.value = _guilds.value.map { guild ->
-            if (guild.id == guildId) {
+            if (guild.id == guildId && guild.isJoined) {
                 guild.copy(
                     isJoined = false,
                     memberCount = (guild.memberCount - 1).coerceAtLeast(0)
@@ -68,7 +68,7 @@ class GuildRepository {
         game: String,
         description: String
     ) {
-        val newGuild = Guild(
+        val guild = Guild(
             id = (_guilds.value.size + 1).toString(),
             name = name,
             game = game,
@@ -77,10 +77,12 @@ class GuildRepository {
             isJoined = true
         )
 
-        _guilds.value = _guilds.value + newGuild
+        _guilds.value = _guilds.value + guild
     }
 
     fun getGuild(guildId: String): Guild? {
-        return _guilds.value.find { it.id == guildId }
+        return _guilds.value.find {
+            it.id == guildId
+        }
     }
 }
