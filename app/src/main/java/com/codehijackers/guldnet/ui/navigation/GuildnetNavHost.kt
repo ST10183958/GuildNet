@@ -31,6 +31,7 @@ import com.codehijackers.guldnet.ui.screens.squads.SquadDetailsScreen
 import com.codehijackers.guldnet.viewmodel.GuideViewModel
 import com.codehijackers.guldnet.viewmodel.SquadViewModel
 import com.codehijackers.guldnet.ui.screens.chat.ChatScreen
+import com.codehijackers.guldnet.ui.screens.posts.PostDetailsScreen
 @Composable
 fun GuildnetNavHost(
     navController: NavHostController,
@@ -444,5 +445,20 @@ fun GuildnetNavHost(
             )
         }
 
+
+        composable(
+            route = GuildnetRoutes.PostDetails.route
+        ) { backStackEntry ->
+
+            val postId = backStackEntry.arguments?.getString("postId")
+                ?: return@composable
+
+            PostDetailsScreen(
+                postId = postId,
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
+        }
     }
 }
