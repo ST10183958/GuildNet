@@ -62,6 +62,42 @@ fun GuildnetNavHost(
         }
 
         composable(
+            route = GuildnetRoutes.LoreVaultHome.route
+        ) {
+            LoreVaultScreen(
+                guildId = DEFAULT_GUILD_ID,
+                onGuideClicked = { guideId ->
+                    navController.navigate(
+                        GuildnetRoutes.GuideDetails.createRoute(guideId)
+                    )
+                },
+                onCreateGuideClicked = {
+                    navController.navigate(
+                        GuildnetRoutes.CreateGuide.createRoute(DEFAULT_GUILD_ID)
+                    )
+                }
+            )
+        }
+
+        composable(
+            route = GuildnetRoutes.ClansHome.route
+        ) {
+            ClansScreen(
+                guildId = DEFAULT_GUILD_ID,
+                onClanClicked = { clanId ->
+                    navController.navigate(
+                        GuildnetRoutes.ClanDetails.createRoute(clanId)
+                    )
+                },
+                onCreateClanClicked = {
+                    navController.navigate(
+                        GuildnetRoutes.CreateClan.createRoute(DEFAULT_GUILD_ID)
+                    )
+                }
+            )
+        }
+
+        composable(
             route = GuildnetRoutes.Guilds.route
         ) {
             GuildsScreen(
@@ -462,3 +498,5 @@ fun GuildnetNavHost(
         }
     }
 }
+
+private const val DEFAULT_GUILD_ID = "1"

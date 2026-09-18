@@ -9,6 +9,8 @@ sealed class GuildnetRoutes(
 
     // Main navigation
     data object Home : GuildnetRoutes("home")
+    data object LoreVaultHome : GuildnetRoutes("lorevault")
+    data object ClansHome : GuildnetRoutes("clans")
     data object Guilds : GuildnetRoutes("guilds")
     data object Search : GuildnetRoutes("search")
     data object Profile : GuildnetRoutes("profile")
