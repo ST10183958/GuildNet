@@ -1,6 +1,7 @@
 package com.codehijackers.guldnet.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -8,43 +9,45 @@ import androidx.navigation.compose.composable
 import com.codehijackers.guldnet.ui.screens.auth.LoginScreen
 import com.codehijackers.guldnet.ui.screens.home.HomeScreen
 import com.codehijackers.guldnet.ui.screens.guilds.GuildsScreen
-import com.codehijackers.guldnet.ui.screens.squads.SquadsScreen
-import com.codehijackers.guldnet.ui.screens.clans.ClansScreen
-import com.codehijackers.guldnet.ui.screens.lorevault.LoreVaultScreen
-import com.codehijackers.guldnet.ui.screens.search.SearchScreen
-import com.codehijackers.guldnet.ui.screens.profile.ProfileScreen
 import com.codehijackers.guldnet.ui.screens.guilds.GuildDetailsScreen
 import com.codehijackers.guldnet.ui.screens.guilds.CreateGuildScreen
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.codehijackers.guldnet.viewmodel.GuildViewModel
-import com.codehijackers.guldnet.ui.screens.posts.GuildPostsScreen
-import com.codehijackers.guldnet.ui.screens.posts.CreatePostScreen
-import com.codehijackers.guldnet.viewmodel.PostViewModel
-import com.codehijackers.guldnet.ui.screens.clans.CreateClanScreen
-import com.codehijackers.guldnet.viewmodel.ClanViewModel
-import com.codehijackers.guldnet.ui.screens.clans.ClanDetailsScreen
-import com.codehijackers.guldnet.ui.screens.lorevault.CreateGuideScreen
-import com.codehijackers.guldnet.ui.screens.lorevault.GuideDetailsScreen
+import com.codehijackers.guldnet.ui.screens.squads.SquadsScreen
 import com.codehijackers.guldnet.ui.screens.squads.CreateSquadScreen
 import com.codehijackers.guldnet.ui.screens.squads.SquadDetailsScreen
+import com.codehijackers.guldnet.ui.screens.clans.ClansScreen
+import com.codehijackers.guldnet.ui.screens.clans.CreateClanScreen
+import com.codehijackers.guldnet.ui.screens.clans.ClanDetailsScreen
+import com.codehijackers.guldnet.ui.screens.lorevault.LoreVaultScreen
+import com.codehijackers.guldnet.ui.screens.lorevault.CreateGuideScreen
+import com.codehijackers.guldnet.ui.screens.lorevault.GuideDetailsScreen
+import com.codehijackers.guldnet.ui.screens.search.SearchScreen
+import com.codehijackers.guldnet.ui.screens.profile.ProfileScreen
+import com.codehijackers.guldnet.ui.screens.profile.EditProfileScreen
+import com.codehijackers.guldnet.ui.screens.posts.GuildPostsScreen
+import com.codehijackers.guldnet.ui.screens.posts.CreatePostScreen
+import com.codehijackers.guldnet.ui.screens.posts.PostDetailsScreen
+import com.codehijackers.guldnet.ui.screens.chat.ChatScreen
+
+import com.codehijackers.guldnet.viewmodel.GuildViewModel
+import com.codehijackers.guldnet.viewmodel.PostViewModel
+import com.codehijackers.guldnet.viewmodel.ClanViewModel
 import com.codehijackers.guldnet.viewmodel.GuideViewModel
 import com.codehijackers.guldnet.viewmodel.SquadViewModel
-import com.codehijackers.guldnet.ui.screens.chat.ChatScreen
-import com.codehijackers.guldnet.ui.screens.posts.PostDetailsScreen
-import com.codehijackers.guldnet.ui.screens.profile.EditProfileScreen
-import com.codehijackers.guldnet.ui.screens.profile.ProfileScreen
+
 @Composable
 fun GuildnetNavHost(
     navController: NavHostController,
     startDestination: String,
     onLoginSuccess: () -> Unit = {},
-
-
 ) {
     NavHost(
         navController = navController,
         startDestination = startDestination
     ) {
+
+        // ---------------------------------------------------------
+        // LOGIN
+        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.Login.route
@@ -56,11 +59,19 @@ fun GuildnetNavHost(
             )
         }
 
+        // ---------------------------------------------------------
+        // HOME
+        // ---------------------------------------------------------
+
         composable(
             route = GuildnetRoutes.Home.route
         ) {
             HomeScreen()
         }
+
+        // ---------------------------------------------------------
+        // GUILDS
+        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.Guilds.route
@@ -71,6 +82,7 @@ fun GuildnetNavHost(
                         GuildnetRoutes.GuildDetails.createRoute(guildId)
                     )
                 },
+
                 onCreateGuildClicked = {
                     navController.navigate(
                         GuildnetRoutes.CreateGuild.route
@@ -78,6 +90,10 @@ fun GuildnetNavHost(
                 }
             )
         }
+
+        // ---------------------------------------------------------
+        // GUILD DETAILS
+        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.GuildDetails.route
@@ -99,70 +115,27 @@ fun GuildnetNavHost(
                     navController.navigate(
                         GuildnetRoutes.GuildPosts.createRoute(guildId)
                     )
+                },
+
+                // FIX: Clans button now navigates correctly.
+                onClansClicked = {
+                    navController.navigate(
+                        GuildnetRoutes.Clans.createRoute(guildId)
+                    )
+                },
+
+                // FIX: LoreVault button now navigates correctly.
+                onLoreVaultClicked = {
+                    navController.navigate(
+                        GuildnetRoutes.LoreVault.createRoute(guildId)
+                    )
                 }
             )
         }
 
-        composable(
-            route = GuildnetRoutes.Squads.route
-        ) {
-            SquadsScreen(
-                onSquadClicked = { squadId ->
-                    navController.navigate(
-                        GuildnetRoutes.SquadDetails.createRoute(squadId)
-                    )
-                },
-
-                onCreateSquadClicked = {
-                    navController.navigate(
-                        GuildnetRoutes.CreateSquad.route
-                    )
-                }
-            )
-        }
-
-        composable(
-            route = GuildnetRoutes.Clans.route
-        ) { backStackEntry ->
-
-            val guildId =
-                backStackEntry.arguments?.getString("guildId")
-                    ?: return@composable
-
-            ClansScreen(
-                guildId = guildId,
-
-                onClanClicked = { clanId ->
-                    navController.navigate(
-                        GuildnetRoutes.ClanDetails.createRoute(clanId)
-                    )
-                },
-
-                onCreateClanClicked = {
-                    navController.navigate(
-                        GuildnetRoutes.CreateClan.createRoute(guildId)
-                    )
-                },
-
-                onBackClicked = {
-                    navController.popBackStack()
-                }
-            )
-        }
-
-
-
-        composable(
-            route = GuildnetRoutes.Search.route
-        ) {
-            SearchScreen()
-        }
-
-        composable(
-            route = GuildnetRoutes.Profile.route
-        ) {
-            ProfileScreen()
-        }
+        // ---------------------------------------------------------
+        // CREATE GUILD
+        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.CreateGuild.route
@@ -180,12 +153,16 @@ fun GuildnetNavHost(
 
                     navController.popBackStack()
                 },
+
                 onBackClicked = {
                     navController.popBackStack()
                 }
             )
         }
 
+        // ---------------------------------------------------------
+        // GUILD POSTS
+        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.GuildPosts.route
@@ -219,9 +196,12 @@ fun GuildnetNavHost(
                 onBackClicked = {
                     navController.popBackStack()
                 }
-
             )
         }
+
+        // ---------------------------------------------------------
+        // CREATE POST
+        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.CreatePost.route
@@ -254,6 +234,64 @@ fun GuildnetNavHost(
             )
         }
 
+        // ---------------------------------------------------------
+        // POST DETAILS
+        // ---------------------------------------------------------
+
+        composable(
+            route = GuildnetRoutes.PostDetails.route
+        ) { backStackEntry ->
+
+            val postId =
+                backStackEntry.arguments?.getString("postId")
+                    ?: return@composable
+
+            PostDetailsScreen(
+                postId = postId,
+
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        // ---------------------------------------------------------
+        // CLANS
+        // ---------------------------------------------------------
+
+        composable(
+            route = GuildnetRoutes.Clans.route
+        ) { backStackEntry ->
+
+            val guildId =
+                backStackEntry.arguments?.getString("guildId")
+                    ?: return@composable
+
+            ClansScreen(
+                guildId = guildId,
+
+                onClanClicked = { clanId ->
+                    navController.navigate(
+                        GuildnetRoutes.ClanDetails.createRoute(clanId)
+                    )
+                },
+
+                onCreateClanClicked = {
+                    navController.navigate(
+                        GuildnetRoutes.CreateClan.createRoute(guildId)
+                    )
+                },
+
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        // ---------------------------------------------------------
+        // CREATE CLAN
+        // ---------------------------------------------------------
+
         composable(
             route = GuildnetRoutes.CreateClan.route
         ) { backStackEntry ->
@@ -285,6 +323,10 @@ fun GuildnetNavHost(
             )
         }
 
+        // ---------------------------------------------------------
+        // CLAN DETAILS
+        // ---------------------------------------------------------
+
         composable(
             route = GuildnetRoutes.ClanDetails.route
         ) { backStackEntry ->
@@ -301,6 +343,10 @@ fun GuildnetNavHost(
                 }
             )
         }
+
+        // ---------------------------------------------------------
+        // LOREVAULT
+        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.LoreVault.route
@@ -330,6 +376,10 @@ fun GuildnetNavHost(
                 }
             )
         }
+
+        // ---------------------------------------------------------
+        // CREATE GUIDE
+        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.CreateGuide.route
@@ -368,6 +418,10 @@ fun GuildnetNavHost(
             )
         }
 
+        // ---------------------------------------------------------
+        // GUIDE DETAILS
+        // ---------------------------------------------------------
+
         composable(
             route = GuildnetRoutes.GuideDetails.route
         ) { backStackEntry ->
@@ -384,6 +438,32 @@ fun GuildnetNavHost(
                 }
             )
         }
+
+        // ---------------------------------------------------------
+        // SQUADS
+        // ---------------------------------------------------------
+
+        composable(
+            route = GuildnetRoutes.Squads.route
+        ) {
+            SquadsScreen(
+                onSquadClicked = { squadId ->
+                    navController.navigate(
+                        GuildnetRoutes.SquadDetails.createRoute(squadId)
+                    )
+                },
+
+                onCreateSquadClicked = {
+                    navController.navigate(
+                        GuildnetRoutes.CreateSquad.route
+                    )
+                }
+            )
+        }
+
+        // ---------------------------------------------------------
+        // CREATE SQUAD
+        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.CreateSquad.route
@@ -408,6 +488,10 @@ fun GuildnetNavHost(
             )
         }
 
+        // ---------------------------------------------------------
+        // SQUAD DETAILS
+        // ---------------------------------------------------------
+
         composable(
             route = GuildnetRoutes.SquadDetails.route
         ) { backStackEntry ->
@@ -431,36 +515,40 @@ fun GuildnetNavHost(
             )
         }
 
+        // ---------------------------------------------------------
+        // CHAT
+        // ---------------------------------------------------------
+
         composable(
             route = GuildnetRoutes.Chat.route
         ) { backStackEntry ->
 
-            val squadId = backStackEntry.arguments?.getString("squadId")
-                ?: return@composable
+            val squadId =
+                backStackEntry.arguments?.getString("squadId")
+                    ?: return@composable
 
             ChatScreen(
                 squadId = squadId,
+
                 onBackClicked = {
                     navController.popBackStack()
                 }
             )
         }
 
+        // ---------------------------------------------------------
+        // SEARCH
+        // ---------------------------------------------------------
 
         composable(
-            route = GuildnetRoutes.PostDetails.route
-        ) { backStackEntry ->
-
-            val postId = backStackEntry.arguments?.getString("postId")
-                ?: return@composable
-
-            PostDetailsScreen(
-                postId = postId,
-                onBackClicked = {
-                    navController.popBackStack()
-                }
-            )
+            route = GuildnetRoutes.Search.route
+        ) {
+            SearchScreen()
         }
+
+        // ---------------------------------------------------------
+        // PROFILE
+        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.Profile.route
@@ -471,20 +559,28 @@ fun GuildnetNavHost(
                         GuildnetRoutes.EditProfile.route
                     )
                 },
+
                 onSettingsClicked = {
                     // Settings will be added next.
                 },
+
                 onNotificationsClicked = {
                     // Notifications will be added next.
                 },
+
                 onAppearanceClicked = {
                     // Appearance will be added next.
                 },
+
                 onLogoutClicked = {
                     // Authentication/logout will be connected later.
                 }
             )
         }
+
+        // ---------------------------------------------------------
+        // EDIT PROFILE
+        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.EditProfile.route
@@ -495,6 +591,5 @@ fun GuildnetNavHost(
                 }
             )
         }
-
     }
 }
