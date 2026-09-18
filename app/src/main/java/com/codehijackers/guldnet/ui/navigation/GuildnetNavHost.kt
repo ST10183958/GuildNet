@@ -25,13 +25,14 @@ import com.codehijackers.guldnet.viewmodel.ClanViewModel
 import com.codehijackers.guldnet.ui.screens.clans.ClanDetailsScreen
 import com.codehijackers.guldnet.ui.screens.lorevault.CreateGuideScreen
 import com.codehijackers.guldnet.ui.screens.lorevault.GuideDetailsScreen
-import com.codehijackers.guldnet.ui.screens.lorevault.LoreVaultScreen
 import com.codehijackers.guldnet.ui.screens.squads.CreateSquadScreen
 import com.codehijackers.guldnet.ui.screens.squads.SquadDetailsScreen
 import com.codehijackers.guldnet.viewmodel.GuideViewModel
 import com.codehijackers.guldnet.viewmodel.SquadViewModel
 import com.codehijackers.guldnet.ui.screens.chat.ChatScreen
 import com.codehijackers.guldnet.ui.screens.posts.PostDetailsScreen
+import com.codehijackers.guldnet.ui.screens.profile.EditProfileScreen
+import com.codehijackers.guldnet.ui.screens.profile.ProfileScreen
 @Composable
 fun GuildnetNavHost(
     navController: NavHostController,
@@ -460,5 +461,40 @@ fun GuildnetNavHost(
                 }
             )
         }
+
+        composable(
+            route = GuildnetRoutes.Profile.route
+        ) {
+            ProfileScreen(
+                onEditProfileClicked = {
+                    navController.navigate(
+                        GuildnetRoutes.EditProfile.route
+                    )
+                },
+                onSettingsClicked = {
+                    // Settings will be added next.
+                },
+                onNotificationsClicked = {
+                    // Notifications will be added next.
+                },
+                onAppearanceClicked = {
+                    // Appearance will be added next.
+                },
+                onLogoutClicked = {
+                    // Authentication/logout will be connected later.
+                }
+            )
+        }
+
+        composable(
+            route = GuildnetRoutes.EditProfile.route
+        ) {
+            EditProfileScreen(
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
     }
 }

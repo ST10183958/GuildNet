@@ -130,5 +130,7 @@ sealed class GuildnetRoutes(
         }
     }
 
+    data object EditProfile :
+        GuildnetRoutes("profile/edit")
 
 }

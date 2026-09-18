@@ -18,18 +18,21 @@ import com.codehijackers.guldnet.ui.screens.home.components.HomeGuildCard
 import com.codehijackers.guldnet.ui.screens.home.components.HomeSection
 import com.codehijackers.guldnet.ui.screens.home.components.HomeSquadCard
 import com.codehijackers.guldnet.viewmodel.GuildViewModel
+import com.codehijackers.guldnet.viewmodel.ProfileViewModel
 import com.codehijackers.guldnet.viewmodel.SquadViewModel
 
 @Composable
 fun HomeScreen(
     guildViewModel: GuildViewModel = viewModel(),
-    squadViewModel: SquadViewModel = viewModel()
+    squadViewModel: SquadViewModel = viewModel(),
+    profileViewModel: ProfileViewModel = viewModel()
 ) {
     val guilds by guildViewModel.guilds.collectAsState()
     val squads by squadViewModel.squads.collectAsState()
 
     val joinedGuilds = guilds.filter { it.isJoined }
     val joinedSquads = squads.filter { it.isJoined }
+    val profile by profileViewModel.profile.collectAsState()
 
     LazyColumn(
         modifier = Modifier
@@ -41,7 +44,7 @@ fun HomeScreen(
         item {
             Column {
                 Text(
-                    text = "Welcome back!",
+                    text = "Welcome back, ${profile.displayName}!",
                     style = MaterialTheme.typography.headlineMedium
                 )
 
