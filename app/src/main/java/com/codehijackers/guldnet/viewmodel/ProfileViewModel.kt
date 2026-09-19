@@ -3,6 +3,7 @@ package com.codehijackers.guldnet.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codehijackers.guldnet.model.UserProfile
+import com.codehijackers.guldnet.repository.LanguageRepository
 import com.codehijackers.guldnet.repository.ProfileRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -63,6 +64,18 @@ class ProfileViewModel : ViewModel() {
                             ?.uppercase()
                             ?: "?"
                     )
+                }
+            }
+        }
+
+        /*
+         * Keep the displayed language in sync with whatever
+         * the user picks on the Settings screen.
+         */
+        viewModelScope.launch {
+            LanguageRepository.language.collect { language ->
+                _uiState.update { current ->
+                    current.copy(language = language.displayName)
                 }
             }
         }

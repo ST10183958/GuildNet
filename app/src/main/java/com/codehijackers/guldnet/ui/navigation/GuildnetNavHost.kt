@@ -23,6 +23,7 @@ import com.codehijackers.guldnet.ui.screens.lorevault.GuideDetailsScreen
 import com.codehijackers.guldnet.ui.screens.search.SearchScreen
 import com.codehijackers.guldnet.ui.screens.profile.ProfileScreen
 import com.codehijackers.guldnet.ui.screens.profile.EditProfileScreen
+import com.codehijackers.guldnet.ui.screens.settings.SettingsScreen
 import com.codehijackers.guldnet.ui.screens.posts.GuildPostsScreen
 import com.codehijackers.guldnet.ui.screens.posts.CreatePostScreen
 import com.codehijackers.guldnet.ui.screens.posts.PostDetailsScreen
@@ -561,7 +562,9 @@ fun GuildnetNavHost(
                 },
 
                 onSettingsClicked = {
-                    // Settings will be added next.
+                    navController.navigate(
+                        GuildnetRoutes.Settings.route
+                    )
                 },
 
                 onNotificationsClicked = {
@@ -586,6 +589,20 @@ fun GuildnetNavHost(
             route = GuildnetRoutes.EditProfile.route
         ) {
             EditProfileScreen(
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        // ---------------------------------------------------------
+        // SETTINGS
+        // ---------------------------------------------------------
+
+        composable(
+            route = GuildnetRoutes.Settings.route
+        ) {
+            SettingsScreen(
                 onBackClicked = {
                     navController.popBackStack()
                 }
