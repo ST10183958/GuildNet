@@ -10,10 +10,10 @@ object ProfileRepository {
     private val _profile = MutableStateFlow(
         UserProfile(
             id = "user-1",
-            displayName = "You",
-            username = "player",
+            displayName = "xDragonSlayer",
+            username = "dragonslayer",
             bio = "Gaming enthusiast and Guildnet explorer.",
-            email = "player@guildnet.local"
+            email = "dragonslayer@guildnet.gg"
         )
     )
 
