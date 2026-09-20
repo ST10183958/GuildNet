@@ -50,7 +50,7 @@ class MainActivity : FragmentActivity() {
 
                         "splash" -> SplashScreen(
                             onSplashFinished = {
-                                currentScreen = "login"
+                                appViewModel.setAuthenticated(true)
                             }
                         )
 

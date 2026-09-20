@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.rememberNavController
+import com.codehijackers.guldnet.ui.components.GuildnetBackground
 
 import com.codehijackers.guldnet.ui.navigation.GuildnetBottomBar
 import com.codehijackers.guldnet.ui.navigation.GuildnetNavHost
@@ -16,7 +18,10 @@ fun GuildnetAuthenticatedApp() {
 
     val navController = rememberNavController()
 
+    GuildnetBackground {
+
     Scaffold(
+        containerColor = Color.Transparent,
 
         bottomBar = {
             GuildnetBottomBar(
@@ -35,5 +40,6 @@ fun GuildnetAuthenticatedApp() {
                 startDestination = GuildnetRoutes.Home.route
             )
         }
+      }
     }
 }
