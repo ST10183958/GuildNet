@@ -1,29 +1,33 @@
 package com.codehijackers.guldnet.ui.screens.clans
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Build
+import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.SportsEsports
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -33,11 +37,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.codehijackers.guldnet.ui.screens.clans.components.ClanCard
+import com.codehijackers.guldnet.model.Clan
 import com.codehijackers.guldnet.viewmodel.ClanViewModel
+
+private val GuildnetSurface = Color(0xFF0F1727)
+private val GuildnetSurfaceLight = Color(0xFF121C2E)
+private val GuildnetBorder = Color(0xFF26344D)
+private val GuildnetPurple = Color(0xFF9857FF)
+private val GuildnetPurpleDark = Color(0xFF241545)
+private val GuildnetText = Color(0xFFF1F3FA)
+private val GuildnetMutedText = Color(0xFF8794AD)
+private val GuildnetGreen = Color(0xFF35D98A)
+private val GuildnetRed = Color(0xFFFF5065)
 
 @Composable
 fun ClansScreen(
@@ -48,112 +67,216 @@ fun ClansScreen(
     clanViewModel: ClanViewModel = viewModel()
 ) {
     val clans by clanViewModel.clans.collectAsState()
-    var searchQuery by remember { mutableStateOf("") }
+
+    var searchQuery by remember {
+        mutableStateOf("")
+    }
 
     val guildClans = clans
-        .filter { it.guildId == guildId }
-        .filter { clan ->
-            searchQuery.isBlank() ||
-                    clan.title.contains(searchQuery, ignoreCase = true) ||
-                    clan.content.contains(searchQuery, ignoreCase = true) ||
-                    clan.authorName.contains(searchQuery, ignoreCase = true)
+        .filter {
+            it.guildId == guildId
         }
+        .filter {
+            searchQuery.isBlank() ||
+                    it.title.contains(
+                        searchQuery,
+                        ignoreCase = true
+                    ) ||
+                    it.content.contains(
+                        searchQuery,
+                        ignoreCase = true
+                    ) ||
+                    it.authorName.contains(
+                        searchQuery,
+                        ignoreCase = true
+                    )
+        }
+
+    val categories = listOf(
+        "⚔️" to "Strategy",
+        "🔧" to "Builds",
+        "📋" to "Patch Notes",
+        "🎮" to "Highlights"
+    )
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(Color.Transparent)
     ) {
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp)
+                .padding(
+                    horizontal = 13.dp
+                )
         ) {
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        top = 13.dp,
+                        bottom = 13.dp
+                    ),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+
+                Text(
+                    text = "Clans Forum",
+                    color = GuildnetText,
+                    fontSize = 19.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Icon(
+                    imageVector = Icons.Outlined.Search,
+                    contentDescription = "Search",
+                    tint = GuildnetMutedText,
+                    modifier = Modifier.size(21.dp)
+                )
+            }
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(41.dp)
+                    .clip(RoundedCornerShape(13.dp))
+                    .background(GuildnetSurface)
+                    .border(
+                        width = 1.dp,
+                        color = GuildnetBorder,
+                        shape = RoundedCornerShape(13.dp)
+                    )
+                    .padding(horizontal = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(
-                    onClick = onBackClicked
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Back"
-                    )
-                }
 
-                Column {
-                    Text(
-                        text = "Clans",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
+                Icon(
+                    imageVector = Icons.Outlined.Search,
+                    contentDescription = null,
+                    tint = Color(0xFF52617D),
+                    modifier = Modifier.size(17.dp)
+                )
 
-                    Text(
-                        text = "Community Discussions",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                Spacer(
+                    modifier = Modifier.width(9.dp)
+                )
+
+                BasicTextField(
+                    value = searchQuery,
+                    onValueChange = {
+                        searchQuery = it
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                    textStyle = TextStyle(
+                        color = GuildnetText,
+                        fontSize = 11.sp
+                    ),
+                    decorationBox = { innerTextField ->
+
+                        if (searchQuery.isEmpty()) {
+                            Text(
+                                text = "Search discussions...",
+                                color = GuildnetMutedText,
+                                fontSize = 11.sp
+                            )
+                        }
+
+                        innerTextField()
+                    }
+                )
+            }
+
+            Spacer(
+                modifier = Modifier.height(14.dp)
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(
+                        rememberScrollState()
+                    ),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+
+                categories.forEach { (icon, title) ->
+
+                    ClanCategoryCard(
+                        icon = icon,
+                        title = title,
+                        count = when (title) {
+                            "Strategy" -> "124"
+                            "Builds" -> "87"
+                            "Patch Notes" -> "43"
+                            else -> "62"
+                        }
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(
+                modifier = Modifier.height(20.dp)
+            )
 
-            OutlinedTextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = {
-                    Text("Search discussions...")
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = "Search"
-                    )
-                },
-                singleLine = true,
-                shape = RoundedCornerShape(14.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    unfocusedBorderColor =
-                        MaterialTheme.colorScheme.outline.copy(alpha = 0.35f)
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Box(
+                    modifier = Modifier
+                        .width(3.dp)
+                        .height(15.dp)
+                        .clip(
+                            RoundedCornerShape(2.dp)
+                        )
+                        .background(GuildnetPurple)
                 )
+
+                Spacer(
+                    modifier = Modifier.width(8.dp)
+                )
+
+                Text(
+                    text = "POPULAR DISCUSSIONS",
+                    color = GuildnetText,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    letterSpacing = 0.9.sp
+                )
+            }
+
+            Spacer(
+                modifier = Modifier.height(12.dp)
             )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Text(
-                text = "Popular Discussions",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
 
             if (guildClans.isEmpty()) {
+
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 48.dp),
+                        .padding(top = 45.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+
                     Text(
                         text = if (searchQuery.isNotBlank()) {
                             "No discussions found"
                         } else {
                             "No discussions yet"
                         },
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = GuildnetText,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold
                     )
 
-                    Spacer(modifier = Modifier.height(6.dp))
+                    Spacer(
+                        modifier = Modifier.height(6.dp)
+                    )
 
                     Text(
                         text = if (searchQuery.isNotBlank()) {
@@ -161,47 +284,271 @@ fun ClansScreen(
                         } else {
                             "Start a discussion with your guild."
                         },
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = GuildnetMutedText,
+                        fontSize = 11.sp
                     )
                 }
+
             } else {
+
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+
+                    contentPadding = PaddingValues(
+                        bottom = 95.dp
+                    ),
+
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
+
                     items(
                         items = guildClans,
-                        key = { it.id }
+                        key = {
+                            "clan_${it.id}"
+                        }
                     ) { clan ->
-                        ClanCard(
+
+                        ClanForumCard(
                             clan = clan,
-                            onClanClicked = {
+                            onClick = {
                                 onClanClicked(clan.id)
                             }
                         )
-                    }
-
-                    item {
-                        Spacer(modifier = Modifier.height(80.dp))
                     }
                 }
             }
         }
 
-        FloatingActionButton(
-            onClick = onCreateClanClicked,
+        Box(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(20.dp),
-            shape = CircleShape,
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary
+                .padding(
+                    end = 17.dp,
+                    bottom = 82.dp
+                )
+                .size(49.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(GuildnetPurple)
+                .clickable {
+                    onCreateClanClicked()
+                },
+            contentAlignment = Alignment.Center
         ) {
+
             Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "Create Discussion"
+                imageVector = Icons.Outlined.Add,
+                contentDescription = "Create Discussion",
+                tint = Color.White,
+                modifier = Modifier.size(25.dp)
             )
         }
+    }
+}
+
+@Composable
+private fun ClanCategoryCard(
+    icon: String,
+    title: String,
+    count: String
+) {
+    Column(
+        modifier = Modifier
+            .width(74.dp)
+            .height(86.dp)
+            .clip(RoundedCornerShape(13.dp))
+            .background(GuildnetSurface)
+            .border(
+                width = 1.dp,
+                color = GuildnetBorder,
+                shape = RoundedCornerShape(13.dp)
+            )
+            .padding(
+                horizontal = 6.dp,
+                vertical = 8.dp
+            ),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Text(
+            text = icon,
+            fontSize = 17.sp
+        )
+
+        Spacer(
+            modifier = Modifier.height(4.dp)
+        )
+
+        Text(
+            text = title,
+            color = GuildnetText,
+            fontSize = 9.sp,
+            fontWeight = FontWeight.Medium,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+
+        Spacer(
+            modifier = Modifier.height(3.dp)
+        )
+
+        Text(
+            text = count,
+            color = GuildnetPurple,
+            fontSize = 8.sp
+        )
+    }
+}
+
+@Composable
+private fun ClanForumCard(
+    clan: Clan,
+    onClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(15.dp))
+            .background(GuildnetSurface)
+            .border(
+                width = 1.dp,
+                color = GuildnetBorder,
+                shape = RoundedCornerShape(15.dp)
+            )
+            .clickable {
+                onClick()
+            }
+            .padding(
+                horizontal = 14.dp,
+                vertical = 13.dp
+            )
+    ) {
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+
+            ClanTag(
+                text = "Strategy"
+            )
+
+            if (clan.upvotes >= 20) {
+                ClanTag(
+                    text = "🔥 Hot",
+                    hot = true
+                )
+            }
+        }
+
+        Spacer(
+            modifier = Modifier.height(8.dp)
+        )
+
+        Text(
+            text = clan.title,
+            color = GuildnetText,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.SemiBold,
+            lineHeight = 17.sp,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+        )
+
+        Spacer(
+            modifier = Modifier.height(8.dp)
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Box(
+                modifier = Modifier
+                    .size(19.dp)
+                    .clip(RoundedCornerShape(5.dp))
+                    .background(GuildnetPurpleDark),
+                contentAlignment = Alignment.Center
+            ) {
+
+                Text(
+                    text = clan.authorName
+                        .take(1)
+                        .uppercase(),
+                    color = GuildnetPurple,
+                    fontSize = 8.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            Spacer(
+                modifier = Modifier.width(7.dp)
+            )
+
+            Text(
+                text = clan.authorName,
+                color = GuildnetMutedText,
+                fontSize = 9.sp,
+                modifier = Modifier.weight(1f)
+            )
+
+            Text(
+                text = "💬 ${clan.upvotes}",
+                color = GuildnetMutedText,
+                fontSize = 8.sp
+            )
+
+            Spacer(
+                modifier = Modifier.width(8.dp)
+            )
+
+            Text(
+                text = "♡ ${clan.upvotes}",
+                color = GuildnetMutedText,
+                fontSize = 8.sp
+            )
+        }
+    }
+}
+
+@Composable
+private fun ClanTag(
+    text: String,
+    hot: Boolean = false
+) {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(5.dp))
+            .background(
+                if (hot) {
+                    GuildnetRed.copy(alpha = 0.12f)
+                } else {
+                    GuildnetPurple.copy(alpha = 0.12f)
+                }
+            )
+            .border(
+                width = 1.dp,
+                color = if (hot) {
+                    GuildnetRed.copy(alpha = 0.3f)
+                } else {
+                    GuildnetPurple.copy(alpha = 0.3f)
+                },
+                shape = RoundedCornerShape(5.dp)
+            )
+            .padding(
+                horizontal = 7.dp,
+                vertical = 4.dp
+            )
+    ) {
+
+        Text(
+            text = text,
+            color = if (hot) {
+                GuildnetRed
+            } else {
+                GuildnetPurple
+            },
+            fontSize = 8.sp,
+            fontWeight = FontWeight.Medium
+        )
     }
 }

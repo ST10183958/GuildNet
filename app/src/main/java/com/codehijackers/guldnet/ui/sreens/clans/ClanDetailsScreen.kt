@@ -1,19 +1,29 @@
 package com.codehijackers.guldnet.ui.screens.clans
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Send
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,12 +31,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codehijackers.guldnet.ui.screens.clans.components.ClanResponseCard
 import com.codehijackers.guldnet.viewmodel.ClanResponseViewModel
 import com.codehijackers.guldnet.viewmodel.ClanViewModel
+private val GuildnetSurface = Color(0xFF0F1727)
+private val GuildnetSurfaceLight = Color(0xFF121C2E)
+private val GuildnetBorder = Color(0xFF26344D)
+private val GuildnetPurple = Color(0xFF9857FF)
+private val GuildnetPurpleDark = Color(0xFF241545)
+private val GuildnetText = Color(0xFFF1F3FA)
+private val GuildnetMutedText = Color(0xFF8794AD)
 
 @Composable
 fun ClanDetailsScreen(
@@ -47,25 +70,51 @@ fun ClanDetailsScreen(
     }
 
     if (clan == null) {
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp)
+                .background(Color.Transparent)
+                .padding(13.dp)
         ) {
-            Text(
-                text = "Clan not found",
-                style = MaterialTheme.typography.headlineMedium
-            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(44.dp)
+                    .clickable {
+                        onBackClicked()
+                    },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Icon(
+                    imageVector = Icons.Outlined.ArrowBack,
+                    contentDescription = "Back",
+                    tint = GuildnetText
+                )
+
+                Spacer(
+                    modifier = Modifier.width(9.dp)
+                )
+
+                Text(
+                    text = "Back",
+                    color = GuildnetMutedText,
+                    fontSize = 11.sp
+                )
+            }
 
             Spacer(
-                modifier = Modifier.height(16.dp)
+                modifier = Modifier.height(30.dp)
             )
 
-            OutlinedButton(
-                onClick = onBackClicked
-            ) {
-                Text("Back")
-            }
+            Text(
+                text = "Discussion not found",
+                color = GuildnetText,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
         }
 
         return
@@ -75,139 +124,362 @@ fun ClanDetailsScreen(
         it.clanId == clanId
     }
 
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .background(Color.Transparent)
     ) {
 
-        item {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(58.dp)
+                .padding(horizontal = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
 
-            Text(
-                text = clan.title,
-                style = MaterialTheme.typography.headlineMedium
-            )
-
-            Text(
-                text = "by ${clan.authorName}",
-                style = MaterialTheme.typography.labelMedium,
-                modifier = Modifier.padding(top = 4.dp)
-            )
-
-            Spacer(
-                modifier = Modifier.height(16.dp)
-            )
-
-            Card(
-                modifier = Modifier.fillMaxWidth()
+            Row(
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable {
+                        onBackClicked()
+                    },
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(
-                    modifier = Modifier.padding(16.dp)
+
+                Icon(
+                    imageVector = Icons.Outlined.ArrowBack,
+                    contentDescription = "Back",
+                    tint = GuildnetText
+                )
+
+                Spacer(
+                    modifier = Modifier.width(10.dp)
+                )
+
+                Text(
+                    text = "Clans Forum",
+                    color = GuildnetText,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+
+            Text(
+                text = "Discussion",
+                color = GuildnetMutedText,
+                fontSize = 9.sp
+            )
+        }
+
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(
+                start = 13.dp,
+                top = 8.dp,
+                end = 13.dp,
+                bottom = 20.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(11.dp)
+        ) {
+
+            item {
+
+                ClanDetailsHeader(
+                    title = clan.title,
+                    authorName = clan.authorName,
+                    upvotes = clan.upvotes,
+                    responseCount = clanResponses.size
+                )
+
+                Spacer(
+                    modifier = Modifier.height(13.dp)
+                )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(15.dp))
+                        .background(GuildnetSurface)
+                        .border(
+                            width = 1.dp,
+                            color = GuildnetBorder,
+                            shape = RoundedCornerShape(15.dp)
+                        )
+                        .padding(15.dp)
                 ) {
+
                     Text(
                         text = clan.content,
-                        style = MaterialTheme.typography.bodyLarge
+                        color = GuildnetText,
+                        fontSize = 12.sp,
+                        lineHeight = 19.sp
+                    )
+                }
+
+                Spacer(
+                    modifier = Modifier.height(21.dp)
+                )
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    Box(
+                        modifier = Modifier
+                            .width(3.dp)
+                            .height(15.dp)
+                            .clip(RoundedCornerShape(2.dp))
+                            .background(GuildnetPurple)
                     )
 
-                    Row(
-                        modifier = Modifier.padding(top = 16.dp)
-                    ) {
-                        Text(
-                            text = "▲ ${clan.upvotes}"
-                        )
+                    Spacer(
+                        modifier = Modifier.width(8.dp)
+                    )
 
-                        Text(
-                            text = "💬 ${clanResponses.size}",
-                            modifier = Modifier.padding(start = 16.dp)
-                        )
-                    }
+                    Text(
+                        text = "RESPONSES",
+                        color = GuildnetText,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        letterSpacing = 0.9.sp
+                    )
                 }
             }
 
-            Spacer(
-                modifier = Modifier.height(24.dp)
-            )
+            items(
+                items = clanResponses,
+                key = {
+                    "response_${it.id}"
+                }
+            ) { response ->
 
-            Text(
-                text = "Responses",
-                style = MaterialTheme.typography.titleLarge
-            )
+                ClanResponseCard(
+                    response = response
+                )
+            }
 
-            Spacer(
-                modifier = Modifier.height(12.dp)
-            )
-        }
+            item {
 
-        items(
-            items = clanResponses,
-            key = { it.id }
-        ) { response ->
+                Spacer(
+                    modifier = Modifier.height(6.dp)
+                )
 
-            ClanResponseCard(
-                response = response
-            )
-        }
+                Text(
+                    text = "ADD A RESPONSE",
+                    color = GuildnetMutedText,
+                    fontSize = 9.sp,
+                    letterSpacing = 0.9.sp,
+                    modifier = Modifier.padding(
+                        start = 3.dp,
+                        bottom = 7.dp
+                    )
+                )
 
-        item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(13.dp))
+                        .background(GuildnetSurface)
+                        .border(
+                            width = 1.dp,
+                            color = GuildnetBorder,
+                            shape = RoundedCornerShape(13.dp)
+                        )
+                        .padding(
+                            horizontal = 13.dp,
+                            vertical = 11.dp
+                        ),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
 
-            Spacer(
-                modifier = Modifier.height(16.dp)
-            )
+                    BasicTextField(
+                        value = responseText,
+                        onValueChange = {
+                            responseText = it
+                        },
+                        modifier = Modifier.weight(1f),
+                        singleLine = false,
+                        maxLines = 4,
+                        textStyle = TextStyle(
+                            color = GuildnetText,
+                            fontSize = 11.sp
+                        ),
+                        decorationBox = { innerTextField ->
 
-            Text(
-                text = "Add a Response",
-                style = MaterialTheme.typography.titleMedium
-            )
+                            if (responseText.isEmpty()) {
+                                Text(
+                                    text = "Join the discussion...",
+                                    color = GuildnetMutedText,
+                                    fontSize = 11.sp
+                                )
+                            }
 
-            Spacer(
-                modifier = Modifier.height(8.dp)
-            )
-
-            OutlinedTextField(
-                value = responseText,
-                onValueChange = {
-                    responseText = it
-                },
-                label = {
-                    Text("Response")
-                },
-                placeholder = {
-                    Text("Join the discussion...")
-                },
-                modifier = Modifier.fillMaxWidth(),
-                minLines = 3
-            )
-
-            Spacer(
-                modifier = Modifier.height(8.dp)
-            )
-
-            Button(
-                onClick = {
-                    responseViewModel.addResponse(
-                        clanId = clanId,
-                        content = responseText.trim(),
-                        authorName = "You"
+                            innerTextField()
+                        }
                     )
 
-                    responseText = ""
-                },
-                enabled = responseText.isNotBlank(),
-                modifier = Modifier.fillMaxWidth()
+                    Spacer(
+                        modifier = Modifier.width(8.dp)
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .size(38.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(
+                                if (responseText.isNotBlank()) {
+                                    GuildnetPurple
+                                } else {
+                                    GuildnetSurfaceLight
+                                }
+                            )
+                            .clickable(
+                                enabled = responseText.isNotBlank()
+                            ) {
+
+                                responseViewModel.addResponse(
+                                    clanId = clanId,
+                                    content = responseText.trim(),
+                                    authorName = "You"
+                                )
+
+                                responseText = ""
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+
+                        Icon(
+                            imageVector = Icons.Outlined.Send,
+                            contentDescription = "Post Response",
+                            tint = if (responseText.isNotBlank()) {
+                                Color.White
+                            } else {
+                                GuildnetMutedText
+                            },
+                            modifier = Modifier.size(17.dp)
+                        )
+                    }
+                }
+
+                Spacer(
+                    modifier = Modifier.height(25.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ClanDetailsHeader(
+    title: String,
+    authorName: String,
+    upvotes: Int,
+    responseCount: Int
+) {
+    Column {
+
+        ClanTag(
+            text = "Strategy"
+        )
+
+        Spacer(
+            modifier = Modifier.height(10.dp)
+        )
+
+        Text(
+            text = title,
+            color = GuildnetText,
+            fontSize = 20.sp,
+            lineHeight = 26.sp,
+            fontWeight = FontWeight.Bold
+        )
+
+        Spacer(
+            modifier = Modifier.height(7.dp)
+        )
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Box(
+                modifier = Modifier
+                    .size(23.dp)
+                    .clip(CircleShape)
+                    .background(GuildnetPurpleDark),
+                contentAlignment = Alignment.Center
             ) {
-                Text("Post Response")
+
+                Text(
+                    text = authorName
+                        .take(1)
+                        .uppercase(),
+                    color = GuildnetPurple,
+                    fontSize = 8.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
 
             Spacer(
-                modifier = Modifier.height(16.dp)
+                modifier = Modifier.width(7.dp)
             )
 
-            OutlinedButton(
-                onClick = onBackClicked,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Back")
-            }
+            Text(
+                text = authorName,
+                color = GuildnetMutedText,
+                fontSize = 9.sp
+            )
+
+            Spacer(
+                modifier = Modifier.width(10.dp)
+            )
+
+            Text(
+                text = "▲ $upvotes",
+                color = GuildnetMutedText,
+                fontSize = 9.sp
+            )
+
+            Spacer(
+                modifier = Modifier.width(8.dp)
+            )
+
+            Text(
+                text = "💬 $responseCount",
+                color = GuildnetMutedText,
+                fontSize = 9.sp
+            )
         }
+    }
+}
+
+@Composable
+private fun ClanTag(
+    text: String
+) {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(5.dp))
+            .background(
+                GuildnetPurple.copy(alpha = 0.12f)
+            )
+            .border(
+                width = 1.dp,
+                color = GuildnetPurple.copy(alpha = 0.3f),
+                shape = RoundedCornerShape(5.dp)
+            )
+            .padding(
+                horizontal = 8.dp,
+                vertical = 4.dp
+            )
+    ) {
+
+        Text(
+            text = text,
+            color = GuildnetPurple,
+            fontSize = 8.sp,
+            fontWeight = FontWeight.Medium
+        )
     }
 }
