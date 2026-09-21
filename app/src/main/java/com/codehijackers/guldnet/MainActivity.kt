@@ -40,8 +40,7 @@ class MainActivity : FragmentActivity() {
 
                 if (isAuthenticated) {
 
-                    // User has successfully authenticated.
-                    // Enter the normal Guildnet application.
+
                     GuildnetAuthenticatedApp()
 
                 } else {
@@ -50,13 +49,13 @@ class MainActivity : FragmentActivity() {
 
                         "splash" -> SplashScreen(
                             onSplashFinished = {
-                                appViewModel.setAuthenticated(true)
+                                currentScreen = "login"
                             }
                         )
 
                         "login" -> LoginScreen(
                             onLoginClick = {
-                                appViewModel.setAuthenticated(true)
+                                currentScreen = "biometric"
                             },
                             onSignUpClick = {
                                 currentScreen = "signup"
