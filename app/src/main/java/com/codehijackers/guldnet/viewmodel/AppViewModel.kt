@@ -2,12 +2,16 @@ package com.codehijackers.guldnet.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.codehijackers.guldnet.data.local.GuildnetDatabase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
-
-class AppViewModel : ViewModel() {
+class AppViewModel(
+    private val database: GuildnetDatabase
+) : ViewModel() {
 
     companion object {
         private const val TAG = "Guildnet.AppViewModel"
@@ -20,17 +24,25 @@ class AppViewModel : ViewModel() {
 
     init {
         Log.d(TAG, "AppViewModel created")
-        Log.d(TAG, "Initial authentication state: false")
+
+        viewModelScope.launch {
+            database.userDao()
+                .observeLoggedInUser()
+                .collect { user ->
+                    _isUserAuthenticated.value = user != null
+
+                    Log.d(
+                        TAG,
+                        "Authenticated user: ${user?.email ?: "none"}"
+                    )
+                }
+        }
     }
 
-    fun setAuthenticated(authenticated: Boolean) {
-        Log.d(
-            TAG,
-            "Authentication state changing: " +
-                    "${_isUserAuthenticated.value} -> $authenticated"
-        )
-
-        _isUserAuthenticated.value = authenticated
+    fun logout() {
+        viewModelScope.launch {
+            database.userDao().logoutAllUsers()
+        }
     }
 
     override fun onCleared() {

@@ -21,6 +21,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.codehijackers.guldnet.data.local.GuildnetDatabaseProvider
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
@@ -33,6 +35,9 @@ fun LoginScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
+
+    val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
     val darkBg = Color(0xFF0B0E14)
@@ -41,8 +46,19 @@ fun LoginScreen(
     val textBodyColor = Color(0xFF94A3B8)
     val dividerColor = Color(0xFF1E293B)
 
-    val googleResId = context.resources.getIdentifier("ic_google", "drawable", context.packageName)
-    val discordResId = context.resources.getIdentifier("ic_discord", "drawable", context.packageName)
+    val googleResId =
+        context.resources.getIdentifier(
+            "ic_google",
+            "drawable",
+            context.packageName
+        )
+
+    val discordResId =
+        context.resources.getIdentifier(
+            "ic_discord",
+            "drawable",
+            context.packageName
+        )
 
     Box(
         modifier = Modifier
@@ -54,8 +70,14 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth(0.9f)
                 .wrapContentHeight()
-                .border(1.dp, dividerColor, RoundedCornerShape(24.dp)),
-            colors = CardDefaults.cardColors(containerColor = cardBg),
+                .border(
+                    1.dp,
+                    dividerColor,
+                    RoundedCornerShape(24.dp)
+                ),
+            colors = CardDefaults.cardColors(
+                containerColor = cardBg
+            ),
             shape = RoundedCornerShape(24.dp)
         ) {
             Column(
@@ -69,14 +91,20 @@ fun LoginScreen(
                     color = textBodyColor,
                     fontSize = 14.sp
                 )
+
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
                     text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(color = Color.White)) {
+                        withStyle(
+                            style = SpanStyle(color = Color.White)
+                        ) {
                             append("GUILD")
                         }
-                        withStyle(style = SpanStyle(color = accentPurple)) {
+
+                        withStyle(
+                            style = SpanStyle(color = accentPurple)
+                        ) {
                             append("NET ★")
                         }
                     },
@@ -86,6 +114,7 @@ fun LoginScreen(
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
+
                 Text(
                     text = "— CREATE YOUR ACCOUNT AND START YOUR ADVENTURE —",
                     color = textBodyColor,
@@ -95,13 +124,30 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text("EMAIL", color = textBodyColor, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        "EMAIL",
+                        color = textBodyColor,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
                     Spacer(modifier = Modifier.height(6.dp))
+
                     OutlinedTextField(
                         value = email,
-                        onValueChange = { email = it },
-                        placeholder = { Text("Enter your email", color = textBodyColor.copy(alpha = 0.5f)) },
+                        onValueChange = {
+                            email = it
+                            errorMessage = ""
+                        },
+                        placeholder = {
+                            Text(
+                                "Enter your email",
+                                color = textBodyColor.copy(alpha = 0.5f)
+                            )
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         colors = OutlinedTextFieldDefaults.colors(
@@ -117,13 +163,30 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(14.dp))
 
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text("PASSWORD", color = textBodyColor, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        "PASSWORD",
+                        color = textBodyColor,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
                     Spacer(modifier = Modifier.height(6.dp))
+
                     OutlinedTextField(
                         value = password,
-                        onValueChange = { password = it },
-                        placeholder = { Text("Enter your password", color = textBodyColor.copy(alpha = 0.5f)) },
+                        onValueChange = {
+                            password = it
+                            errorMessage = ""
+                        },
+                        placeholder = {
+                            Text(
+                                "Enter your password",
+                                color = textBodyColor.copy(alpha = 0.5f)
+                            )
+                        },
                         visualTransformation = PasswordVisualTransformation(),
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
@@ -138,28 +201,86 @@ fun LoginScreen(
                     )
                 }
 
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.CenterEnd
+                ) {
                     Text(
                         text = "Forgot Password?",
                         color = accentPurple,
                         fontSize = 12.sp,
                         modifier = Modifier
                             .padding(top = 8.dp)
-                            .clickable { onForgotPasswordClick() }
+                            .clickable {
+                                onForgotPasswordClick()
+                            }
+                    )
+                }
+
+                if (errorMessage.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Text(
+                        text = errorMessage,
+                        color = Color(0xFFFF6B6B),
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Medium
                     )
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
-                    onClick = onLoginClick,
+                    onClick = {
+                        if (email.isBlank()) {
+                            errorMessage = "Please enter your email."
+                            return@Button
+                        }
+
+                        if (!email.contains("@")) {
+                            errorMessage = "Please enter a valid email address."
+                            return@Button
+                        }
+
+                        if (password.isBlank()) {
+                            errorMessage = "Please enter your password."
+                            return@Button
+                        }
+
+                        scope.launch {
+                            val database =
+                                GuildnetDatabaseProvider.getDatabase()
+
+                            val user =
+                                database.userDao()
+                                    .getUserByEmail(email.trim())
+
+                            if (user == null) {
+                                errorMessage =
+                                    "No account was found with this email."
+                                return@launch
+                            }
+
+                            database.userDao().logoutAllUsers()
+                            database.userDao().loginUser(user.id)
+
+                            onLoginClick()
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),
                     shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = accentPurple)
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = accentPurple
+                    )
                 ) {
-                    Text("LOG IN", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                    Text(
+                        "LOG IN",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(14.dp))
@@ -168,9 +289,22 @@ fun LoginScreen(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    HorizontalDivider(modifier = Modifier.weight(1f), color = dividerColor)
-                    Text(text = " OR ", color = textBodyColor, fontSize = 11.sp, modifier = Modifier.padding(horizontal = 8.dp))
-                    HorizontalDivider(modifier = Modifier.weight(1f), color = dividerColor)
+                    HorizontalDivider(
+                        modifier = Modifier.weight(1f),
+                        color = dividerColor
+                    )
+
+                    Text(
+                        text = " OR ",
+                        color = textBodyColor,
+                        fontSize = 11.sp,
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
+
+                    HorizontalDivider(
+                        modifier = Modifier.weight(1f),
+                        color = dividerColor
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(14.dp))
@@ -181,15 +315,28 @@ fun LoginScreen(
                         .fillMaxWidth()
                         .height(48.dp),
                     shape = RoundedCornerShape(12.dp),
-                    border = ButtonDefaults.outlinedButtonBorder.copy(brush = SolidColor(accentPurple)),
-                    colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.Transparent)
+                    border = ButtonDefaults.outlinedButtonBorder.copy(
+                        brush = SolidColor(accentPurple)
+                    ),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = Color.Transparent
+                    )
                 ) {
-                    Text("SIGN UP", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                    Text(
+                        "SIGN UP",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(14.dp))
 
-                Text(text = "OR CONTINUE WITH", color = textBodyColor, fontSize = 10.sp)
+                Text(
+                    text = "OR CONTINUE WITH",
+                    color = textBodyColor,
+                    fontSize = 10.sp
+                )
 
                 Spacer(modifier = Modifier.height(10.dp))
 
@@ -203,19 +350,35 @@ fun LoginScreen(
                             .weight(1f)
                             .height(42.dp),
                         shape = RoundedCornerShape(10.dp),
-                        border = ButtonDefaults.outlinedButtonBorder.copy(brush = SolidColor(dividerColor)),
-                        colors = ButtonDefaults.outlinedButtonColors(containerColor = darkBg)
+                        border = ButtonDefaults.outlinedButtonBorder.copy(
+                            brush = SolidColor(dividerColor)
+                        ),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            containerColor = darkBg
+                        )
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             if (googleResId != 0) {
                                 Image(
-                                    painter = painterResource(id = googleResId),
+                                    painter = painterResource(
+                                        id = googleResId
+                                    ),
                                     contentDescription = "Google",
                                     modifier = Modifier.size(18.dp)
                                 )
-                                Spacer(modifier = Modifier.width(8.dp))
+
+                                Spacer(
+                                    modifier = Modifier.width(8.dp)
+                                )
                             }
-                            Text("Google", color = Color.White, fontSize = 12.sp)
+
+                            Text(
+                                "Google",
+                                color = Color.White,
+                                fontSize = 12.sp
+                            )
                         }
                     }
 
@@ -225,19 +388,35 @@ fun LoginScreen(
                             .weight(1f)
                             .height(42.dp),
                         shape = RoundedCornerShape(10.dp),
-                        border = ButtonDefaults.outlinedButtonBorder.copy(brush = SolidColor(dividerColor)),
-                        colors = ButtonDefaults.outlinedButtonColors(containerColor = darkBg)
+                        border = ButtonDefaults.outlinedButtonBorder.copy(
+                            brush = SolidColor(dividerColor)
+                        ),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            containerColor = darkBg
+                        )
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                             if (discordResId != 0) {
                                 Image(
-                                    painter = painterResource(id = discordResId),
+                                    painter = painterResource(
+                                        id = discordResId
+                                    ),
                                     contentDescription = "Discord",
                                     modifier = Modifier.size(18.dp)
                                 )
-                                Spacer(modifier = Modifier.width(8.dp))
+
+                                Spacer(
+                                    modifier = Modifier.width(8.dp)
+                                )
                             }
-                            Text("Discord", color = Color.White, fontSize = 12.sp)
+
+                            Text(
+                                "Discord",
+                                color = Color.White,
+                                fontSize = 12.sp
+                            )
                         }
                     }
                 }
@@ -248,23 +427,36 @@ fun LoginScreen(
                     text = "Continue as Guest",
                     color = accentPurple,
                     fontSize = 12.sp,
-                    modifier = Modifier.clickable { onGuestClick() }
+                    modifier = Modifier.clickable {
+                        onGuestClick()
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(14.dp))
 
                 Text(
                     text = buildAnnotatedString {
-                        withStyle(style = SpanStyle(color = textBodyColor)) {
+                        withStyle(
+                            style = SpanStyle(color = textBodyColor)
+                        ) {
                             append("By continuing, you agree to our ")
                         }
-                        withStyle(style = SpanStyle(color = accentPurple)) {
+
+                        withStyle(
+                            style = SpanStyle(color = accentPurple)
+                        ) {
                             append("Terms of Service")
                         }
-                        withStyle(style = SpanStyle(color = textBodyColor)) {
+
+                        withStyle(
+                            style = SpanStyle(color = textBodyColor)
+                        ) {
                             append(" and ")
                         }
-                        withStyle(style = SpanStyle(color = accentPurple)) {
+
+                        withStyle(
+                            style = SpanStyle(color = accentPurple)
+                        ) {
                             append("Privacy Policy")
                         }
                     },
