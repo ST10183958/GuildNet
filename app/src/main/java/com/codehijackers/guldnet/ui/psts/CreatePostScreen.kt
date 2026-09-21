@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
 
 @Composable
 fun CreatePostScreen(
@@ -29,6 +30,8 @@ fun CreatePostScreen(
     ) -> Unit = { _, _ -> },
     onBackClicked: () -> Unit = {}
 ) {
+    val strings = currentGuildnetStrings
+
     var title by remember {
         mutableStateOf("")
     }
@@ -48,12 +51,12 @@ fun CreatePostScreen(
         verticalArrangement = Arrangement.Top
     ) {
         Text(
-            text = "Create Post",
+            text = strings.createPost,
             style = MaterialTheme.typography.headlineMedium
         )
 
         Text(
-            text = "Start a discussion with your Guild.",
+            text = strings.startDiscussionWithGuild,
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(top = 4.dp)
         )
@@ -68,10 +71,10 @@ fun CreatePostScreen(
                 title = it
             },
             label = {
-                Text("Post Title")
+                Text(strings.postTitle)
             },
             placeholder = {
-                Text("What do you want to discuss?")
+                Text(strings.postTitlePlaceholder)
             },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
@@ -87,10 +90,10 @@ fun CreatePostScreen(
                 content = it
             },
             label = {
-                Text("Content")
+                Text(strings.content)
             },
             placeholder = {
-                Text("Write your post...")
+                Text(strings.postContentPlaceholder)
             },
             modifier = Modifier.fillMaxWidth(),
             minLines = 6
@@ -110,7 +113,7 @@ fun CreatePostScreen(
             enabled = isValid,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Create Post")
+            Text(strings.createPost)
         }
 
         Spacer(
@@ -121,7 +124,7 @@ fun CreatePostScreen(
             onClick = onBackClicked,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Cancel")
+            Text(strings.cancel)
         }
     }
 }

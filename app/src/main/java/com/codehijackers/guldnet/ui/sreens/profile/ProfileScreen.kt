@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
 import com.codehijackers.guldnet.viewmodel.ProfileUiState
 import com.codehijackers.guldnet.viewmodel.ProfileViewModel
 
@@ -60,6 +61,7 @@ fun ProfileScreen(
     onAppearanceClicked: () -> Unit = {},
     onLogoutClicked: () -> Unit = {}
 ) {
+    val strings = currentGuildnetStrings
     val state by profileViewModel.uiState.collectAsState()
 
     Column(
@@ -71,15 +73,13 @@ fun ProfileScreen(
                 vertical = 14.dp
             )
     ) {
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-
             Text(
-                text = "Profile",
+                text = strings.profile,
                 color = GuildnetText,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
@@ -94,10 +94,9 @@ fun ProfileScreen(
                     },
                 contentAlignment = Alignment.Center
             ) {
-
                 Icon(
                     imageVector = Icons.Outlined.Settings,
-                    contentDescription = "Settings",
+                    contentDescription = strings.settings,
                     tint = GuildnetMutedText,
                     modifier = Modifier.size(21.dp)
                 )
@@ -117,34 +116,34 @@ fun ProfileScreen(
         )
 
         ProfileStats(
-            state = state
+            state = state,
+            strings = strings
         )
 
         Spacer(
             modifier = Modifier.height(20.dp)
         )
 
-        ProfileSectionLabel("ACCOUNT")
+        ProfileSectionLabel(strings.account)
 
         Spacer(
             modifier = Modifier.height(8.dp)
         )
 
         ProfileActionGroup {
-
             ProfileActionRow(
                 icon = Icons.Outlined.PersonOutline,
-                title = "Edit Profile",
+                title = strings.editProfile,
                 onClick = onEditProfileClicked
             )
 
             ProfileActionRow(
                 icon = Icons.Outlined.NotificationsNone,
-                title = "Notifications",
+                title = strings.notifications,
                 value = if (state.notificationsEnabled) {
-                    "On"
+                    strings.on
                 } else {
-                    "Off"
+                    strings.off
                 },
                 trailing = {
                     Switch(
@@ -168,7 +167,7 @@ fun ProfileScreen(
 
             ProfileActionRow(
                 icon = Icons.Outlined.Lock,
-                title = "Privacy",
+                title = strings.privacy,
                 value = state.privacy,
                 onClick = {}
             )
@@ -178,24 +177,23 @@ fun ProfileScreen(
             modifier = Modifier.height(20.dp)
         )
 
-        ProfileSectionLabel("PREFERENCES")
+        ProfileSectionLabel(strings.preferences)
 
         Spacer(
             modifier = Modifier.height(8.dp)
         )
 
         ProfileActionGroup {
-
             ProfileActionRow(
                 icon = Icons.Outlined.Settings,
-                title = "Theme",
+                title = strings.theme,
                 value = state.theme,
                 onClick = onAppearanceClicked
             )
 
             ProfileActionRow(
                 icon = Icons.Outlined.Language,
-                title = "Language",
+                title = strings.language,
                 value = state.language,
                 onClick = onSettingsClicked
             )
@@ -226,16 +224,13 @@ private fun ProfileHeader(
                 horizontal = 16.dp
             )
     ) {
-
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Box(
                 modifier = Modifier.size(78.dp)
             ) {
-
                 Box(
                     modifier = Modifier
                         .size(70.dp)
@@ -249,7 +244,6 @@ private fun ProfileHeader(
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-
                     Text(
                         text = state.initial,
                         color = Color.White,
@@ -271,7 +265,6 @@ private fun ProfileHeader(
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-
                     Text(
                         text = "+",
                         color = GuildnetPurple,
@@ -309,7 +302,6 @@ private fun ProfileHeader(
             Row(
                 horizontalArrangement = Arrangement.spacedBy(7.dp)
             ) {
-
                 ProfilePill(
                     text = state.rank
                 )
@@ -340,7 +332,6 @@ private fun ProfilePill(
                 vertical = 4.dp
             )
     ) {
-
         Text(
             text = text,
             color = GuildnetPurple,
@@ -352,22 +343,21 @@ private fun ProfilePill(
 
 @Composable
 private fun ProfileStats(
-    state: ProfileUiState
+    state: ProfileUiState,
+    strings: com.codehijackers.guldnet.ui.localization.GuildnetStrings
 ) {
     val stats = listOf(
-        state.matches to "Matches",
-        state.winRate to "Win Rate",
-        state.squadRank to "Squad Rank",
-        state.posts to "Posts"
+        state.matches to strings.matches,
+        state.winRate to strings.winRate,
+        state.squadRank to strings.squadRank,
+        state.posts to strings.posts
     )
 
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-
         stats.forEach { (value, label) ->
-
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -386,7 +376,6 @@ private fun ProfileStats(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-
                 Text(
                     text = value,
                     color = GuildnetText,
@@ -461,7 +450,6 @@ private fun ProfileActionRow(
             .padding(horizontal = 13.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-
         Icon(
             imageVector = icon,
             contentDescription = null,
@@ -482,7 +470,6 @@ private fun ProfileActionRow(
         )
 
         if (value != null) {
-
             Text(
                 text = value,
                 color = GuildnetMutedText,
@@ -495,15 +482,12 @@ private fun ProfileActionRow(
         }
 
         if (trailing != null) {
-
             Spacer(
                 modifier = Modifier.width(5.dp)
             )
 
             trailing()
-
         } else {
-
             Icon(
                 imageVector = Icons.Outlined.ChevronRight,
                 contentDescription = null,

@@ -10,11 +10,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Article
@@ -36,9 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.layout.imePadding
+import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
 
 private val GuildnetSurface = Color(0xFF0F1727)
 private val GuildnetBorder = Color(0xFF26344D)
@@ -57,6 +58,8 @@ fun CreateGuideScreen(
     ) -> Unit = { _, _, _, _ -> },
     onBackClicked: () -> Unit = {}
 ) {
+    val strings = currentGuildnetStrings
+
     var title by remember {
         mutableStateOf("")
     }
@@ -90,12 +93,10 @@ fun CreateGuideScreen(
                 vertical = 14.dp
             )
     ) {
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Row(
                 modifier = Modifier
                     .size(38.dp)
@@ -105,10 +106,9 @@ fun CreateGuideScreen(
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = strings.back,
                     tint = GuildnetText,
                     modifier = Modifier.size(21.dp)
                 )
@@ -119,16 +119,15 @@ fun CreateGuideScreen(
             )
 
             Column {
-
                 Text(
-                    text = "Create Guide",
+                    text = strings.createGuide,
                     color = GuildnetText,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
 
                 Text(
-                    text = "Share your gaming knowledge",
+                    text = strings.shareGamingKnowledge,
                     color = GuildnetMutedText,
                     fontSize = 9.sp
                 )
@@ -140,8 +139,8 @@ fun CreateGuideScreen(
         )
 
         GuideEditorField(
-            label = "Guide Title",
-            placeholder = "Example: Ultimate Beginner Guide",
+            label = strings.guideTitle,
+            placeholder = strings.guideTitlePlaceholder,
             value = title,
             onValueChange = {
                 title = it
@@ -155,8 +154,8 @@ fun CreateGuideScreen(
         )
 
         GuideEditorField(
-            label = "Category",
-            placeholder = "Builds, Tactics, Tutorial...",
+            label = strings.category,
+            placeholder = strings.guideCategoryPlaceholder,
             value = category,
             onValueChange = {
                 category = it
@@ -170,8 +169,8 @@ fun CreateGuideScreen(
         )
 
         GuideEditorField(
-            label = "Description",
-            placeholder = "Briefly describe your guide",
+            label = strings.description,
+            placeholder = strings.guideDescriptionPlaceholder,
             value = description,
             onValueChange = {
                 description = it
@@ -186,8 +185,8 @@ fun CreateGuideScreen(
         )
 
         GuideEditorField(
-            label = "Guide Content",
-            placeholder = "Write your guide here...",
+            label = strings.guideContent,
+            placeholder = strings.guideContentPlaceholder,
             value = content,
             onValueChange = {
                 content = it
@@ -234,9 +233,8 @@ fun CreateGuideScreen(
                 },
             contentAlignment = Alignment.Center
         ) {
-
             Text(
-                text = "Publish Guide",
+                text = strings.publishGuide,
                 color = if (isValid) {
                     Color.White
                 } else {
@@ -266,9 +264,8 @@ fun CreateGuideScreen(
                 },
             contentAlignment = Alignment.Center
         ) {
-
             Text(
-                text = "Cancel",
+                text = strings.cancel,
                 color = GuildnetMutedText,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Medium
@@ -288,7 +285,6 @@ private fun GuideEditorField(
     minHeight: Dp = 46.dp
 ) {
     Column {
-
         Text(
             text = label.uppercase(),
             color = GuildnetMutedText,
@@ -322,7 +318,6 @@ private fun GuideEditorField(
                 Alignment.Top
             }
         ) {
-
             Icon(
                 imageVector = icon,
                 contentDescription = null,
@@ -357,7 +352,6 @@ private fun GuideEditorField(
                     fontSize = 12.sp
                 ),
                 decorationBox = { innerTextField ->
-
                     if (value.isEmpty()) {
                         Text(
                             text = placeholder,

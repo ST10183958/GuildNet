@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codehijackers.guldnet.model.Guild
 import com.codehijackers.guldnet.model.Squad
+import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
 import com.codehijackers.guldnet.viewmodel.GuildViewModel
 import com.codehijackers.guldnet.viewmodel.HomeViewModel
 import com.codehijackers.guldnet.viewmodel.SquadViewModel
@@ -59,6 +60,7 @@ private val GuildnetMutedText = Color(0xFF8794AD)
 private val GuildnetGreen = Color(0xFF35D98A)
 private val GuildnetRed = Color(0xFFFF4F62)
 
+
 @Composable
 fun HomeScreen(
     guildViewModel: GuildViewModel = viewModel(),
@@ -66,12 +68,12 @@ fun HomeScreen(
     homeViewModel: HomeViewModel = viewModel(),
     onNotificationsClicked: () -> Unit = {}
 ) {
-
     val guilds by guildViewModel.guilds.collectAsState()
     val squads by squadViewModel.squads.collectAsState()
     val homeState by homeViewModel.uiState.collectAsState()
 
     val query = homeState.searchQuery.trim()
+    val strings = currentGuildnetStrings
 
     val visibleGuilds = guilds.filter { guild ->
         query.isBlank() ||
@@ -91,27 +93,22 @@ fun HomeScreen(
             .fillMaxSize()
             .background(Color.Transparent)
             .padding(horizontal = 20.dp),
-
         contentPadding = PaddingValues(
             top = 14.dp,
             bottom = 90.dp
         ),
-
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
 
         item {
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 Column {
-
                     Text(
-                        text = "Good evening,",
+                        text = strings.goodEvening,
                         color = GuildnetMutedText,
                         fontSize = 13.sp
                     )
@@ -129,7 +126,6 @@ fun HomeScreen(
                 }
 
                 Box {
-
                     IconButton(
                         onClick = onNotificationsClicked,
                         modifier = Modifier
@@ -137,18 +133,15 @@ fun HomeScreen(
                             .clip(CircleShape)
                             .background(GuildnetPurple)
                     ) {
-
                         Icon(
                             imageVector = Icons.Outlined.Notifications,
-                            contentDescription = "Notifications",
+                            contentDescription = strings.notifications,
                             tint = Color.White,
                             modifier = Modifier.size(20.dp)
                         )
                     }
 
-                    // Notification dot
                     if (homeState.notificationsAvailable) {
-
                         Box(
                             modifier = Modifier
                                 .size(7.dp)
@@ -162,7 +155,6 @@ fun HomeScreen(
         }
 
         item {
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -177,10 +169,9 @@ fun HomeScreen(
                     .padding(horizontal = 13.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 Icon(
                     imageVector = Icons.Outlined.Search,
-                    contentDescription = null,
+                    contentDescription = strings.search,
                     tint = Color(0xFF52617D),
                     modifier = Modifier.size(18.dp)
                 )
@@ -199,11 +190,9 @@ fun HomeScreen(
                         fontSize = 12.sp
                     ),
                     decorationBox = { innerTextField ->
-
                         if (homeState.searchQuery.isEmpty()) {
-
                             Text(
-                                text = "Search squads, guides, players...",
+                                text = strings.searchSquadsGuidesPlayers,
                                 color = GuildnetMutedText,
                                 fontSize = 12.sp
                             )
@@ -220,28 +209,23 @@ fun HomeScreen(
         }
 
         item {
-
             HomeSectionHeader(
-                title = "Recommended Squads",
+                title = strings.recommendedSquads,
                 onSeeAllClicked = {}
             )
         }
 
         if (visibleSquads.isEmpty()) {
-
             item {
                 EmptyHomeMessage(
-                    message = "No squads match your search."
+                    message = strings.noSquadsMatchSearch
                 )
             }
-
         } else {
-
             items(
                 items = visibleSquads.take(3),
                 key = { "squad_${it.id}" }
             ) { squad ->
-
                 RecommendedSquadCard(
                     squad = squad,
                     onJoinClicked = {
@@ -257,15 +241,13 @@ fun HomeScreen(
         }
 
         item {
-
             HomeSectionHeader(
-                title = "Trending Discussions",
+                title = strings.trendingDiscussions,
                 onSeeAllClicked = {}
             )
         }
 
         item {
-
             DiscussionCard(
                 title = "Best loadout for ranked in Season 20?",
                 author = "xDragonSlayer",
@@ -275,7 +257,6 @@ fun HomeScreen(
         }
 
         item {
-
             DiscussionCard(
                 title = "Share your controller settings",
                 author = "Nova",
@@ -285,28 +266,23 @@ fun HomeScreen(
         }
 
         item {
-
             HomeSectionHeader(
-                title = "Your Communities",
+                title = strings.yourCommunities,
                 onSeeAllClicked = {}
             )
         }
 
         if (joinedGuilds.isEmpty()) {
-
             item {
                 EmptyHomeMessage(
-                    message = "You have not joined any communities yet."
+                    message = strings.noCommunitiesJoined
                 )
             }
-
         } else {
-
             items(
                 items = joinedGuilds.take(3),
                 key = { "guild_${it.id}" }
             ) { guild ->
-
                 CommunityCard(guild)
             }
         }
@@ -315,21 +291,22 @@ fun HomeScreen(
 
 @Composable
 private fun StatsRow() {
+    val strings = currentGuildnetStrings
 
     val stats = listOf(
         Triple(
             "128",
-            "Matches",
+            strings.matches,
             Icons.Outlined.SportsEsports
         ),
         Triple(
             "68%",
-            "Win Rate",
+            strings.winRate,
             Icons.Outlined.EmojiEvents
         ),
         Triple(
             "Gold II",
-            "Rank",
+            strings.rank,
             Icons.Outlined.Star
         )
     )
@@ -338,9 +315,7 @@ private fun StatsRow() {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-
         stats.forEach { (value, label, icon) ->
-
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -356,11 +331,9 @@ private fun StatsRow() {
                         horizontal = 7.dp,
                         vertical = 11.dp
                     ),
-
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
@@ -395,9 +368,9 @@ private fun StatsRow() {
 
                 Text(
                     text = when (label) {
-                        "Matches" -> "+3 today"
-                        "Win Rate" -> "Top 15%"
-                        else -> "↑ from Silver"
+                        strings.matches -> strings.plusThreeToday
+                        strings.winRate -> strings.topFifteenPercent
+                        else -> strings.upFromSilver
                     },
                     color = GuildnetGreen,
                     fontSize = 8.sp
@@ -413,13 +386,13 @@ private fun HomeSectionHeader(
     title: String,
     onSeeAllClicked: () -> Unit
 ) {
+    val strings = currentGuildnetStrings
 
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-
         Text(
             text = title.uppercase(),
             color = GuildnetText,
@@ -429,7 +402,7 @@ private fun HomeSectionHeader(
         )
 
         Text(
-            text = "See All",
+            text = strings.seeAll,
             color = GuildnetPurple,
             fontSize = 11.sp,
             fontWeight = FontWeight.Medium,
@@ -440,12 +413,12 @@ private fun HomeSectionHeader(
     }
 }
 
-
 @Composable
 private fun RecommendedSquadCard(
     squad: Squad,
     onJoinClicked: () -> Unit
 ) {
+    val strings = currentGuildnetStrings
 
     Row(
         modifier = Modifier
@@ -539,7 +512,7 @@ private fun RecommendedSquadCard(
             Row {
 
                 Text(
-                    text = "${squad.memberCount} members",
+                    text = "${squad.memberCount} ${strings.members}",
                     color = GuildnetMutedText,
                     fontSize = 10.sp
                 )
@@ -551,7 +524,7 @@ private fun RecommendedSquadCard(
                 )
 
                 Text(
-                    text = "${onlineCount(squad)} online",
+                    text = "${onlineCount(squad)} ${strings.online}",
                     color = GuildnetGreen,
                     fontSize = 10.sp
                 )
@@ -581,9 +554,9 @@ private fun RecommendedSquadCard(
 
             Text(
                 text = if (squad.isJoined) {
-                    "Joined"
+                    strings.joined
                 } else {
-                    "Join"
+                    strings.join
                 },
                 color = GuildnetPurple,
                 fontSize = 10.sp,

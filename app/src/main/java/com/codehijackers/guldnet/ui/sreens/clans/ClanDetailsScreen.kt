@@ -40,9 +40,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
 import com.codehijackers.guldnet.ui.screens.clans.components.ClanResponseCard
 import com.codehijackers.guldnet.viewmodel.ClanResponseViewModel
 import com.codehijackers.guldnet.viewmodel.ClanViewModel
+
 private val GuildnetSurface = Color(0xFF0F1727)
 private val GuildnetSurfaceLight = Color(0xFF121C2E)
 private val GuildnetBorder = Color(0xFF26344D)
@@ -58,6 +60,8 @@ fun ClanDetailsScreen(
     clanViewModel: ClanViewModel = viewModel(),
     responseViewModel: ClanResponseViewModel = viewModel()
 ) {
+    val strings = currentGuildnetStrings
+
     val clans by clanViewModel.clans.collectAsState()
     val responses by responseViewModel.responses.collectAsState()
 
@@ -70,14 +74,12 @@ fun ClanDetailsScreen(
     }
 
     if (clan == null) {
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Transparent)
                 .padding(13.dp)
         ) {
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -87,10 +89,9 @@ fun ClanDetailsScreen(
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = strings.back,
                     tint = GuildnetText
                 )
 
@@ -99,7 +100,7 @@ fun ClanDetailsScreen(
                 )
 
                 Text(
-                    text = "Back",
+                    text = strings.back,
                     color = GuildnetMutedText,
                     fontSize = 11.sp
                 )
@@ -110,7 +111,7 @@ fun ClanDetailsScreen(
             )
 
             Text(
-                text = "Discussion not found",
+                text = strings.discussionNotFound,
                 color = GuildnetText,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
@@ -129,7 +130,6 @@ fun ClanDetailsScreen(
             .fillMaxSize()
             .background(Color.Transparent)
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -137,7 +137,6 @@ fun ClanDetailsScreen(
                 .padding(horizontal = 10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Row(
                 modifier = Modifier
                     .weight(1f)
@@ -146,10 +145,9 @@ fun ClanDetailsScreen(
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = strings.back,
                     tint = GuildnetText
                 )
 
@@ -158,7 +156,7 @@ fun ClanDetailsScreen(
                 )
 
                 Text(
-                    text = "Clans Forum",
+                    text = strings.clansForum,
                     color = GuildnetText,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold
@@ -166,7 +164,7 @@ fun ClanDetailsScreen(
             }
 
             Text(
-                text = "Discussion",
+                text = strings.discussion,
                 color = GuildnetMutedText,
                 fontSize = 9.sp
             )
@@ -182,14 +180,13 @@ fun ClanDetailsScreen(
             ),
             verticalArrangement = Arrangement.spacedBy(11.dp)
         ) {
-
             item {
-
                 ClanDetailsHeader(
                     title = clan.title,
                     authorName = clan.authorName,
                     upvotes = clan.upvotes,
-                    responseCount = clanResponses.size
+                    responseCount = clanResponses.size,
+                    categoryText = strings.categoryStrategy
                 )
 
                 Spacer(
@@ -208,7 +205,6 @@ fun ClanDetailsScreen(
                         )
                         .padding(15.dp)
                 ) {
-
                     Text(
                         text = clan.content,
                         color = GuildnetText,
@@ -224,7 +220,6 @@ fun ClanDetailsScreen(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-
                     Box(
                         modifier = Modifier
                             .width(3.dp)
@@ -238,7 +233,7 @@ fun ClanDetailsScreen(
                     )
 
                     Text(
-                        text = "RESPONSES",
+                        text = strings.responses,
                         color = GuildnetText,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -253,20 +248,18 @@ fun ClanDetailsScreen(
                     "response_${it.id}"
                 }
             ) { response ->
-
                 ClanResponseCard(
                     response = response
                 )
             }
 
             item {
-
                 Spacer(
                     modifier = Modifier.height(6.dp)
                 )
 
                 Text(
-                    text = "ADD A RESPONSE",
+                    text = strings.addResponse,
                     color = GuildnetMutedText,
                     fontSize = 9.sp,
                     letterSpacing = 0.9.sp,
@@ -292,7 +285,6 @@ fun ClanDetailsScreen(
                         ),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-
                     BasicTextField(
                         value = responseText,
                         onValueChange = {
@@ -306,10 +298,9 @@ fun ClanDetailsScreen(
                             fontSize = 11.sp
                         ),
                         decorationBox = { innerTextField ->
-
                             if (responseText.isEmpty()) {
                                 Text(
-                                    text = "Join the discussion...",
+                                    text = strings.joinDiscussion,
                                     color = GuildnetMutedText,
                                     fontSize = 11.sp
                                 )
@@ -337,7 +328,6 @@ fun ClanDetailsScreen(
                             .clickable(
                                 enabled = responseText.isNotBlank()
                             ) {
-
                                 responseViewModel.addResponse(
                                     clanId = clanId,
                                     content = responseText.trim(),
@@ -348,10 +338,9 @@ fun ClanDetailsScreen(
                             },
                         contentAlignment = Alignment.Center
                     ) {
-
                         Icon(
                             imageVector = Icons.Outlined.Send,
-                            contentDescription = "Post Response",
+                            contentDescription = strings.postResponse,
                             tint = if (responseText.isNotBlank()) {
                                 Color.White
                             } else {
@@ -375,12 +364,12 @@ private fun ClanDetailsHeader(
     title: String,
     authorName: String,
     upvotes: Int,
-    responseCount: Int
+    responseCount: Int,
+    categoryText: String
 ) {
     Column {
-
         ClanTag(
-            text = "Strategy"
+            text = categoryText
         )
 
         Spacer(
@@ -402,7 +391,6 @@ private fun ClanDetailsHeader(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Box(
                 modifier = Modifier
                     .size(23.dp)
@@ -410,7 +398,6 @@ private fun ClanDetailsHeader(
                     .background(GuildnetPurpleDark),
                 contentAlignment = Alignment.Center
             ) {
-
                 Text(
                     text = authorName
                         .take(1)
@@ -474,7 +461,6 @@ private fun ClanTag(
                 vertical = 4.dp
             )
     ) {
-
         Text(
             text = text,
             color = GuildnetPurple,

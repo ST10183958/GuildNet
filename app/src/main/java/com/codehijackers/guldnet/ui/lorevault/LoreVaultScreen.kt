@@ -35,7 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -43,11 +43,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
 import com.codehijackers.guldnet.viewmodel.GuideViewModel
-import androidx.compose.ui.draw.clip
 
 private val GuildnetSurface = Color(0xFF0F1727)
-private val GuildnetSurfaceLight = Color(0xFF121C2E)
 private val GuildnetBorder = Color(0xFF26344D)
 private val GuildnetPurple = Color(0xFF9857FF)
 private val GuildnetPurpleDark = Color(0xFF241545)
@@ -62,6 +61,7 @@ fun LoreVaultScreen(
     onBackClicked: () -> Unit = {},
     guideViewModel: GuideViewModel = viewModel()
 ) {
+    val strings = currentGuildnetStrings
     val guides by guideViewModel.guides.collectAsState()
 
     var searchQuery by remember {
@@ -69,21 +69,21 @@ fun LoreVaultScreen(
     }
 
     var selectedCategory by remember {
-        mutableStateOf("All")
+        mutableStateOf(strings.all)
     }
 
     val guildGuides = guides.filter {
         it.guildId == guildId
     }
 
-    val categories = listOf("All") +
+    val categories = listOf(strings.all) +
             guildGuides
                 .map { it.category }
                 .distinct()
 
     val filteredGuides = guildGuides
         .filter {
-            selectedCategory == "All" ||
+            selectedCategory == strings.all ||
                     it.category == selectedCategory
         }
         .filter {
@@ -118,7 +118,6 @@ fun LoreVaultScreen(
             .background(Color.Transparent)
             .padding(horizontal = 13.dp)
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -129,20 +128,18 @@ fun LoreVaultScreen(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 Text(
-                    text = "Lore",
+                    text = strings.lore,
                     color = GuildnetText,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
 
                 Text(
-                    text = "Vault",
+                    text = strings.vault,
                     color = GuildnetPurple,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
@@ -158,10 +155,9 @@ fun LoreVaultScreen(
                     },
                 contentAlignment = Alignment.Center
             ) {
-
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Create Guide",
+                    contentDescription = strings.createGuide,
                     tint = GuildnetPurple,
                     modifier = Modifier.size(21.dp)
                 )
@@ -182,10 +178,9 @@ fun LoreVaultScreen(
                 .padding(horizontal = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Icon(
                 imageVector = Icons.Outlined.Search,
-                contentDescription = "Search",
+                contentDescription = strings.search,
                 tint = Color(0xFF52617D),
                 modifier = Modifier.size(17.dp)
             )
@@ -206,10 +201,9 @@ fun LoreVaultScreen(
                     fontSize = 11.sp
                 ),
                 decorationBox = { innerTextField ->
-
                     if (searchQuery.isEmpty()) {
                         Text(
-                            text = "Search guides & lore...",
+                            text = strings.searchGuidesLore,
                             color = GuildnetMutedText,
                             fontSize = 11.sp
                         )
@@ -232,9 +226,7 @@ fun LoreVaultScreen(
                 ),
             horizontalArrangement = Arrangement.spacedBy(7.dp)
         ) {
-
             categories.forEach { category ->
-
                 LoreCategoryChip(
                     text = category,
                     selected = selectedCategory == category,
@@ -250,16 +242,14 @@ fun LoreVaultScreen(
         )
 
         if (filteredGuides.isEmpty()) {
-
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 48.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
                 Text(
-                    text = "No guides found",
+                    text = strings.noGuidesFound,
                     color = GuildnetText,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold
@@ -270,14 +260,12 @@ fun LoreVaultScreen(
                 )
 
                 Text(
-                    text = "Try another search or category.",
+                    text = strings.tryAnotherSearchCategory,
                     color = GuildnetMutedText,
                     fontSize = 11.sp
                 )
             }
-
         } else {
-
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(
@@ -285,25 +273,23 @@ fun LoreVaultScreen(
                 ),
                 verticalArrangement = Arrangement.spacedBy(9.dp)
             ) {
-
                 item {
-
                     LoreSectionHeader(
-                        title = "Featured Guides"
+                        title = strings.featuredGuides
                     )
                 }
 
                 item {
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-
                         featuredGuides.forEach { guide ->
-
                             FeaturedGuideCard(
                                 guide = guide,
+                                featuredText = strings.featured,
+                                byText = strings.byAuthor,
+                                minReadText = strings.minRead,
                                 onClick = {
                                     onGuideClicked(guide.id)
                                 },
@@ -326,9 +312,8 @@ fun LoreVaultScreen(
                 }
 
                 item {
-
                     LoreSectionHeader(
-                        title = "All Guides"
+                        title = strings.allGuides
                     )
                 }
 
@@ -338,9 +323,11 @@ fun LoreVaultScreen(
                         "guide_${it.id}"
                     }
                 ) { guide ->
-
                     GuideListCard(
                         guide = guide,
+                        byText = strings.byAuthor,
+                        viewsText = strings.views,
+                        minReadText = strings.minRead,
                         onClick = {
                             onGuideClicked(guide.id)
                         }
@@ -381,7 +368,6 @@ private fun LoreCategoryChip(
             ),
         contentAlignment = Alignment.Center
     ) {
-
         Text(
             text = text,
             color = if (selected) {
@@ -406,7 +392,6 @@ private fun LoreSectionHeader(
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
-
         Box(
             modifier = Modifier
                 .width(3.dp)
@@ -432,6 +417,9 @@ private fun LoreSectionHeader(
 @Composable
 private fun FeaturedGuideCard(
     guide: com.codehijackers.guldnet.model.Guide,
+    featuredText: String,
+    byText: String,
+    minReadText: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -450,7 +438,6 @@ private fun FeaturedGuideCard(
             }
             .padding(13.dp)
     ) {
-
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(5.dp))
@@ -462,9 +449,8 @@ private fun FeaturedGuideCard(
                     vertical = 4.dp
                 )
         ) {
-
             Text(
-                text = "Featured",
+                text = featuredText,
                 color = GuildnetPurple,
                 fontSize = 8.sp,
                 fontWeight = FontWeight.Medium
@@ -492,9 +478,8 @@ private fun FeaturedGuideCard(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-
             Text(
-                text = "by ${guide.authorName}",
+                text = "$byText ${guide.authorName}",
                 color = GuildnetMutedText,
                 fontSize = 8.sp,
                 maxLines = 1,
@@ -502,7 +487,7 @@ private fun FeaturedGuideCard(
             )
 
             Text(
-                text = "${readTime(guide.content)} min read",
+                text = "${readTime(guide.content)} $minReadText",
                 color = GuildnetMutedText,
                 fontSize = 8.sp
             )
@@ -513,6 +498,9 @@ private fun FeaturedGuideCard(
 @Composable
 private fun GuideListCard(
     guide: com.codehijackers.guldnet.model.Guide,
+    byText: String,
+    viewsText: String,
+    minReadText: String,
     onClick: () -> Unit
 ) {
     Row(
@@ -534,11 +522,9 @@ private fun GuideListCard(
             ),
         verticalAlignment = Alignment.Top
     ) {
-
         Column(
             modifier = Modifier.weight(1f)
         ) {
-
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(5.dp))
@@ -550,7 +536,6 @@ private fun GuideListCard(
                         vertical = 4.dp
                     )
             ) {
-
                 Text(
                     text = guide.category,
                     color = GuildnetPurple,
@@ -577,7 +562,7 @@ private fun GuideListCard(
             )
 
             Text(
-                text = "by ${guide.authorName}  •  ${guide.viewCount} views  •  ${readTime(guide.content)} min",
+                text = "$byText ${guide.authorName}  •  ${guide.viewCount} $viewsText  •  ${readTime(guide.content)} $minReadText",
                 color = GuildnetMutedText,
                 fontSize = 8.sp,
                 maxLines = 1,

@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
 import com.codehijackers.guldnet.ui.screens.posts.components.PostCard
 import com.codehijackers.guldnet.viewmodel.PostViewModel
 
@@ -27,6 +28,7 @@ fun GuildPostsScreen(
     postViewModel: PostViewModel = viewModel(),
     onLoreVaultClicked: () -> Unit
 ) {
+    val strings = currentGuildnetStrings
     val allPosts by postViewModel.posts.collectAsState()
 
     val posts = allPosts.filter {
@@ -38,14 +40,13 @@ fun GuildPostsScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-
         Text(
-            text = "Guild Posts",
+            text = strings.guildPosts,
             style = MaterialTheme.typography.headlineMedium
         )
 
         Text(
-            text = "Community discussions",
+            text = strings.communityDiscussions,
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(top = 4.dp)
         )
@@ -54,7 +55,7 @@ fun GuildPostsScreen(
             onClick = onCreatePostClicked,
             modifier = Modifier.padding(top = 16.dp)
         ) {
-            Text("Create Post")
+            Text(strings.createPost)
         }
 
         LazyColumn(
@@ -63,12 +64,10 @@ fun GuildPostsScreen(
                 .padding(top = 12.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-
             items(
                 items = posts,
                 key = { it.id }
             ) { post ->
-
                 PostCard(
                     post = post,
                     onPostClicked = {
@@ -81,7 +80,7 @@ fun GuildPostsScreen(
                 Button(
                     onClick = onBackClicked
                 ) {
-                    Text("Back")
+                    Text(strings.back)
                 }
             }
         }

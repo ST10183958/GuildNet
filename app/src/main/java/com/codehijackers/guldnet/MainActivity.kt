@@ -5,12 +5,22 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.codehijackers.guldnet.repository.LanguageRepository
 import com.codehijackers.guldnet.ui.GuildnetAuthenticatedApp
+import com.codehijackers.guldnet.ui.localization.LocalGuildnetLanguage
+import com.codehijackers.guldnet.ui.localization.LocalGuildnetStrings
+import com.codehijackers.guldnet.ui.localization.guildnetStrings
 import com.codehijackers.guldnet.viewmodel.AppViewModel
 
 class MainActivity : FragmentActivity() {
@@ -28,66 +38,76 @@ class MainActivity : FragmentActivity() {
                 .isUserAuthenticated
                 .collectAsState()
 
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(darkBackground)
+            val language by LanguageRepository
+                .language
+                .collectAsState()
+
+            val strings = guildnetStrings(language)
+
+            CompositionLocalProvider(
+                LocalGuildnetLanguage provides language,
+                LocalGuildnetStrings provides strings
             ) {
 
-                var currentScreen by remember {
-                    mutableStateOf("splash")
-                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(darkBackground)
+                ) {
 
-                if (isAuthenticated) {
+                    var currentScreen by remember {
+                        mutableStateOf("splash")
+                    }
 
+                    if (isAuthenticated) {
 
-                    GuildnetAuthenticatedApp()
+                        GuildnetAuthenticatedApp()
 
-                } else {
+                    } else {
 
-                    when (currentScreen) {
+                        when (currentScreen) {
 
-                        "splash" -> SplashScreen(
-                            onSplashFinished = {
-                                currentScreen = "login"
-                            }
-                        )
+                            "splash" -> SplashScreen(
+                                onSplashFinished = {
+                                    appViewModel.setAuthenticated(true)
+                                }
+                            )
 
-                        "login" -> LoginScreen(
-                            onLoginClick = {
-                                currentScreen = "biometric"
-                            },
-                            onSignUpClick = {
-                                currentScreen = "signup"
-                            },
-                            onForgotPasswordClick = {
-                                // TODO: Forgot password
-                            }
-                        )
+                            "login" -> LoginScreen(
+                                onLoginClick = {
+                                    currentScreen = "biometric"
+                                },
+                                onSignUpClick = {
+                                    currentScreen = "signup"
+                                },
+                                onForgotPasswordClick = {
+                                }
+                            )
 
-                        "signup" -> SignUpScreen(
-                            onSignUpClick = {
-                                currentScreen = "login"
-                            },
-                            onLoginLinkClick = {
-                                currentScreen = "login"
-                            }
-                        )
+                            "signup" -> SignUpScreen(
+                                onSignUpClick = {
+                                    currentScreen = "login"
+                                },
+                                onLoginLinkClick = {
+                                    currentScreen = "login"
+                                }
+                            )
 
-                        "biometric" -> BiometricScreen(
-                            onAuthenticationSuccess = {
-                                appViewModel.setAuthenticated(true)
-                            },
-                            onBackClick = {
-                                currentScreen = "login"
-                            },
-                            onUsePasswordClick = {
-                                currentScreen = "login"
-                            },
-                            onCancelClick = {
-                                currentScreen = "login"
-                            }
-                        )
+                            "biometric" -> BiometricScreen(
+                                onAuthenticationSuccess = {
+                                    appViewModel.setAuthenticated(true)
+                                },
+                                onBackClick = {
+                                    currentScreen = "login"
+                                },
+                                onUsePasswordClick = {
+                                    currentScreen = "login"
+                                },
+                                onCancelClick = {
+                                    currentScreen = "login"
+                                }
+                            )
+                        }
                     }
                 }
             }

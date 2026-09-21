@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,8 +24,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.Send
 import androidx.compose.material.icons.outlined.Group
+import androidx.compose.material.icons.outlined.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
 import com.codehijackers.guldnet.viewmodel.MessageViewModel
 
 private val GuildnetSurface = Color(0xFF0F1727)
@@ -59,6 +61,8 @@ fun ChatScreen(
     onBackClicked: () -> Unit = {},
     messageViewModel: MessageViewModel = viewModel()
 ) {
+    val strings = currentGuildnetStrings
+
     val messages by messageViewModel.messages.collectAsState()
 
     val squadMessages = messages.filter {
@@ -84,7 +88,6 @@ fun ChatScreen(
             .fillMaxSize()
             .background(Color.Transparent)
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -99,7 +102,6 @@ fun ChatScreen(
                 .padding(horizontal = 10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Box(
                 modifier = Modifier
                     .size(40.dp)
@@ -111,7 +113,7 @@ fun ChatScreen(
             ) {
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = strings.back,
                     tint = GuildnetText,
                     modifier = Modifier.size(21.dp)
                 )
@@ -149,7 +151,7 @@ fun ChatScreen(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = "Squad Chat",
+                    text = strings.squadChat,
                     color = GuildnetText,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold
@@ -160,7 +162,7 @@ fun ChatScreen(
                 )
 
                 Text(
-                    text = "Squad $squadId",
+                    text = "${strings.squadLabel} $squadId",
                     color = GuildnetMutedText,
                     fontSize = 9.sp
                 )
@@ -172,22 +174,19 @@ fun ChatScreen(
                 .weight(1f)
                 .fillMaxWidth()
                 .padding(horizontal = 14.dp),
-
             state = listState,
-
-            contentPadding = androidx.compose.foundation.layout.PaddingValues(
+            contentPadding = PaddingValues(
                 top = 16.dp,
                 bottom = 12.dp
             ),
-
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-
             items(
                 items = squadMessages,
-                key = { it.id }
+                key = {
+                    it.id
+                }
             ) { message ->
-
                 ChatMessageBubble(
                     senderName = message.senderName,
                     content = message.content,
@@ -211,10 +210,8 @@ fun ChatScreen(
                     horizontal = 12.dp,
                     vertical = 10.dp
                 ),
-
             verticalAlignment = Alignment.Bottom
         ) {
-
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -230,7 +227,6 @@ fun ChatScreen(
                         vertical = 11.dp
                     )
             ) {
-
                 BasicTextField(
                     value = messageText,
                     onValueChange = {
@@ -244,10 +240,9 @@ fun ChatScreen(
                     singleLine = false,
                     maxLines = 4,
                     decorationBox = { innerTextField ->
-
                         if (messageText.isEmpty()) {
-                            androidx.compose.material3.Text(
-                                text = "Type a message...",
+                            Text(
+                                text = strings.squadChatPlaceholder,
                                 color = GuildnetMutedText,
                                 fontSize = 12.sp
                             )
@@ -285,21 +280,19 @@ fun ChatScreen(
                     .clickable(
                         enabled = messageText.isNotBlank()
                     ) {
-
                         messageViewModel.sendMessage(
                             squadId = squadId,
                             content = messageText.trim(),
-                            senderName = "You"
+                            senderName = strings.you
                         )
 
                         messageText = ""
                     },
                 contentAlignment = Alignment.Center
             ) {
-
                 Icon(
                     imageVector = Icons.Outlined.Send,
-                    contentDescription = "Send",
+                    contentDescription = strings.send,
                     tint = if (messageText.isNotBlank()) {
                         Color.White
                     } else {

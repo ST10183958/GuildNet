@@ -3,7 +3,6 @@ package com.codehijackers.guldnet.ui.screens.profile
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -37,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
 import com.codehijackers.guldnet.viewmodel.ProfileViewModel
 
 private val GuildnetSurface = Color(0xFF0F1727)
@@ -52,6 +53,7 @@ fun EditProfileScreen(
     onBackClicked: () -> Unit = {},
     profileViewModel: ProfileViewModel = viewModel()
 ) {
+    val strings = currentGuildnetStrings
     val profile by profileViewModel.profile.collectAsState()
 
     var displayName by remember(profile.displayName) {
@@ -79,12 +81,10 @@ fun EditProfileScreen(
                 vertical = 14.dp
             )
     ) {
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Box(
                 modifier = Modifier
                     .size(38.dp)
@@ -94,10 +94,9 @@ fun EditProfileScreen(
                     },
                 contentAlignment = Alignment.Center
             ) {
-
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = strings.back,
                     tint = GuildnetText,
                     modifier = Modifier.size(21.dp)
                 )
@@ -108,7 +107,7 @@ fun EditProfileScreen(
             )
 
             Text(
-                text = "Edit Profile",
+                text = strings.editProfile,
                 color = GuildnetText,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
@@ -134,11 +133,9 @@ fun EditProfileScreen(
                 ),
             contentAlignment = Alignment.Center
         ) {
-
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
                 Box(
                     modifier = Modifier
                         .size(76.dp)
@@ -151,7 +148,6 @@ fun EditProfileScreen(
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-
                     Text(
                         text = profile.displayName,
                         color = Color.White,
@@ -165,7 +161,7 @@ fun EditProfileScreen(
                 )
 
                 Text(
-                    text = "Change Avatar",
+                    text = strings.changeAvatar,
                     color = GuildnetPurple,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Medium
@@ -178,7 +174,7 @@ fun EditProfileScreen(
         )
 
         EditProfileField(
-            label = "Display Name",
+            label = strings.displayName,
             value = displayName,
             onValueChange = {
                 displayName = it
@@ -191,7 +187,7 @@ fun EditProfileScreen(
         )
 
         EditProfileField(
-            label = "Username",
+            label = strings.username,
             value = username,
             onValueChange = {
                 username = it
@@ -204,7 +200,7 @@ fun EditProfileScreen(
         )
 
         EditProfileField(
-            label = "Bio",
+            label = strings.bio,
             value = bio,
             onValueChange = {
                 bio = it
@@ -240,7 +236,6 @@ fun EditProfileScreen(
                 .clickable(
                     enabled = isValid
                 ) {
-
                     profileViewModel.updateProfile(
                         displayName = displayName.trim(),
                         username = username.trim(),
@@ -251,9 +246,8 @@ fun EditProfileScreen(
                 },
             contentAlignment = Alignment.Center
         ) {
-
             Text(
-                text = "Save Changes",
+                text = strings.saveChanges,
                 color = if (isValid) {
                     Color.White
                 } else {
@@ -283,9 +277,8 @@ fun EditProfileScreen(
                 },
             contentAlignment = Alignment.Center
         ) {
-
             Text(
-                text = "Cancel",
+                text = strings.cancel,
                 color = GuildnetMutedText,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Medium
@@ -302,7 +295,6 @@ private fun EditProfileField(
     singleLine: Boolean
 ) {
     Column {
-
         Text(
             text = label.uppercase(),
             color = GuildnetMutedText,
@@ -331,7 +323,6 @@ private fun EditProfileField(
                 ),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Icon(
                 imageVector = Icons.Outlined.PersonOutline,
                 contentDescription = null,

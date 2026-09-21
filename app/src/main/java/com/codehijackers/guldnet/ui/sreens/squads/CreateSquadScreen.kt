@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
 
 @Composable
 fun CreateSquadScreen(
@@ -36,6 +37,8 @@ fun CreateSquadScreen(
         mutableStateOf("")
     }
 
+    val strings = currentGuildnetStrings
+
     val isValid =
         name.isNotBlank() &&
                 description.isNotBlank()
@@ -47,12 +50,12 @@ fun CreateSquadScreen(
         verticalArrangement = Arrangement.Top
     ) {
         Text(
-            text = "Create Squad",
+            text = strings.createSquad,
             style = MaterialTheme.typography.headlineMedium
         )
 
         Text(
-            text = "Create a group for real-time gaming chat.",
+            text = strings.createSquadDescription,
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(top = 4.dp)
         )
@@ -67,10 +70,10 @@ fun CreateSquadScreen(
                 name = it
             },
             label = {
-                Text("Squad Name")
+                Text(strings.squadName)
             },
             placeholder = {
-                Text("Example: Minecraft Survival Crew")
+                Text(strings.squadNamePlaceholder)
             },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
@@ -86,10 +89,10 @@ fun CreateSquadScreen(
                 description = it
             },
             label = {
-                Text("Description")
+                Text(strings.description)
             },
             placeholder = {
-                Text("What is this Squad about?")
+                Text(strings.squadDescriptionPlaceholder)
             },
             modifier = Modifier.fillMaxWidth(),
             minLines = 4
@@ -109,7 +112,7 @@ fun CreateSquadScreen(
             enabled = isValid,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Create Squad")
+            Text(strings.createSquad)
         }
 
         Spacer(
@@ -120,7 +123,7 @@ fun CreateSquadScreen(
             onClick = onBackClicked,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Cancel")
+            Text(strings.cancel)
         }
     }
 }

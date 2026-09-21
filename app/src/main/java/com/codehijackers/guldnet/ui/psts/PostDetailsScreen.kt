@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
 import com.codehijackers.guldnet.ui.screens.posts.components.CommentCard
 import com.codehijackers.guldnet.viewmodel.CommentViewModel
 import com.codehijackers.guldnet.viewmodel.PostViewModel
@@ -36,6 +37,7 @@ fun PostDetailsScreen(
     postViewModel: PostViewModel = viewModel(),
     commentViewModel: CommentViewModel = viewModel()
 ) {
+    val strings = currentGuildnetStrings
     val posts by postViewModel.posts.collectAsState()
     val comments by commentViewModel.comments.collectAsState()
 
@@ -55,7 +57,7 @@ fun PostDetailsScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Post not found",
+                text = strings.postNotFound,
                 style = MaterialTheme.typography.headlineMedium
             )
 
@@ -66,7 +68,7 @@ fun PostDetailsScreen(
             OutlinedButton(
                 onClick = onBackClicked
             ) {
-                Text("Back")
+                Text(strings.back)
             }
         }
 
@@ -82,7 +84,6 @@ fun PostDetailsScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-
         item {
             Text(
                 text = post.title,
@@ -90,7 +91,7 @@ fun PostDetailsScreen(
             )
 
             Text(
-                text = "by ${post.authorName}",
+                text = "${strings.by} ${post.authorName}",
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.padding(top = 4.dp)
             )
@@ -130,7 +131,7 @@ fun PostDetailsScreen(
             )
 
             Text(
-                text = "Comments",
+                text = strings.comments,
                 style = MaterialTheme.typography.titleLarge
             )
 
@@ -143,7 +144,6 @@ fun PostDetailsScreen(
             items = postComments,
             key = { it.id }
         ) { comment ->
-
             CommentCard(
                 comment = comment
             )
@@ -155,7 +155,7 @@ fun PostDetailsScreen(
             )
 
             Text(
-                text = "Add a Comment",
+                text = strings.addComment,
                 style = MaterialTheme.typography.titleMedium
             )
 
@@ -169,10 +169,10 @@ fun PostDetailsScreen(
                     commentText = it
                 },
                 label = {
-                    Text("Comment")
+                    Text(strings.comment)
                 },
                 placeholder = {
-                    Text("Join the discussion...")
+                    Text(strings.joinDiscussion)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 3
@@ -187,7 +187,7 @@ fun PostDetailsScreen(
                     commentViewModel.addComment(
                         postId = postId,
                         content = commentText.trim(),
-                        authorName = "You"
+                        authorName = strings.you
                     )
 
                     commentText = ""
@@ -195,7 +195,7 @@ fun PostDetailsScreen(
                 enabled = commentText.isNotBlank(),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Post Comment")
+                Text(strings.postComment)
             }
 
             Spacer(
@@ -206,7 +206,7 @@ fun PostDetailsScreen(
                 onClick = onBackClicked,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Back")
+                Text(strings.back)
             }
         }
     }

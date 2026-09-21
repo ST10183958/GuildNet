@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
@@ -32,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
 import com.codehijackers.guldnet.viewmodel.SquadViewModel
 
 private val GuildnetSurface = Color(0xFF0F1727)
@@ -51,6 +53,7 @@ fun SquadDetailsScreen(
     squadViewModel: SquadViewModel = viewModel()
 ) {
     val squads by squadViewModel.squads.collectAsState()
+    val strings = currentGuildnetStrings
 
     val squad = squads.find {
         it.id == squadId
@@ -77,7 +80,7 @@ fun SquadDetailsScreen(
 
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = strings.back,
                     tint = GuildnetText
                 )
 
@@ -86,7 +89,7 @@ fun SquadDetailsScreen(
                 )
 
                 Text(
-                    text = "Back",
+                    text = strings.back,
                     color = GuildnetMutedText,
                     fontSize = 11.sp
                 )
@@ -97,7 +100,7 @@ fun SquadDetailsScreen(
             )
 
             Text(
-                text = "Squad not found",
+                text = strings.squadNotFound,
                 color = GuildnetText,
                 fontSize = 19.sp,
                 fontWeight = FontWeight.Bold
@@ -135,7 +138,7 @@ fun SquadDetailsScreen(
 
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = strings.back,
                     tint = GuildnetText,
                     modifier = Modifier.size(21.dp)
                 )
@@ -145,7 +148,7 @@ fun SquadDetailsScreen(
                 )
 
                 Text(
-                    text = "Squads",
+                    text = strings.squads,
                     color = GuildnetText,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold
@@ -178,14 +181,10 @@ fun SquadDetailsScreen(
                     modifier = Modifier
                         .size(58.dp)
                         .clip(RoundedCornerShape(14.dp))
-                        .background(
-                            GuildnetPurpleDark
-                        )
+                        .background(GuildnetPurpleDark)
                         .border(
                             width = 1.dp,
-                            color = GuildnetPurple.copy(
-                                alpha = 0.45f
-                            ),
+                            color = GuildnetPurple.copy(alpha = 0.45f),
                             shape = RoundedCornerShape(14.dp)
                         ),
                     contentAlignment = Alignment.Center
@@ -227,12 +226,8 @@ fun SquadDetailsScreen(
                         Box(
                             modifier = Modifier
                                 .size(6.dp)
-                                .clip(
-                                    androidx.compose.foundation.shape.CircleShape
-                                )
-                                .background(
-                                    GuildnetGreen
-                                )
+                                .clip(CircleShape)
+                                .background(GuildnetGreen)
                         )
 
                         Spacer(
@@ -240,7 +235,7 @@ fun SquadDetailsScreen(
                         )
 
                         Text(
-                            text = "Community active",
+                            text = strings.communityActive,
                             color = GuildnetGreen,
                             fontSize = 9.sp
                         )
@@ -270,17 +265,17 @@ fun SquadDetailsScreen(
 
                 SquadStat(
                     value = squad.memberCount.toString(),
-                    label = "Members",
+                    label = strings.members,
                     modifier = Modifier.weight(1f)
                 )
 
                 SquadStat(
                     value = if (squad.isJoined) {
-                        "Joined"
+                        strings.joined
                     } else {
-                        "Open"
+                        strings.open
                     },
-                    label = "Status",
+                    label = strings.status,
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -291,7 +286,7 @@ fun SquadDetailsScreen(
         )
 
         Text(
-            text = "SQUAD CHAT",
+            text = strings.squadChat.uppercase(),
             color = GuildnetText,
             fontSize = 11.sp,
             fontWeight = FontWeight.SemiBold,
@@ -329,7 +324,7 @@ fun SquadDetailsScreen(
 
                     Icon(
                         imageVector = Icons.Outlined.ChatBubbleOutline,
-                        contentDescription = null,
+                        contentDescription = strings.squadChat,
                         tint = GuildnetPurple,
                         modifier = Modifier.size(20.dp)
                     )
@@ -344,7 +339,7 @@ fun SquadDetailsScreen(
                 ) {
 
                     Text(
-                        text = "Squad Chat",
+                        text = strings.squadChat,
                         color = GuildnetText,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold
@@ -356,9 +351,9 @@ fun SquadDetailsScreen(
 
                     Text(
                         text = if (squad.isJoined) {
-                            "Chat with your squad members"
+                            strings.chatWithSquadMembers
                         } else {
-                            "Join the squad to enter chat"
+                            strings.joinSquadToEnterChat
                         },
                         color = GuildnetMutedText,
                         fontSize = 9.sp
@@ -405,7 +400,7 @@ fun SquadDetailsScreen(
 
                     Icon(
                         imageVector = Icons.Outlined.ChatBubbleOutline,
-                        contentDescription = null,
+                        contentDescription = strings.openChat,
                         tint = if (squad.isJoined) {
                             Color.White
                         } else {
@@ -420,9 +415,9 @@ fun SquadDetailsScreen(
 
                     Text(
                         text = if (squad.isJoined) {
-                            "Open Chat"
+                            strings.openChat
                         } else {
-                            "Join Squad to Chat"
+                            strings.joinSquadToChat
                         },
                         color = if (squad.isJoined) {
                             Color.White
@@ -441,7 +436,7 @@ fun SquadDetailsScreen(
         )
 
         Text(
-            text = "COMMUNITY",
+            text = strings.community.uppercase(),
             color = GuildnetText,
             fontSize = 11.sp,
             fontWeight = FontWeight.SemiBold,
@@ -471,7 +466,7 @@ fun SquadDetailsScreen(
 
                 Icon(
                     imageVector = Icons.Outlined.Groups,
-                    contentDescription = null,
+                    contentDescription = strings.community,
                     tint = GuildnetPurple,
                     modifier = Modifier.size(21.dp)
                 )
@@ -483,7 +478,7 @@ fun SquadDetailsScreen(
                 Column {
 
                     Text(
-                        text = "${squad.memberCount} members",
+                        text = "${squad.memberCount} ${strings.members}",
                         color = GuildnetText,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold
@@ -494,7 +489,7 @@ fun SquadDetailsScreen(
                     )
 
                     Text(
-                        text = "Gaming community",
+                        text = strings.gamingCommunity,
                         color = GuildnetMutedText,
                         fontSize = 9.sp
                     )
@@ -523,7 +518,7 @@ fun SquadDetailsScreen(
         ) {
 
             Text(
-                text = "Back to Squads",
+                text = strings.backToSquads,
                 color = GuildnetMutedText,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Medium

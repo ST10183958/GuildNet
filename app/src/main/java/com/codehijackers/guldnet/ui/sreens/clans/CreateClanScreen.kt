@@ -17,7 +17,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.Article
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,8 +30,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
 
 private val GuildnetSurface = Color(0xFF0F1727)
 private val GuildnetBorder = Color(0xFF26344D)
@@ -57,6 +58,8 @@ fun CreateClanScreen(
         mutableStateOf("")
     }
 
+    val strings = currentGuildnetStrings
+
     val isValid =
         title.isNotBlank() &&
                 content.isNotBlank()
@@ -71,12 +74,10 @@ fun CreateClanScreen(
                 vertical = 14.dp
             )
     ) {
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Row(
                 modifier = Modifier
                     .width(38.dp)
@@ -87,10 +88,9 @@ fun CreateClanScreen(
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = strings.back,
                     tint = GuildnetText
                 )
             }
@@ -100,7 +100,7 @@ fun CreateClanScreen(
             )
 
             Text(
-                text = "Create Discussion",
+                text = strings.createDiscussion,
                 color = GuildnetText,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
@@ -112,8 +112,8 @@ fun CreateClanScreen(
         )
 
         ClanEditorField(
-            label = "TITLE *",
-            placeholder = "Give your discussion a title...",
+            label = strings.discussionTitle,
+            placeholder = strings.discussionTitlePlaceholder,
             value = title,
             onValueChange = {
                 title = it
@@ -126,7 +126,7 @@ fun CreateClanScreen(
         )
 
         Text(
-            text = "CATEGORY *",
+            text = strings.category,
             color = GuildnetMutedText,
             fontSize = 9.sp,
             letterSpacing = 1.sp,
@@ -150,9 +150,8 @@ fun CreateClanScreen(
                 .padding(horizontal = 13.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Text(
-                text = "Strategy",
+                text = strings.strategy,
                 color = GuildnetText,
                 fontSize = 11.sp
             )
@@ -163,8 +162,8 @@ fun CreateClanScreen(
         )
 
         ClanEditorField(
-            label = "CONTENT *",
-            placeholder = "Share your thoughts with the clan...",
+            label = strings.discussionContent,
+            placeholder = strings.discussionContentPlaceholder,
             value = content,
             onValueChange = {
                 content = it
@@ -208,9 +207,8 @@ fun CreateClanScreen(
                 },
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Text(
-                text = "Create Discussion",
+                text = strings.createDiscussion,
                 color = if (isValid) {
                     Color.White
                 } else {
@@ -243,9 +241,8 @@ fun CreateClanScreen(
                 },
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Text(
-                text = "Cancel",
+                text = strings.cancel,
                 color = GuildnetMutedText,
                 fontSize = 11.sp,
                 modifier = Modifier
@@ -267,10 +264,9 @@ private fun ClanEditorField(
     value: String,
     onValueChange: (String) -> Unit,
     singleLine: Boolean,
-    minHeight: androidx.compose.ui.unit.Dp = 46.dp
+    minHeight: Dp = 46.dp
 ) {
     Column {
-
         Text(
             text = label,
             color = GuildnetMutedText,
@@ -303,7 +299,6 @@ private fun ClanEditorField(
                 Alignment.Top
             }
         ) {
-
             BasicTextField(
                 value = value,
                 onValueChange = onValueChange,
@@ -315,7 +310,6 @@ private fun ClanEditorField(
                     fontSize = 12.sp
                 ),
                 decorationBox = { innerTextField ->
-
                     if (value.isEmpty()) {
                         Text(
                             text = placeholder,

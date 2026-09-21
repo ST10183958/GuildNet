@@ -23,10 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.Build
-import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.outlined.SportsEsports
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,16 +43,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codehijackers.guldnet.model.Clan
+import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
 import com.codehijackers.guldnet.viewmodel.ClanViewModel
 
 private val GuildnetSurface = Color(0xFF0F1727)
-private val GuildnetSurfaceLight = Color(0xFF121C2E)
 private val GuildnetBorder = Color(0xFF26344D)
 private val GuildnetPurple = Color(0xFF9857FF)
 private val GuildnetPurpleDark = Color(0xFF241545)
 private val GuildnetText = Color(0xFFF1F3FA)
 private val GuildnetMutedText = Color(0xFF8794AD)
-private val GuildnetGreen = Color(0xFF35D98A)
 private val GuildnetRed = Color(0xFFFF5065)
 
 @Composable
@@ -66,6 +62,7 @@ fun ClansScreen(
     onBackClicked: () -> Unit = {},
     clanViewModel: ClanViewModel = viewModel()
 ) {
+    val strings = currentGuildnetStrings
     val clans by clanViewModel.clans.collectAsState()
 
     var searchQuery by remember {
@@ -93,10 +90,10 @@ fun ClansScreen(
         }
 
     val categories = listOf(
-        "⚔️" to "Strategy",
-        "🔧" to "Builds",
-        "📋" to "Patch Notes",
-        "🎮" to "Highlights"
+        "⚔️" to strings.categoryStrategy,
+        "🔧" to strings.categoryBuilds,
+        "📋" to strings.categoryPatchNotes,
+        "🎮" to strings.categoryHighlights
     )
 
     Box(
@@ -104,15 +101,11 @@ fun ClansScreen(
             .fillMaxSize()
             .background(Color.Transparent)
     ) {
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(
-                    horizontal = 13.dp
-                )
+                .padding(horizontal = 13.dp)
         ) {
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -123,9 +116,8 @@ fun ClansScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-
                 Text(
-                    text = "Clans Forum",
+                    text = strings.clansForum,
                     color = GuildnetText,
                     fontSize = 19.sp,
                     fontWeight = FontWeight.Bold
@@ -133,7 +125,7 @@ fun ClansScreen(
 
                 Icon(
                     imageVector = Icons.Outlined.Search,
-                    contentDescription = "Search",
+                    contentDescription = strings.search,
                     tint = GuildnetMutedText,
                     modifier = Modifier.size(21.dp)
                 )
@@ -153,7 +145,6 @@ fun ClansScreen(
                     .padding(horizontal = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 Icon(
                     imageVector = Icons.Outlined.Search,
                     contentDescription = null,
@@ -177,10 +168,9 @@ fun ClansScreen(
                         fontSize = 11.sp
                     ),
                     decorationBox = { innerTextField ->
-
                         if (searchQuery.isEmpty()) {
                             Text(
-                                text = "Search discussions...",
+                                text = strings.searchDiscussions,
                                 color = GuildnetMutedText,
                                 fontSize = 11.sp
                             )
@@ -203,16 +193,14 @@ fun ClansScreen(
                     ),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-
                 categories.forEach { (icon, title) ->
-
                     ClanCategoryCard(
                         icon = icon,
                         title = title,
                         count = when (title) {
-                            "Strategy" -> "124"
-                            "Builds" -> "87"
-                            "Patch Notes" -> "43"
+                            strings.categoryStrategy -> "124"
+                            strings.categoryBuilds -> "87"
+                            strings.categoryPatchNotes -> "43"
                             else -> "62"
                         }
                     )
@@ -226,7 +214,6 @@ fun ClansScreen(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 Box(
                     modifier = Modifier
                         .width(3.dp)
@@ -242,7 +229,7 @@ fun ClansScreen(
                 )
 
                 Text(
-                    text = "POPULAR DISCUSSIONS",
+                    text = strings.popularDiscussions.uppercase(),
                     color = GuildnetText,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -255,19 +242,17 @@ fun ClansScreen(
             )
 
             if (guildClans.isEmpty()) {
-
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 45.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-
                     Text(
                         text = if (searchQuery.isNotBlank()) {
-                            "No discussions found"
+                            strings.noDiscussionsFound
                         } else {
-                            "No discussions yet"
+                            strings.noDiscussions
                         },
                         color = GuildnetText,
                         fontSize = 14.sp,
@@ -280,36 +265,32 @@ fun ClansScreen(
 
                     Text(
                         text = if (searchQuery.isNotBlank()) {
-                            "Try a different search."
+                            strings.tryDifferentSearch
                         } else {
-                            "Start a discussion with your guild."
+                            strings.startDiscussionWithGuild
                         },
                         color = GuildnetMutedText,
                         fontSize = 11.sp
                     )
                 }
-
             } else {
-
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-
                     contentPadding = PaddingValues(
                         bottom = 95.dp
                     ),
-
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-
                     items(
                         items = guildClans,
                         key = {
                             "clan_${it.id}"
                         }
                     ) { clan ->
-
                         ClanForumCard(
                             clan = clan,
+                            hotText = strings.hot,
+                            categoryText = strings.categoryStrategy,
                             onClick = {
                                 onClanClicked(clan.id)
                             }
@@ -334,10 +315,9 @@ fun ClansScreen(
                 },
             contentAlignment = Alignment.Center
         ) {
-
             Icon(
                 imageVector = Icons.Outlined.Add,
-                contentDescription = "Create Discussion",
+                contentDescription = strings.createDiscussion,
                 tint = Color.White,
                 modifier = Modifier.size(25.dp)
             )
@@ -368,7 +348,6 @@ private fun ClanCategoryCard(
             ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Text(
             text = icon,
             fontSize = 17.sp
@@ -402,6 +381,8 @@ private fun ClanCategoryCard(
 @Composable
 private fun ClanForumCard(
     clan: Clan,
+    categoryText: String,
+    hotText: String,
     onClick: () -> Unit
 ) {
     Column(
@@ -422,18 +403,16 @@ private fun ClanForumCard(
                 vertical = 13.dp
             )
     ) {
-
         Row(
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-
             ClanTag(
-                text = "Strategy"
+                text = categoryText
             )
 
             if (clan.upvotes >= 20) {
                 ClanTag(
-                    text = "🔥 Hot",
+                    text = "🔥 $hotText",
                     hot = true
                 )
             }
@@ -461,7 +440,6 @@ private fun ClanForumCard(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Box(
                 modifier = Modifier
                     .size(19.dp)
@@ -469,7 +447,6 @@ private fun ClanForumCard(
                     .background(GuildnetPurpleDark),
                 contentAlignment = Alignment.Center
             ) {
-
                 Text(
                     text = clan.authorName
                         .take(1)
@@ -539,7 +516,6 @@ private fun ClanTag(
                 vertical = 4.dp
             )
     ) {
-
         Text(
             text = text,
             color = if (hot) {

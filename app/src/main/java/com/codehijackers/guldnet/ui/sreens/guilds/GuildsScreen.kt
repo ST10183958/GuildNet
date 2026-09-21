@@ -1,5 +1,6 @@
 package com.codehijackers.guldnet.ui.screens.guilds
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,8 +17,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
 import com.codehijackers.guldnet.ui.screens.guilds.components.GuildCard
 import com.codehijackers.guldnet.viewmodel.GuildViewModel
 
@@ -28,20 +31,22 @@ fun GuildsScreen(
     guildViewModel: GuildViewModel = viewModel()
 ) {
     val guilds by guildViewModel.guilds.collectAsState()
+    val strings = currentGuildnetStrings
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color.Transparent)
             .padding(16.dp)
     ) {
 
         Text(
-            text = "Guilds",
+            text = strings.guilds,
             style = MaterialTheme.typography.headlineMedium
         )
 
         Text(
-            text = "Find and join gaming communities.",
+            text = strings.findAndJoinGamingCommunities,
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(top = 4.dp)
         )
@@ -54,7 +59,7 @@ fun GuildsScreen(
             onClick = onCreateGuildClicked,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Create Guild")
+            Text(strings.createGuild)
         }
 
         Spacer(
