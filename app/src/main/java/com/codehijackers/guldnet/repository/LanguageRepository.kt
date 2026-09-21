@@ -1,0 +1,26 @@
+package com.codehijackers.guldnet.repository
+
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
+enum class AppLanguage(
+    val code: String,
+    val displayName: String
+) {
+    ENGLISH(code = "en", displayName = "English"),
+    ZULU(code = "zu", displayName = "isiZulu")
+}
+
+
+object LanguageRepository {
+
+    private val _language = MutableStateFlow(AppLanguage.ENGLISH)
+
+    val language: StateFlow<AppLanguage> =
+        _language.asStateFlow()
+
+    fun setLanguage(language: AppLanguage) {
+        _language.value = language
+    }
+}

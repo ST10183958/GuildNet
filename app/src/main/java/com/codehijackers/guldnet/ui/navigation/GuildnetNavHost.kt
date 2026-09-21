@@ -27,7 +27,7 @@ import com.codehijackers.guldnet.ui.screens.posts.GuildPostsScreen
 import com.codehijackers.guldnet.ui.screens.posts.CreatePostScreen
 import com.codehijackers.guldnet.ui.screens.posts.PostDetailsScreen
 import com.codehijackers.guldnet.ui.screens.chat.ChatScreen
-
+import com.codehijackers.guldnet.ui.screens.settings.SettingsScreen
 import com.codehijackers.guldnet.viewmodel.GuildViewModel
 import com.codehijackers.guldnet.viewmodel.PostViewModel
 import com.codehijackers.guldnet.viewmodel.ClanViewModel
@@ -45,9 +45,6 @@ fun GuildnetNavHost(
         startDestination = startDestination
     ) {
 
-        // ---------------------------------------------------------
-        // LOGIN
-        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.Login.route
@@ -59,19 +56,12 @@ fun GuildnetNavHost(
             )
         }
 
-        // ---------------------------------------------------------
-        // HOME
-        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.Home.route
         ) {
             HomeScreen()
         }
-
-        // ---------------------------------------------------------
-        // GUILDS
-        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.Guilds.route
@@ -91,9 +81,6 @@ fun GuildnetNavHost(
             )
         }
 
-        // ---------------------------------------------------------
-        // GUILD DETAILS
-        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.GuildDetails.route
@@ -133,10 +120,6 @@ fun GuildnetNavHost(
             )
         }
 
-        // ---------------------------------------------------------
-        // CREATE GUILD
-        // ---------------------------------------------------------
-
         composable(
             route = GuildnetRoutes.CreateGuild.route
         ) {
@@ -160,9 +143,6 @@ fun GuildnetNavHost(
             )
         }
 
-        // ---------------------------------------------------------
-        // GUILD POSTS
-        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.GuildPosts.route
@@ -199,9 +179,6 @@ fun GuildnetNavHost(
             )
         }
 
-        // ---------------------------------------------------------
-        // CREATE POST
-        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.CreatePost.route
@@ -234,9 +211,6 @@ fun GuildnetNavHost(
             )
         }
 
-        // ---------------------------------------------------------
-        // POST DETAILS
-        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.PostDetails.route
@@ -255,9 +229,6 @@ fun GuildnetNavHost(
             )
         }
 
-        // ---------------------------------------------------------
-        // CLANS
-        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.Clans.route
@@ -288,9 +259,6 @@ fun GuildnetNavHost(
             )
         }
 
-        // ---------------------------------------------------------
-        // CREATE CLAN
-        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.CreateClan.route
@@ -323,9 +291,6 @@ fun GuildnetNavHost(
             )
         }
 
-        // ---------------------------------------------------------
-        // CLAN DETAILS
-        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.ClanDetails.route
@@ -344,9 +309,6 @@ fun GuildnetNavHost(
             )
         }
 
-        // ---------------------------------------------------------
-        // LOREVAULT
-        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.LoreVault.route
@@ -377,9 +339,6 @@ fun GuildnetNavHost(
             )
         }
 
-        // ---------------------------------------------------------
-        // CREATE GUIDE
-        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.CreateGuide.route
@@ -418,10 +377,6 @@ fun GuildnetNavHost(
             )
         }
 
-        // ---------------------------------------------------------
-        // GUIDE DETAILS
-        // ---------------------------------------------------------
-
         composable(
             route = GuildnetRoutes.GuideDetails.route
         ) { backStackEntry ->
@@ -439,9 +394,6 @@ fun GuildnetNavHost(
             )
         }
 
-        // ---------------------------------------------------------
-        // SQUADS
-        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.Squads.route
@@ -460,10 +412,6 @@ fun GuildnetNavHost(
                 }
             )
         }
-
-        // ---------------------------------------------------------
-        // CREATE SQUAD
-        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.CreateSquad.route
@@ -488,9 +436,6 @@ fun GuildnetNavHost(
             )
         }
 
-        // ---------------------------------------------------------
-        // SQUAD DETAILS
-        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.SquadDetails.route
@@ -515,9 +460,6 @@ fun GuildnetNavHost(
             )
         }
 
-        // ---------------------------------------------------------
-        // CHAT
-        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.Chat.route
@@ -536,19 +478,12 @@ fun GuildnetNavHost(
             )
         }
 
-        // ---------------------------------------------------------
-        // SEARCH
-        // ---------------------------------------------------------
-
         composable(
             route = GuildnetRoutes.Search.route
         ) {
             SearchScreen()
         }
 
-        // ---------------------------------------------------------
-        // PROFILE
-        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.Profile.route
@@ -561,7 +496,9 @@ fun GuildnetNavHost(
                 },
 
                 onSettingsClicked = {
-                    // Settings will be added next.
+                    navController.navigate(
+                        GuildnetRoutes.Settings.route
+                    )
                 },
 
                 onNotificationsClicked = {
@@ -578,14 +515,21 @@ fun GuildnetNavHost(
             )
         }
 
-        // ---------------------------------------------------------
-        // EDIT PROFILE
-        // ---------------------------------------------------------
 
         composable(
             route = GuildnetRoutes.EditProfile.route
         ) {
             EditProfileScreen(
+                onBackClicked = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable(
+            route = GuildnetRoutes.Settings.route
+        ) {
+            SettingsScreen(
                 onBackClicked = {
                     navController.popBackStack()
                 }

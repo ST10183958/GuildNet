@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codehijackers.guldnet.model.UserProfile
 import com.codehijackers.guldnet.repository.ProfileRepository
+import com.codehijackers.guldnet.repository.LanguageRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,7 +16,6 @@ data class ProfileUiState(
     val email: String = "",
     val initial: String = "",
 
-    // Prototype gaming statistics.
     val rank: String = "Gold II",
     val badge: String = "Veteran",
     val matches: String = "128",
@@ -33,10 +33,6 @@ class ProfileViewModel : ViewModel() {
 
     private val repository = ProfileRepository
 
-    /*
-     * This remains available for EditProfileScreen
-     * and other screens that need the actual UserProfile.
-     */
     val profile: StateFlow<UserProfile> =
         repository.profile
 
@@ -48,10 +44,7 @@ class ProfileViewModel : ViewModel() {
         _uiState.asStateFlow()
 
     init {
-        /*
-         * Keep the old UI state synchronized with the
-         * current profile repository.
-         */
+
         viewModelScope.launch {
             repository.profile.collect { profile ->
                 _uiState.update { current ->
@@ -62,6 +55,16 @@ class ProfileViewModel : ViewModel() {
                             .firstOrNull()
                             ?.uppercase()
                             ?: "?"
+                    )
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            LanguageRepository.language.collect { language ->
+                _uiState.update { current ->
+                    current.copy(
+                        language = language.displayName
                     )
                 }
             }
