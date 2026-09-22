@@ -31,7 +31,8 @@ class MainActivity : FragmentActivity() {
 
         GuildnetDatabaseProvider.initialize(applicationContext)
 
-        val database = GuildnetDatabaseProvider.getDatabase()
+        val database =
+            GuildnetDatabaseProvider.getDatabase()
 
         LanguageRepository.initialize(database)
 
@@ -46,11 +47,23 @@ class MainActivity : FragmentActivity() {
                 .isUserAuthenticated
                 .collectAsState()
 
+            val rememberedUserId by appViewModel
+                .rememberedUserId
+                .collectAsState()
+
             val language by LanguageRepository
                 .language
                 .collectAsState()
 
             val strings = guildnetStrings(language)
+
+            var currentScreen by remember {
+                mutableStateOf("splash")
+            }
+
+            var pendingUserId by remember {
+                mutableStateOf<Long?>(null)
+            }
 
             CompositionLocalProvider(
                 LocalGuildnetLanguage provides language,
@@ -61,30 +74,45 @@ class MainActivity : FragmentActivity() {
                         .fillMaxSize()
                         .background(darkBackground)
                 ) {
-                    var currentScreen by remember {
-                        mutableStateOf("splash")
-                    }
 
                     if (isAuthenticated) {
+
                         GuildnetAuthenticatedApp()
+
                     } else {
+
                         when (currentScreen) {
 
                             "splash" -> {
                                 SplashScreen(
                                     onSplashFinished = {
-                                        currentScreen = "login"
+
+                                        if (rememberedUserId != null) {
+                                            pendingUserId =
+                                                rememberedUserId
+
+                                            currentScreen =
+                                                "biometric"
+                                        } else {
+                                            currentScreen =
+                                                "login"
+                                        }
                                     }
                                 )
                             }
 
                             "login" -> {
                                 LoginScreen(
-                                    onLoginClick = {
-                                        currentScreen = "biometric"
+                                    onLoginClick = { userId ->
+
+                                        pendingUserId = userId
+
+                                        currentScreen =
+                                            "biometric"
                                     },
                                     onSignUpClick = {
-                                        currentScreen = "signup"
+                                        currentScreen =
+                                            "signup"
                                     },
                                     onForgotPasswordClick = {
                                     }
@@ -94,29 +122,50 @@ class MainActivity : FragmentActivity() {
                             "signup" -> {
                                 SignUpScreen(
                                     onSignUpClick = {
-                                        currentScreen = "login"
+                                        currentScreen =
+                                            "login"
                                     },
                                     onLoginLinkClick = {
-                                        currentScreen = "login"
+                                        currentScreen =
+                                            "login"
                                     }
                                 )
                             }
 
                             "biometric" -> {
-                                BiometricScreen(
-                                    onAuthenticationSuccess = {
-                                        currentScreen = "login"
-                                    },
-                                    onBackClick = {
-                                        currentScreen = "login"
-                                    },
-                                    onUsePasswordClick = {
-                                        currentScreen = "login"
-                                    },
-                                    onCancelClick = {
-                                        currentScreen = "login"
-                                    }
-                                )
+
+                                val userId =
+                                    pendingUserId
+
+                                if (userId != null) {
+
+                                    BiometricScreen(
+                                        userId = userId,
+
+                                        onAuthenticationSuccess = { authenticatedUserId ->
+
+                                            appViewModel
+                                                .authenticateUser(
+                                                    authenticatedUserId
+                                                )
+                                        },
+
+                                        onBackClick = {
+                                            currentScreen =
+                                                "login"
+                                        },
+
+                                        onUsePasswordClick = {
+                                            currentScreen =
+                                                "login"
+                                        },
+
+                                        onCancelClick = {
+                                            currentScreen =
+                                                "login"
+                                        }
+                                    )
+                                }
                             }
                         }
                     }

@@ -23,7 +23,8 @@ import androidx.core.content.ContextCompat
 
 @Composable
 fun BiometricScreen(
-    onAuthenticationSuccess: () -> Unit = {},
+    userId: Long,
+    onAuthenticationSuccess: (Long) -> Unit = {},
     onBackClick: () -> Unit = {},
     onUsePasswordClick: () -> Unit = {},
     onCancelClick: () -> Unit = {}
@@ -65,7 +66,7 @@ fun BiometricScreen(
                 ) {
                     super.onAuthenticationSucceeded(result)
 
-                    onAuthenticationSuccess()
+                    onAuthenticationSuccess(userId)
                 }
 
                 override fun onAuthenticationError(

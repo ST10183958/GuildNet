@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
-    onLoginClick: () -> Unit = {},
+    onLoginClick: (Long) -> Unit = {},
     onSignUpClick: () -> Unit = {},
     onGoogleClick: () -> Unit = {},
     onDiscordClick: () -> Unit = {},
@@ -264,7 +264,7 @@ fun LoginScreen(
                             database.userDao().logoutAllUsers()
                             database.userDao().loginUser(user.id)
 
-                            onLoginClick()
+                            onLoginClick(user.id)
                         }
                     },
                     modifier = Modifier

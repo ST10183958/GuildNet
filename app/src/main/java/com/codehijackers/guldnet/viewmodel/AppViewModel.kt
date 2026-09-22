@@ -17,10 +17,17 @@ class AppViewModel(
         private const val TAG = "Guildnet.AppViewModel"
     }
 
-    private val _isUserAuthenticated = MutableStateFlow(false)
+    private val _isUserAuthenticated =
+        MutableStateFlow(false)
 
     val isUserAuthenticated: StateFlow<Boolean> =
         _isUserAuthenticated.asStateFlow()
+
+    private val _rememberedUserId =
+        MutableStateFlow<Long?>(null)
+
+    val rememberedUserId: StateFlow<Long?> =
+        _rememberedUserId.asStateFlow()
 
     init {
         Log.d(TAG, "AppViewModel created")
@@ -29,20 +36,35 @@ class AppViewModel(
             database.userDao()
                 .observeLoggedInUser()
                 .collect { user ->
-                    _isUserAuthenticated.value = user != null
+                    _rememberedUserId.value = user?.id
 
                     Log.d(
                         TAG,
-                        "Authenticated user: ${user?.email ?: "none"}"
+                        "Remembered user: ${user?.email ?: "none"}"
                     )
                 }
+        }
+    }
+
+    fun authenticateUser(userId: Long) {
+        viewModelScope.launch {
+            database.userDao().logoutAllUsers()
+            database.userDao().loginUser(userId)
+
+            _isUserAuthenticated.value = true
         }
     }
 
     fun logout() {
         viewModelScope.launch {
             database.userDao().logoutAllUsers()
+            _isUserAuthenticated.value = false
+            _rememberedUserId.value = null
         }
+    }
+
+    fun lockApp() {
+        _isUserAuthenticated.value = false
     }
 
     override fun onCleared() {
