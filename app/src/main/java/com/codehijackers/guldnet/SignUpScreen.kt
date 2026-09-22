@@ -21,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codehijackers.guldnet.data.local.UserEntity
 import com.codehijackers.guldnet.data.local.GuildnetDatabaseProvider
 import kotlinx.coroutines.launch
@@ -29,7 +28,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun SignUpScreen(
     onSignUpClick: () -> Unit = {},
-    onLoginLinkClick: () -> Unit = {}
+    onLoginLinkClick: () -> Unit = {},
+    onBackClick: () -> Unit
 ) {
     var fullName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }

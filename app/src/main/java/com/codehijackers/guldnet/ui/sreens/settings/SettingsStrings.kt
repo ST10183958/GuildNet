@@ -38,11 +38,13 @@ import com.codehijackers.guldnet.repository.AppLanguage
 import com.codehijackers.guldnet.repository.LanguageRepository
 import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
 import com.codehijackers.guldnet.ui.theme.GuildnetThemeOption
+import com.codehijackers.guldnet.ui.theme.currentGuildnetThemeColors
 
 @Composable
 fun SettingsScreen(
     onBackClicked: () -> Unit = {}
 ) {
+    val colors = currentGuildnetThemeColors
     val strings = currentGuildnetStrings
 
     val currentLanguage by LanguageRepository
@@ -53,18 +55,10 @@ fun SettingsScreen(
         .theme
         .collectAsState()
 
-    val background = Color(0xFF0B0E14)
-    val surface = Color(0xFF0F1727)
-    val border = Color(0xFF26344D)
-    val text = Color(0xFFF1F3FA)
-    val mutedText = Color(0xFF8794AD)
-    val purple = Color(0xFF9857FF)
-    val purpleDark = Color(0xFF241545)
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(background)
+            .background(colors.background)
             .verticalScroll(rememberScrollState())
             .padding(
                 horizontal = 10.dp,
@@ -87,7 +81,7 @@ fun SettingsScreen(
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
                     contentDescription = strings.back,
-                    tint = text,
+                    tint = colors.textPrimary,
                     modifier = Modifier.size(21.dp)
                 )
             }
@@ -99,14 +93,14 @@ fun SettingsScreen(
             Column {
                 Text(
                     text = strings.settings,
-                    color = text,
+                    color = colors.textPrimary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
 
                 Text(
                     text = strings.language,
-                    color = mutedText,
+                    color = colors.textSecondary,
                     fontSize = 9.sp
                 )
             }
@@ -118,7 +112,7 @@ fun SettingsScreen(
 
         SettingsSectionTitle(
             text = strings.language,
-            color = mutedText
+            color = colors.textSecondary
         )
 
         Spacer(
@@ -130,17 +124,17 @@ fun SettingsScreen(
                 Icon(
                     imageVector = Icons.Outlined.Language,
                     contentDescription = null,
-                    tint = purple,
+                    tint = colors.primary,
                     modifier = Modifier.size(22.dp)
                 )
             },
             title = strings.language,
             description = strings.languageSettingsDescription,
-            surface = surface,
-            border = border,
-            iconBackground = purpleDark,
-            text = text,
-            mutedText = mutedText
+            surface = colors.surface,
+            border = colors.border,
+            iconBackground = colors.selectedBackground,
+            text = colors.textPrimary,
+            mutedText = colors.textSecondary
         )
 
         Spacer(
@@ -155,13 +149,13 @@ fun SettingsScreen(
                     AppLanguage.ENGLISH
                 )
             },
-            surface = surface,
-            selectedSurface = purpleDark,
-            border = border,
-            selectedBorder = purple,
-            text = text,
-            mutedText = mutedText,
-            accent = purple
+            surface = colors.surface,
+            selectedSurface = colors.selectedBackground,
+            border = colors.border,
+            selectedBorder = colors.primary,
+            text = colors.textPrimary,
+            mutedText = colors.textSecondary,
+            accent = colors.primary
         )
 
         Spacer(
@@ -176,13 +170,13 @@ fun SettingsScreen(
                     AppLanguage.ZULU
                 )
             },
-            surface = surface,
-            selectedSurface = purpleDark,
-            border = border,
-            selectedBorder = purple,
-            text = text,
-            mutedText = mutedText,
-            accent = purple
+            surface = colors.surface,
+            selectedSurface = colors.selectedBackground,
+            border = colors.border,
+            selectedBorder = colors.primary,
+            text = colors.textPrimary,
+            mutedText = colors.textSecondary,
+            accent = colors.primary
         )
 
         Spacer(
@@ -191,7 +185,7 @@ fun SettingsScreen(
 
         SettingsSectionTitle(
             text = strings.theme,
-            color = mutedText
+            color = colors.textSecondary
         )
 
         Spacer(
@@ -203,17 +197,17 @@ fun SettingsScreen(
                 Icon(
                     imageVector = Icons.Outlined.Palette,
                     contentDescription = null,
-                    tint = purple,
+                    tint = colors.primary,
                     modifier = Modifier.size(22.dp)
                 )
             },
             title = strings.theme,
             description = strings.themeSettingsDescription,
-            surface = surface,
-            border = border,
-            iconBackground = purpleDark,
-            text = text,
-            mutedText = mutedText
+            surface = colors.surface,
+            border = colors.border,
+            iconBackground = colors.selectedBackground,
+            text = colors.textPrimary,
+            mutedText = colors.textSecondary
         )
 
         Spacer(
@@ -230,10 +224,10 @@ fun SettingsScreen(
                     GuildnetThemeOption.DARK_PURPLE
                 )
             },
-            surface = surface,
-            border = border,
-            text = text,
-            mutedText = mutedText,
+            surface = colors.surface,
+            border = colors.border,
+            text = colors.textPrimary,
+            mutedText = colors.textSecondary,
             accent = Color(0xFF9C27B0),
             accentDark = Color(0xFF241545)
         )
@@ -252,10 +246,10 @@ fun SettingsScreen(
                     GuildnetThemeOption.ROYAL_PACIFIC
                 )
             },
-            surface = surface,
-            border = border,
-            text = text,
-            mutedText = mutedText,
+            surface = colors.surface,
+            border = colors.border,
+            text = colors.textPrimary,
+            mutedText = colors.textSecondary,
             accent = Color(0xFF22D3EE),
             accentDark = Color(0xFF102D5F)
         )
@@ -274,10 +268,10 @@ fun SettingsScreen(
                     GuildnetThemeOption.SABEINS
                 )
             },
-            surface = surface,
-            border = border,
-            text = text,
-            mutedText = mutedText,
+            surface = colors.surface,
+            border = colors.border,
+            text = colors.textPrimary,
+            mutedText = colors.textSecondary,
             accent = Color(0xFFD4AF37),
             accentDark = Color(0xFF3B1515)
         )
@@ -296,10 +290,10 @@ fun SettingsScreen(
                     GuildnetThemeOption.VELVET_BLOOM
                 )
             },
-            surface = surface,
-            border = border,
-            text = text,
-            mutedText = mutedText,
+            surface = colors.surface,
+            border = colors.border,
+            text = colors.textPrimary,
+            mutedText = colors.textSecondary,
             accent = Color(0xFFF06292),
             accentDark = Color(0xFF35102D)
         )

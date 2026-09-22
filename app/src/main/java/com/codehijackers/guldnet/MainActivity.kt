@@ -5,7 +5,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -13,8 +12,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.codehijackers.guldnet.ui.theme.GuildnetTheme
-import androidx.compose.ui.graphics.Color
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codehijackers.guldnet.data.local.GuildnetDatabaseProvider
@@ -22,7 +19,10 @@ import com.codehijackers.guldnet.repository.LanguageRepository
 import com.codehijackers.guldnet.ui.GuildnetAuthenticatedApp
 import com.codehijackers.guldnet.ui.localization.LocalGuildnetLanguage
 import com.codehijackers.guldnet.ui.localization.LocalGuildnetStrings
-import com.codehijackers.guldnet.ui.localization.guildnetStrings import com.codehijackers.guldnet.viewmodel.AppViewModel
+import com.codehijackers.guldnet.ui.localization.guildnetStrings
+import com.codehijackers.guldnet.ui.theme.GuildnetTheme
+import com.codehijackers.guldnet.ui.theme.currentGuildnetThemeColors
+import com.codehijackers.guldnet.viewmodel.AppViewModel
 import com.codehijackers.guldnet.viewmodel.AppViewModelFactory
 
 class MainActivity : FragmentActivity() {
@@ -32,29 +32,25 @@ class MainActivity : FragmentActivity() {
 
         GuildnetDatabaseProvider.initialize(applicationContext)
 
-        val database =
-            GuildnetDatabaseProvider.getDatabase()
+        val database = GuildnetDatabaseProvider.getDatabase()
 
         LanguageRepository.initialize(database)
 
         setContent {
             GuildnetTheme {
+                val appViewModel: AppViewModel =
+                    viewModel(
+                        factory = AppViewModelFactory(database)
+                    )
 
-                val appViewModel: AppViewModel = viewModel(
-                    factory = AppViewModelFactory(database)
-                )
+                val isAuthenticated by
+                appViewModel.isUserAuthenticated.collectAsState()
 
-                val isAuthenticated by appViewModel
-                    .isUserAuthenticated
-                    .collectAsState()
+                val rememberedUserId by
+                appViewModel.rememberedUserId.collectAsState()
 
-                val rememberedUserId by appViewModel
-                    .rememberedUserId
-                    .collectAsState()
-
-                val language by LanguageRepository
-                    .language
-                    .collectAsState()
+                val language by
+                LanguageRepository.language.collectAsState()
 
                 val strings = guildnetStrings(language)
 
@@ -74,31 +70,22 @@ class MainActivity : FragmentActivity() {
                         modifier = Modifier
                             .fillMaxSize()
                             .background(
-                                MaterialTheme.colorScheme.background
+                                currentGuildnetThemeColors.background
                             )
                     ) {
-
                         if (isAuthenticated) {
-
                             GuildnetAuthenticatedApp()
-
                         } else {
-
                             when (currentScreen) {
 
                                 "splash" -> {
                                     SplashScreen(
                                         onSplashFinished = {
-
                                             if (rememberedUserId != null) {
-                                                pendingUserId =
-                                                    rememberedUserId
-
-                                                currentScreen =
-                                                    "biometric"
+                                                pendingUserId = rememberedUserId
+                                                currentScreen = "biometric"
                                             } else {
-                                                currentScreen =
-                                                    "login"
+                                                currentScreen = "login"
                                             }
                                         }
                                     )
@@ -107,18 +94,11 @@ class MainActivity : FragmentActivity() {
                                 "login" -> {
                                     LoginScreen(
                                         onLoginClick = { userId ->
-
-                                            pendingUserId =
-                                                userId
-
-                                            currentScreen =
-                                                "biometric"
+                                            pendingUserId = userId
+                                            currentScreen = "biometric"
                                         },
                                         onSignUpClick = {
-                                            currentScreen =
-                                                "signup"
-                                        },
-                                        onForgotPasswordClick = {
+                                            currentScreen = "signup"
                                         }
                                     )
                                 }
@@ -126,48 +106,32 @@ class MainActivity : FragmentActivity() {
                                 "signup" -> {
                                     SignUpScreen(
                                         onSignUpClick = {
-                                            currentScreen =
-                                                "login"
+                                            currentScreen = "login"
                                         },
-                                        onLoginLinkClick = {
-                                            currentScreen =
-                                                "login"
+                                        onBackClick = {
+                                            currentScreen = "login"
                                         }
                                     )
                                 }
 
                                 "biometric" -> {
-
-                                    val userId =
-                                        pendingUserId
+                                    val userId = pendingUserId
 
                                     if (userId != null) {
-
                                         BiometricScreen(
                                             userId = userId,
-
                                             onAuthenticationSuccess = {
                                                     authenticatedUserId ->
-
                                                 appViewModel
                                                     .authenticateUser(
                                                         authenticatedUserId
                                                     )
                                             },
-
-                                            onBackClick = {
-                                                currentScreen =
-                                                    "login"
-                                            },
-
                                             onUsePasswordClick = {
-                                                currentScreen =
-                                                    "login"
+                                                currentScreen = "login"
                                             },
-
                                             onCancelClick = {
-                                                currentScreen =
-                                                    "login"
+                                                currentScreen = "login"
                                             }
                                         )
                                     }
