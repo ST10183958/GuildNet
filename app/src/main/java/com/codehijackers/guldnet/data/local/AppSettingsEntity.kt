@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 data class AppSettingsEntity(
     @PrimaryKey
     val id: Int = 1,
-    val language: String = "en"
+    val language: String = "en",
+    val theme: String = "dark_purple"
 )

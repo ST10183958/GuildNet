@@ -5,6 +5,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -12,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.codehijackers.guldnet.ui.theme.GuildnetTheme
 import androidx.compose.ui.graphics.Color
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -20,8 +22,7 @@ import com.codehijackers.guldnet.repository.LanguageRepository
 import com.codehijackers.guldnet.ui.GuildnetAuthenticatedApp
 import com.codehijackers.guldnet.ui.localization.LocalGuildnetLanguage
 import com.codehijackers.guldnet.ui.localization.LocalGuildnetStrings
-import com.codehijackers.guldnet.ui.localization.guildnetStrings
-import com.codehijackers.guldnet.viewmodel.AppViewModel
+import com.codehijackers.guldnet.ui.localization.guildnetStrings import com.codehijackers.guldnet.viewmodel.AppViewModel
 import com.codehijackers.guldnet.viewmodel.AppViewModelFactory
 
 class MainActivity : FragmentActivity() {
@@ -37,134 +38,139 @@ class MainActivity : FragmentActivity() {
         LanguageRepository.initialize(database)
 
         setContent {
-            val darkBackground = Color(0xFF0B0E14)
+            GuildnetTheme {
 
-            val appViewModel: AppViewModel = viewModel(
-                factory = AppViewModelFactory(database)
-            )
+                val appViewModel: AppViewModel = viewModel(
+                    factory = AppViewModelFactory(database)
+                )
 
-            val isAuthenticated by appViewModel
-                .isUserAuthenticated
-                .collectAsState()
+                val isAuthenticated by appViewModel
+                    .isUserAuthenticated
+                    .collectAsState()
 
-            val rememberedUserId by appViewModel
-                .rememberedUserId
-                .collectAsState()
+                val rememberedUserId by appViewModel
+                    .rememberedUserId
+                    .collectAsState()
 
-            val language by LanguageRepository
-                .language
-                .collectAsState()
+                val language by LanguageRepository
+                    .language
+                    .collectAsState()
 
-            val strings = guildnetStrings(language)
+                val strings = guildnetStrings(language)
 
-            var currentScreen by remember {
-                mutableStateOf("splash")
-            }
+                var currentScreen by remember {
+                    mutableStateOf("splash")
+                }
 
-            var pendingUserId by remember {
-                mutableStateOf<Long?>(null)
-            }
+                var pendingUserId by remember {
+                    mutableStateOf<Long?>(null)
+                }
 
-            CompositionLocalProvider(
-                LocalGuildnetLanguage provides language,
-                LocalGuildnetStrings provides strings
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(darkBackground)
+                CompositionLocalProvider(
+                    LocalGuildnetLanguage provides language,
+                    LocalGuildnetStrings provides strings
                 ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(
+                                MaterialTheme.colorScheme.background
+                            )
+                    ) {
 
-                    if (isAuthenticated) {
+                        if (isAuthenticated) {
 
-                        GuildnetAuthenticatedApp()
+                            GuildnetAuthenticatedApp()
 
-                    } else {
+                        } else {
 
-                        when (currentScreen) {
+                            when (currentScreen) {
 
-                            "splash" -> {
-                                SplashScreen(
-                                    onSplashFinished = {
+                                "splash" -> {
+                                    SplashScreen(
+                                        onSplashFinished = {
 
-                                        if (rememberedUserId != null) {
+                                            if (rememberedUserId != null) {
+                                                pendingUserId =
+                                                    rememberedUserId
+
+                                                currentScreen =
+                                                    "biometric"
+                                            } else {
+                                                currentScreen =
+                                                    "login"
+                                            }
+                                        }
+                                    )
+                                }
+
+                                "login" -> {
+                                    LoginScreen(
+                                        onLoginClick = { userId ->
+
                                             pendingUserId =
-                                                rememberedUserId
+                                                userId
 
                                             currentScreen =
                                                 "biometric"
-                                        } else {
+                                        },
+                                        onSignUpClick = {
                                             currentScreen =
-                                                "login"
+                                                "signup"
+                                        },
+                                        onForgotPasswordClick = {
                                         }
-                                    }
-                                )
-                            }
+                                    )
+                                }
 
-                            "login" -> {
-                                LoginScreen(
-                                    onLoginClick = { userId ->
-
-                                        pendingUserId = userId
-
-                                        currentScreen =
-                                            "biometric"
-                                    },
-                                    onSignUpClick = {
-                                        currentScreen =
-                                            "signup"
-                                    },
-                                    onForgotPasswordClick = {
-                                    }
-                                )
-                            }
-
-                            "signup" -> {
-                                SignUpScreen(
-                                    onSignUpClick = {
-                                        currentScreen =
-                                            "login"
-                                    },
-                                    onLoginLinkClick = {
-                                        currentScreen =
-                                            "login"
-                                    }
-                                )
-                            }
-
-                            "biometric" -> {
-
-                                val userId =
-                                    pendingUserId
-
-                                if (userId != null) {
-
-                                    BiometricScreen(
-                                        userId = userId,
-
-                                        onAuthenticationSuccess = { authenticatedUserId ->
-
-                                            appViewModel
-                                                .authenticateUser(
-                                                    authenticatedUserId
-                                                )
-                                        },
-
-                                        onBackClick = {
+                                "signup" -> {
+                                    SignUpScreen(
+                                        onSignUpClick = {
                                             currentScreen =
                                                 "login"
                                         },
-
-                                        onUsePasswordClick = {
-                                            currentScreen =
-                                                "login"
-                                        },
-
-                                        onCancelClick = {
+                                        onLoginLinkClick = {
                                             currentScreen =
                                                 "login"
                                         }
                                     )
+                                }
+
+                                "biometric" -> {
+
+                                    val userId =
+                                        pendingUserId
+
+                                    if (userId != null) {
+
+                                        BiometricScreen(
+                                            userId = userId,
+
+                                            onAuthenticationSuccess = {
+                                                    authenticatedUserId ->
+
+                                                appViewModel
+                                                    .authenticateUser(
+                                                        authenticatedUserId
+                                                    )
+                                            },
+
+                                            onBackClick = {
+                                                currentScreen =
+                                                    "login"
+                                            },
+
+                                            onUsePasswordClick = {
+                                                currentScreen =
+                                                    "login"
+                                            },
+
+                                            onCancelClick = {
+                                                currentScreen =
+                                                    "login"
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }

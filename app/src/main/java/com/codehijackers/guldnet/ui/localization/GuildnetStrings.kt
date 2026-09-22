@@ -178,6 +178,17 @@ data class GuildnetStrings(
     val saveChanges: String,
 
     val languageSettingsDescription: String,
+
+    val darkPurple: String,
+    val royalPacific: String,
+    val sabeins: String,
+    val velvetBloom: String,
+    val darkPurpleDescription: String,
+    val royalPacificDescription: String,
+    val sabeinsDescription: String,
+    val velvetBloomDescription: String,
+
+    val themeSettingsDescription: String,
 )
 
 fun guildnetStrings(
@@ -362,6 +373,16 @@ fun guildnetStrings(
 
             languageSettingsDescription = "Choose the language used across GuildNet.",
 
+            darkPurple = "Dark Purple",
+            royalPacific = "Royal Pacific",
+            sabeins = "Sabeins",
+            velvetBloom = "Velvet Bloom",
+
+            darkPurpleDescription = "Guildnet's classic dark purple theme",
+            royalPacificDescription = "Royal blue, cyan and white",
+            sabeinsDescription = "Black, red and gold",
+            velvetBloomDescription = "Royal pink and velvet purple",
+            themeSettingsDescription = "Choose the visual style used across Guildnet.",
         )
 
         AppLanguage.ZULU -> GuildnetStrings(
@@ -539,7 +560,17 @@ fun guildnetStrings(
             saveChanges = "Londoloza Izinguquko",
 
             languageSettingsDescription = "Khetha ulimi olusetshenziswa kuyo yonke i-GuildNet.",
+            darkPurple = "Okunsomi Okumnyama",
+            royalPacific = "Royal Pacific",
+            sabeins = "Sabeins",
+            velvetBloom = "Velvet Bloom",
 
+            darkPurpleDescription = "Itimu yakudala ye-Guildnet enombala onsomi omnyama",
+            royalPacificDescription = "Okuluhlaza okwesibhakabhaka, i-cyan nokumhlophe",
+            sabeinsDescription = "Okumnyama, okubomvu negolide",
+            velvetBloomDescription = "Okuphinki kweRoyal nokunsomi kwevelvet",
+
+            themeSettingsDescription = "Khetha isitayela esibonakalayo esisetshenziswa kuyo yonke i-Guildnet.",
         )
     }
 }
