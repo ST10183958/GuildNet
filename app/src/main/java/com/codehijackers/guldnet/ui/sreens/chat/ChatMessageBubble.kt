@@ -13,16 +13,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-private val GuildnetSurface = Color(0xFF0F1727)
-private val GuildnetBorder = Color(0xFF26344D)
-private val GuildnetPurple = Color(0xFF9857FF)
-private val GuildnetText = Color(0xFFF1F3FA)
-private val GuildnetMutedText = Color(0xFF8794AD)
+import com.codehijackers.guldnet.ui.theme.currentGuildnetThemeColors
 
 @Composable
 fun ChatMessageBubble(
@@ -30,21 +24,22 @@ fun ChatMessageBubble(
     content: String,
     createdAt: String
 ) {
+    val colors = currentGuildnetThemeColors
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Top
     ) {
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    GuildnetSurface,
+                    colors.surface,
                     RoundedCornerShape(13.dp)
                 )
                 .border(
                     width = 1.dp,
-                    color = GuildnetBorder,
+                    color = colors.border,
                     shape = RoundedCornerShape(13.dp)
                 )
                 .padding(
@@ -52,14 +47,12 @@ fun ChatMessageBubble(
                     vertical = 10.dp
                 )
         ) {
-
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 Text(
                     text = senderName,
-                    color = GuildnetPurple,
+                    color = colors.primary,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -70,14 +63,14 @@ fun ChatMessageBubble(
 
                 Text(
                     text = createdAt,
-                    color = GuildnetMutedText,
+                    color = colors.textSecondary,
                     fontSize = 8.sp
                 )
             }
 
             Text(
                 text = content,
-                color = GuildnetText,
+                color = colors.textPrimary,
                 fontSize = 12.sp,
                 lineHeight = 17.sp,
                 modifier = Modifier.padding(

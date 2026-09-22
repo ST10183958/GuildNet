@@ -1,5 +1,6 @@
 package com.codehijackers.guldnet.ui.screens.guilds
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,13 +13,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.codehijackers.guldnet.ui.theme.currentGuildnetThemeColors
 
 @Composable
 fun CreateGuildScreen(
@@ -29,6 +33,8 @@ fun CreateGuildScreen(
     ) -> Unit = { _, _, _ -> },
     onBackClicked: () -> Unit = {}
 ) {
+    val colors = currentGuildnetThemeColors
+
     var name by remember {
         mutableStateOf("")
     }
@@ -49,17 +55,19 @@ fun CreateGuildScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(colors.background)
             .padding(24.dp),
         verticalArrangement = Arrangement.Top
     ) {
-
         Text(
             text = "Create Guild",
+            color = colors.textPrimary,
             style = MaterialTheme.typography.headlineMedium
         )
 
         Text(
             text = "Create a community for your game.",
+            color = colors.textSecondary,
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(top = 4.dp)
         )
@@ -74,13 +82,30 @@ fun CreateGuildScreen(
                 name = it
             },
             label = {
-                Text("Guild Name")
+                Text(
+                    text = "Guild Name",
+                    color = colors.textSecondary
+                )
             },
             placeholder = {
-                Text("Example: Minecraft Builders")
+                Text(
+                    text = "Example: Minecraft Builders",
+                    color = colors.textSecondary
+                )
             },
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true
+            singleLine = true,
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = colors.textPrimary,
+                unfocusedTextColor = colors.textPrimary,
+                focusedContainerColor = colors.surface,
+                unfocusedContainerColor = colors.surface,
+                focusedIndicatorColor = colors.primary,
+                unfocusedIndicatorColor = colors.border,
+                cursorColor = colors.primary,
+                focusedLabelColor = colors.primary,
+                unfocusedLabelColor = colors.textSecondary
+            )
         )
 
         Spacer(
@@ -93,13 +118,30 @@ fun CreateGuildScreen(
                 game = it
             },
             label = {
-                Text("Game")
+                Text(
+                    text = "Game",
+                    color = colors.textSecondary
+                )
             },
             placeholder = {
-                Text("Example: Minecraft")
+                Text(
+                    text = "Example: Minecraft",
+                    color = colors.textSecondary
+                )
             },
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true
+            singleLine = true,
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = colors.textPrimary,
+                unfocusedTextColor = colors.textPrimary,
+                focusedContainerColor = colors.surface,
+                unfocusedContainerColor = colors.surface,
+                focusedIndicatorColor = colors.primary,
+                unfocusedIndicatorColor = colors.border,
+                cursorColor = colors.primary,
+                focusedLabelColor = colors.primary,
+                unfocusedLabelColor = colors.textSecondary
+            )
         )
 
         Spacer(
@@ -112,13 +154,30 @@ fun CreateGuildScreen(
                 description = it
             },
             label = {
-                Text("Description")
+                Text(
+                    text = "Description",
+                    color = colors.textSecondary
+                )
             },
             placeholder = {
-                Text("What is your Guild about?")
+                Text(
+                    text = "What is your Guild about?",
+                    color = colors.textSecondary
+                )
             },
             modifier = Modifier.fillMaxWidth(),
-            minLines = 4
+            minLines = 4,
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = colors.textPrimary,
+                unfocusedTextColor = colors.textPrimary,
+                focusedContainerColor = colors.surface,
+                unfocusedContainerColor = colors.surface,
+                focusedIndicatorColor = colors.primary,
+                unfocusedIndicatorColor = colors.border,
+                cursorColor = colors.primary,
+                focusedLabelColor = colors.primary,
+                unfocusedLabelColor = colors.textSecondary
+            )
         )
 
         Spacer(
@@ -136,7 +195,10 @@ fun CreateGuildScreen(
             enabled = isValid,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Create Guild")
+            Text(
+                text = "Create Guild",
+                color = Color.White
+            )
         }
 
         Spacer(
@@ -147,7 +209,10 @@ fun CreateGuildScreen(
             onClick = onBackClicked,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Cancel")
+            Text(
+                text = "Cancel",
+                color = colors.textPrimary
+            )
         }
     }
 }

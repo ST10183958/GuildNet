@@ -1,5 +1,6 @@
 package com.codehijackers.guldnet.ui.screens.posts
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,9 +13,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
 import com.codehijackers.guldnet.ui.screens.posts.components.CommentCard
+import com.codehijackers.guldnet.ui.theme.currentGuildnetThemeColors
 import com.codehijackers.guldnet.viewmodel.CommentViewModel
 import com.codehijackers.guldnet.viewmodel.PostViewModel
 
@@ -37,7 +41,9 @@ fun PostDetailsScreen(
     postViewModel: PostViewModel = viewModel(),
     commentViewModel: CommentViewModel = viewModel()
 ) {
+    val colors = currentGuildnetThemeColors
     val strings = currentGuildnetStrings
+
     val posts by postViewModel.posts.collectAsState()
     val comments by commentViewModel.comments.collectAsState()
 
@@ -53,11 +59,13 @@ fun PostDetailsScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(colors.background)
                 .padding(24.dp),
             verticalArrangement = Arrangement.Center
         ) {
             Text(
                 text = strings.postNotFound,
+                color = colors.textPrimary,
                 style = MaterialTheme.typography.headlineMedium
             )
 
@@ -68,7 +76,10 @@ fun PostDetailsScreen(
             OutlinedButton(
                 onClick = onBackClicked
             ) {
-                Text(strings.back)
+                Text(
+                    text = strings.back,
+                    color = colors.textPrimary
+                )
             }
         }
 
@@ -82,16 +93,19 @@ fun PostDetailsScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
+            .background(colors.background)
             .padding(16.dp)
     ) {
         item {
             Text(
                 text = post.title,
+                color = colors.textPrimary,
                 style = MaterialTheme.typography.headlineMedium
             )
 
             Text(
                 text = "${strings.by} ${post.authorName}",
+                color = colors.textSecondary,
                 style = MaterialTheme.typography.labelMedium,
                 modifier = Modifier.padding(top = 4.dp)
             )
@@ -101,13 +115,21 @@ fun PostDetailsScreen(
             )
 
             Card(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = colors.surface
+                ),
+                border = androidx.compose.foundation.BorderStroke(
+                    width = 1.dp,
+                    color = colors.border
+                )
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp)
                 ) {
                     Text(
                         text = post.content,
+                        color = colors.textPrimary,
                         style = MaterialTheme.typography.bodyLarge
                     )
 
@@ -115,11 +137,13 @@ fun PostDetailsScreen(
                         modifier = Modifier.padding(top = 16.dp)
                     ) {
                         Text(
-                            text = "▲ ${post.upvotes}"
+                            text = "▲ ${post.upvotes}",
+                            color = colors.primary
                         )
 
                         Text(
                             text = "💬 ${postComments.size}",
+                            color = colors.textSecondary,
                             modifier = Modifier.padding(start = 16.dp)
                         )
                     }
@@ -132,6 +156,7 @@ fun PostDetailsScreen(
 
             Text(
                 text = strings.comments,
+                color = colors.textPrimary,
                 style = MaterialTheme.typography.titleLarge
             )
 
@@ -156,6 +181,7 @@ fun PostDetailsScreen(
 
             Text(
                 text = strings.addComment,
+                color = colors.textPrimary,
                 style = MaterialTheme.typography.titleMedium
             )
 
@@ -169,13 +195,31 @@ fun PostDetailsScreen(
                     commentText = it
                 },
                 label = {
-                    Text(strings.comment)
+                    Text(
+                        text = strings.comment,
+                        color = colors.textSecondary
+                    )
                 },
                 placeholder = {
-                    Text(strings.joinDiscussion)
+                    Text(
+                        text = strings.joinDiscussion,
+                        color = colors.textSecondary
+                    )
                 },
                 modifier = Modifier.fillMaxWidth(),
-                minLines = 3
+                minLines = 3,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = colors.surface,
+                    unfocusedContainerColor = colors.surface,
+                    disabledContainerColor = colors.surfaceVariant,
+                    focusedBorderColor = colors.primary,
+                    unfocusedBorderColor = colors.border,
+                    focusedLabelColor = colors.primary,
+                    unfocusedLabelColor = colors.textSecondary,
+                    focusedTextColor = colors.textPrimary,
+                    unfocusedTextColor = colors.textPrimary,
+                    cursorColor = colors.primary
+                )
             )
 
             Spacer(
@@ -195,7 +239,9 @@ fun PostDetailsScreen(
                 enabled = commentText.isNotBlank(),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(strings.postComment)
+                Text(
+                    text = strings.postComment
+                )
             }
 
             Spacer(
@@ -206,7 +252,10 @@ fun PostDetailsScreen(
                 onClick = onBackClicked,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(strings.back)
+                Text(
+                    text = strings.back,
+                    color = colors.textPrimary
+                )
             }
         }
     }

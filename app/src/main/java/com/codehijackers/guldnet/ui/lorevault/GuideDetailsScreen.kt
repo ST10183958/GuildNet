@@ -24,20 +24,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
+import com.codehijackers.guldnet.ui.theme.currentGuildnetThemeColors
 import com.codehijackers.guldnet.viewmodel.GuideViewModel
-
-private val GuildnetSurface = Color(0xFF0F1727)
-private val GuildnetBorder = Color(0xFF26344D)
-private val GuildnetPurple = Color(0xFF9857FF)
-private val GuildnetPurpleDark = Color(0xFF241545)
-private val GuildnetText = Color(0xFFF1F3FA)
-private val GuildnetMutedText = Color(0xFF8794AD)
 
 @Composable
 fun GuideDetailsScreen(
@@ -45,6 +38,7 @@ fun GuideDetailsScreen(
     onBackClicked: () -> Unit = {},
     guideViewModel: GuideViewModel = viewModel()
 ) {
+    val colors = currentGuildnetThemeColors
     val strings = currentGuildnetStrings
     val guides by guideViewModel.guides.collectAsState()
 
@@ -56,7 +50,7 @@ fun GuideDetailsScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Transparent)
+                .background(colors.background)
                 .padding(13.dp)
         ) {
             Row(
@@ -71,7 +65,7 @@ fun GuideDetailsScreen(
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
                     contentDescription = strings.back,
-                    tint = GuildnetText,
+                    tint = colors.textPrimary,
                     modifier = Modifier.padding(
                         end = 10.dp
                     )
@@ -79,7 +73,7 @@ fun GuideDetailsScreen(
 
                 Text(
                     text = strings.back,
-                    color = GuildnetMutedText,
+                    color = colors.textSecondary,
                     fontSize = 11.sp
                 )
             }
@@ -90,7 +84,7 @@ fun GuideDetailsScreen(
 
             Text(
                 text = strings.guideNotFound,
-                color = GuildnetText,
+                color = colors.textPrimary,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -102,7 +96,7 @@ fun GuideDetailsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Transparent)
+            .background(colors.background)
     ) {
         Row(
             modifier = Modifier
@@ -122,7 +116,7 @@ fun GuideDetailsScreen(
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
                     contentDescription = strings.back,
-                    tint = GuildnetText,
+                    tint = colors.textPrimary,
                     modifier = Modifier.padding(
                         end = 10.dp
                     )
@@ -130,7 +124,7 @@ fun GuideDetailsScreen(
 
                 Text(
                     text = strings.loreVaultLabel,
-                    color = GuildnetText,
+                    color = colors.textPrimary,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -139,7 +133,7 @@ fun GuideDetailsScreen(
             Icon(
                 imageVector = Icons.Outlined.BookmarkBorder,
                 contentDescription = strings.bookmark,
-                tint = GuildnetPurple,
+                tint = colors.primary,
                 modifier = Modifier.padding(
                     horizontal = 7.dp
                 )
@@ -158,17 +152,17 @@ fun GuideDetailsScreen(
         ) {
             Text(
                 text = guide.category,
-                color = GuildnetPurple,
+                color = colors.primary,
                 fontSize = 9.sp,
                 fontWeight = FontWeight.Medium,
                 modifier = Modifier
                     .clip(RoundedCornerShape(5.dp))
                     .background(
-                        GuildnetPurple.copy(alpha = 0.12f)
+                        colors.primary.copy(alpha = 0.12f)
                     )
                     .border(
                         width = 1.dp,
-                        color = GuildnetPurple.copy(alpha = 0.25f),
+                        color = colors.primary.copy(alpha = 0.25f),
                         shape = RoundedCornerShape(5.dp)
                     )
                     .padding(
@@ -183,7 +177,7 @@ fun GuideDetailsScreen(
 
             Text(
                 text = guide.title,
-                color = GuildnetText,
+                color = colors.textPrimary,
                 fontSize = 22.sp,
                 lineHeight = 28.sp,
                 fontWeight = FontWeight.Bold
@@ -195,7 +189,7 @@ fun GuideDetailsScreen(
 
             Text(
                 text = "${strings.by} ${guide.authorName} • ${guide.createdAt} • ${guide.viewCount} ${strings.views}",
-                color = GuildnetMutedText,
+                color = colors.textSecondary,
                 fontSize = 9.sp
             )
 
@@ -207,17 +201,17 @@ fun GuideDetailsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(15.dp))
-                    .background(GuildnetSurface)
+                    .background(colors.surface)
                     .border(
                         width = 1.dp,
-                        color = GuildnetBorder,
+                        color = colors.border,
                         shape = RoundedCornerShape(15.dp)
                     )
                     .padding(15.dp)
             ) {
                 Text(
                     text = guide.description,
-                    color = GuildnetText,
+                    color = colors.textPrimary,
                     fontSize = 12.sp,
                     lineHeight = 18.sp,
                     fontWeight = FontWeight.Medium
@@ -230,7 +224,7 @@ fun GuideDetailsScreen(
 
             Text(
                 text = guide.content,
-                color = GuildnetText,
+                color = colors.textPrimary,
                 fontSize = 13.sp,
                 lineHeight = 21.sp
             )
@@ -241,7 +235,7 @@ fun GuideDetailsScreen(
 
             Text(
                 text = "${guide.viewCount} ${strings.views}",
-                color = GuildnetMutedText,
+                color = colors.textSecondary,
                 fontSize = 9.sp
             )
 

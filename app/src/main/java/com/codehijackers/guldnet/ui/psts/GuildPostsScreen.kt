@@ -1,5 +1,6 @@
 package com.codehijackers.guldnet.ui.screens.posts
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
 import com.codehijackers.guldnet.ui.screens.posts.components.PostCard
+import com.codehijackers.guldnet.ui.theme.currentGuildnetThemeColors
 import com.codehijackers.guldnet.viewmodel.PostViewModel
 
 @Composable
@@ -28,7 +30,9 @@ fun GuildPostsScreen(
     postViewModel: PostViewModel = viewModel(),
     onLoreVaultClicked: () -> Unit
 ) {
+    val colors = currentGuildnetThemeColors
     val strings = currentGuildnetStrings
+
     val allPosts by postViewModel.posts.collectAsState()
 
     val posts = allPosts.filter {
@@ -38,15 +42,18 @@ fun GuildPostsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(colors.background)
             .padding(16.dp)
     ) {
         Text(
             text = strings.guildPosts,
+            color = colors.textPrimary,
             style = MaterialTheme.typography.headlineMedium
         )
 
         Text(
             text = strings.communityDiscussions,
+            color = colors.textSecondary,
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(top = 4.dp)
         )
@@ -55,7 +62,9 @@ fun GuildPostsScreen(
             onClick = onCreatePostClicked,
             modifier = Modifier.padding(top = 16.dp)
         ) {
-            Text(strings.createPost)
+            Text(
+                text = strings.createPost
+            )
         }
 
         LazyColumn(
@@ -80,7 +89,9 @@ fun GuildPostsScreen(
                 Button(
                     onClick = onBackClicked
                 ) {
-                    Text(strings.back)
+                    Text(
+                        text = strings.back
+                    )
                 }
             }
         }

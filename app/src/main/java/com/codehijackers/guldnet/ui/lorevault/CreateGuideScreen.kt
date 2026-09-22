@@ -40,12 +40,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
-
-private val GuildnetSurface = Color(0xFF0F1727)
-private val GuildnetBorder = Color(0xFF26344D)
-private val GuildnetPurple = Color(0xFF9857FF)
-private val GuildnetText = Color(0xFFF1F3FA)
-private val GuildnetMutedText = Color(0xFF8794AD)
+import com.codehijackers.guldnet.ui.theme.currentGuildnetThemeColors
 
 @Composable
 fun CreateGuideScreen(
@@ -58,6 +53,7 @@ fun CreateGuideScreen(
     ) -> Unit = { _, _, _, _ -> },
     onBackClicked: () -> Unit = {}
 ) {
+    val colors = currentGuildnetThemeColors
     val strings = currentGuildnetStrings
 
     var title by remember {
@@ -85,7 +81,7 @@ fun CreateGuideScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Transparent)
+            .background(colors.background)
             .verticalScroll(rememberScrollState())
             .imePadding()
             .padding(
@@ -109,7 +105,7 @@ fun CreateGuideScreen(
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
                     contentDescription = strings.back,
-                    tint = GuildnetText,
+                    tint = colors.textPrimary,
                     modifier = Modifier.size(21.dp)
                 )
             }
@@ -121,14 +117,14 @@ fun CreateGuideScreen(
             Column {
                 Text(
                     text = strings.createGuide,
-                    color = GuildnetText,
+                    color = colors.textPrimary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
 
                 Text(
                     text = strings.shareGamingKnowledge,
-                    color = GuildnetMutedText,
+                    color = colors.textSecondary,
                     fontSize = 9.sp
                 )
             }
@@ -207,17 +203,17 @@ fun CreateGuideScreen(
                 .clip(RoundedCornerShape(11.dp))
                 .background(
                     if (isValid) {
-                        GuildnetPurple
+                        colors.primary
                     } else {
-                        GuildnetSurface
+                        colors.surfaceVariant
                     }
                 )
                 .border(
                     width = 1.dp,
                     color = if (isValid) {
-                        GuildnetPurple
+                        colors.primary
                     } else {
-                        GuildnetBorder
+                        colors.border
                     },
                     shape = RoundedCornerShape(11.dp)
                 )
@@ -238,7 +234,7 @@ fun CreateGuideScreen(
                 color = if (isValid) {
                     Color.White
                 } else {
-                    GuildnetMutedText
+                    colors.textSecondary
                 },
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold
@@ -256,7 +252,7 @@ fun CreateGuideScreen(
                 .clip(RoundedCornerShape(11.dp))
                 .border(
                     width = 1.dp,
-                    color = GuildnetBorder,
+                    color = colors.border,
                     shape = RoundedCornerShape(11.dp)
                 )
                 .clickable {
@@ -266,7 +262,7 @@ fun CreateGuideScreen(
         ) {
             Text(
                 text = strings.cancel,
-                color = GuildnetMutedText,
+                color = colors.textSecondary,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Medium
             )
@@ -284,10 +280,12 @@ private fun GuideEditorField(
     singleLine: Boolean,
     minHeight: Dp = 46.dp
 ) {
+    val colors = currentGuildnetThemeColors
+
     Column {
         Text(
             text = label.uppercase(),
-            color = GuildnetMutedText,
+            color = colors.textSecondary,
             fontSize = 9.sp,
             fontWeight = FontWeight.Medium,
             letterSpacing = 0.8.sp,
@@ -302,10 +300,10 @@ private fun GuideEditorField(
                 .fillMaxWidth()
                 .height(minHeight)
                 .clip(RoundedCornerShape(12.dp))
-                .background(GuildnetSurface)
+                .background(colors.surface)
                 .border(
                     width = 1.dp,
-                    color = GuildnetBorder,
+                    color = colors.border,
                     shape = RoundedCornerShape(12.dp)
                 )
                 .padding(
@@ -321,7 +319,7 @@ private fun GuideEditorField(
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = GuildnetPurple,
+                tint = colors.primary,
                 modifier = Modifier
                     .size(17.dp)
                     .padding(
@@ -348,14 +346,14 @@ private fun GuideEditorField(
                     8
                 },
                 textStyle = TextStyle(
-                    color = GuildnetText,
+                    color = colors.textPrimary,
                     fontSize = 12.sp
                 ),
                 decorationBox = { innerTextField ->
                     if (value.isEmpty()) {
                         Text(
                             text = placeholder,
-                            color = GuildnetMutedText,
+                            color = colors.textSecondary,
                             fontSize = 11.sp
                         )
                     }

@@ -29,7 +29,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -38,34 +37,31 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
+import com.codehijackers.guldnet.ui.theme.currentGuildnetThemeColors
 import com.codehijackers.guldnet.viewmodel.ProfileViewModel
-
-private val GuildnetSurface = Color(0xFF0F1727)
-private val GuildnetSurfaceLight = Color(0xFF121C2E)
-private val GuildnetBorder = Color(0xFF26344D)
-private val GuildnetPurple = Color(0xFF9857FF)
-private val GuildnetPurpleDark = Color(0xFF241545)
-private val GuildnetText = Color(0xFFF1F3FA)
-private val GuildnetMutedText = Color(0xFF8794AD)
 
 @Composable
 fun EditProfileScreen(
     onBackClicked: () -> Unit = {},
     profileViewModel: ProfileViewModel = viewModel()
 ) {
+    val colors = currentGuildnetThemeColors
     val strings = currentGuildnetStrings
+
     val profile by profileViewModel.profile.collectAsState()
 
-    var displayName by remember(profile.displayName) {
-        mutableStateOf(profile.displayName)
+    val currentProfile = profile
+
+    var displayName by remember(currentProfile?.displayName) {
+        mutableStateOf(currentProfile?.displayName ?: "")
     }
 
-    var username by remember(profile.username) {
-        mutableStateOf(profile.username)
+    var username by remember(currentProfile?.username) {
+        mutableStateOf(currentProfile?.username ?: "")
     }
 
-    var bio by remember(profile.bio) {
-        mutableStateOf(profile.bio)
+    var bio by remember(currentProfile?.bio) {
+        mutableStateOf(currentProfile?.bio ?: "")
     }
 
     val isValid =
@@ -75,7 +71,7 @@ fun EditProfileScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Transparent)
+            .background(colors.background)
             .padding(
                 horizontal = 10.dp,
                 vertical = 14.dp
@@ -97,7 +93,7 @@ fun EditProfileScreen(
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
                     contentDescription = strings.back,
-                    tint = GuildnetText,
+                    tint = colors.textPrimary,
                     modifier = Modifier.size(21.dp)
                 )
             }
@@ -108,7 +104,7 @@ fun EditProfileScreen(
 
             Text(
                 text = strings.editProfile,
-                color = GuildnetText,
+                color = colors.textPrimary,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -122,10 +118,10 @@ fun EditProfileScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(17.dp))
-                .background(GuildnetSurface)
+                .background(colors.surface)
                 .border(
                     width = 1.dp,
-                    color = GuildnetBorder,
+                    color = colors.border,
                     shape = RoundedCornerShape(17.dp)
                 )
                 .padding(
@@ -140,16 +136,16 @@ fun EditProfileScreen(
                     modifier = Modifier
                         .size(76.dp)
                         .clip(CircleShape)
-                        .background(GuildnetPurple)
+                        .background(colors.primary)
                         .border(
                             width = 2.dp,
-                            color = Color(0xFFB477FF),
+                            color = colors.accent,
                             shape = CircleShape
                         ),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = profile.displayName,
+                        text = profile?.displayName ?: "X",
                         color = Color.White,
                         fontSize = 25.sp,
                         fontWeight = FontWeight.Bold
@@ -162,7 +158,7 @@ fun EditProfileScreen(
 
                 Text(
                     text = strings.changeAvatar,
-                    color = GuildnetPurple,
+                    color = colors.primary,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Medium
                 )
@@ -219,17 +215,17 @@ fun EditProfileScreen(
                 .clip(RoundedCornerShape(11.dp))
                 .background(
                     if (isValid) {
-                        GuildnetPurple
+                        colors.primary
                     } else {
-                        GuildnetSurfaceLight
+                        colors.surfaceVariant
                     }
                 )
                 .border(
                     width = 1.dp,
                     color = if (isValid) {
-                        GuildnetPurple
+                        colors.primary
                     } else {
-                        GuildnetBorder
+                        colors.border
                     },
                     shape = RoundedCornerShape(11.dp)
                 )
@@ -251,7 +247,7 @@ fun EditProfileScreen(
                 color = if (isValid) {
                     Color.White
                 } else {
-                    GuildnetMutedText
+                    colors.textSecondary
                 },
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold
@@ -269,7 +265,7 @@ fun EditProfileScreen(
                 .clip(RoundedCornerShape(11.dp))
                 .border(
                     width = 1.dp,
-                    color = GuildnetBorder,
+                    color = colors.border,
                     shape = RoundedCornerShape(11.dp)
                 )
                 .clickable {
@@ -279,7 +275,7 @@ fun EditProfileScreen(
         ) {
             Text(
                 text = strings.cancel,
-                color = GuildnetMutedText,
+                color = colors.textSecondary,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Medium
             )
@@ -294,10 +290,12 @@ private fun EditProfileField(
     onValueChange: (String) -> Unit,
     singleLine: Boolean
 ) {
+    val colors = currentGuildnetThemeColors
+
     Column {
         Text(
             text = label.uppercase(),
-            color = GuildnetMutedText,
+            color = colors.textSecondary,
             fontSize = 9.sp,
             fontWeight = FontWeight.Medium,
             letterSpacing = 0.7.sp,
@@ -311,10 +309,10 @@ private fun EditProfileField(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
-                .background(GuildnetSurface)
+                .background(colors.surface)
                 .border(
                     width = 1.dp,
-                    color = GuildnetBorder,
+                    color = colors.border,
                     shape = RoundedCornerShape(12.dp)
                 )
                 .padding(
@@ -326,7 +324,7 @@ private fun EditProfileField(
             Icon(
                 imageVector = Icons.Outlined.PersonOutline,
                 contentDescription = null,
-                tint = GuildnetPurple,
+                tint = colors.primary,
                 modifier = Modifier.size(17.dp)
             )
 
@@ -341,7 +339,7 @@ private fun EditProfileField(
                 singleLine = singleLine,
                 maxLines = if (singleLine) 1 else 4,
                 textStyle = TextStyle(
-                    color = GuildnetText,
+                    color = colors.textPrimary,
                     fontSize = 12.sp
                 )
             )

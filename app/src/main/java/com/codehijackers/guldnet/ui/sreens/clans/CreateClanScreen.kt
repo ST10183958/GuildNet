@@ -34,12 +34,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
-
-private val GuildnetSurface = Color(0xFF0F1727)
-private val GuildnetBorder = Color(0xFF26344D)
-private val GuildnetPurple = Color(0xFF9857FF)
-private val GuildnetText = Color(0xFFF1F3FA)
-private val GuildnetMutedText = Color(0xFF8794AD)
+import com.codehijackers.guldnet.ui.theme.currentGuildnetThemeColors
 
 @Composable
 fun CreateClanScreen(
@@ -50,6 +45,9 @@ fun CreateClanScreen(
     ) -> Unit = { _, _ -> },
     onBackClicked: () -> Unit = {}
 ) {
+    val colors = currentGuildnetThemeColors
+    val strings = currentGuildnetStrings
+
     var title by remember {
         mutableStateOf("")
     }
@@ -58,8 +56,6 @@ fun CreateClanScreen(
         mutableStateOf("")
     }
 
-    val strings = currentGuildnetStrings
-
     val isValid =
         title.isNotBlank() &&
                 content.isNotBlank()
@@ -67,7 +63,7 @@ fun CreateClanScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Transparent)
+            .background(colors.background)
             .verticalScroll(rememberScrollState())
             .padding(
                 horizontal = 13.dp,
@@ -91,7 +87,7 @@ fun CreateClanScreen(
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
                     contentDescription = strings.back,
-                    tint = GuildnetText
+                    tint = colors.textPrimary
                 )
             }
 
@@ -101,7 +97,7 @@ fun CreateClanScreen(
 
             Text(
                 text = strings.createDiscussion,
-                color = GuildnetText,
+                color = colors.textPrimary,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -127,7 +123,7 @@ fun CreateClanScreen(
 
         Text(
             text = strings.category,
-            color = GuildnetMutedText,
+            color = colors.textSecondary,
             fontSize = 9.sp,
             letterSpacing = 1.sp,
             modifier = Modifier.padding(
@@ -141,10 +137,10 @@ fun CreateClanScreen(
                 .fillMaxWidth()
                 .height(46.dp)
                 .clip(RoundedCornerShape(12.dp))
-                .background(GuildnetSurface)
+                .background(colors.surface)
                 .border(
                     width = 1.dp,
-                    color = GuildnetBorder,
+                    color = colors.border,
                     shape = RoundedCornerShape(12.dp)
                 )
                 .padding(horizontal = 13.dp),
@@ -152,7 +148,7 @@ fun CreateClanScreen(
         ) {
             Text(
                 text = strings.strategy,
-                color = GuildnetText,
+                color = colors.textPrimary,
                 fontSize = 11.sp
             )
         }
@@ -183,17 +179,17 @@ fun CreateClanScreen(
                 .clip(RoundedCornerShape(11.dp))
                 .background(
                     if (isValid) {
-                        GuildnetPurple
+                        colors.primary
                     } else {
-                        GuildnetSurface
+                        colors.surfaceVariant
                     }
                 )
                 .border(
                     width = 1.dp,
                     color = if (isValid) {
-                        GuildnetPurple
+                        colors.primary
                     } else {
-                        GuildnetBorder
+                        colors.border
                     },
                     shape = RoundedCornerShape(11.dp)
                 )
@@ -212,7 +208,7 @@ fun CreateClanScreen(
                 color = if (isValid) {
                     Color.White
                 } else {
-                    GuildnetMutedText
+                    colors.textSecondary
                 },
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -233,7 +229,7 @@ fun CreateClanScreen(
                 .clip(RoundedCornerShape(11.dp))
                 .border(
                     width = 1.dp,
-                    color = GuildnetBorder,
+                    color = colors.border,
                     shape = RoundedCornerShape(11.dp)
                 )
                 .clickable {
@@ -243,7 +239,7 @@ fun CreateClanScreen(
         ) {
             Text(
                 text = strings.cancel,
-                color = GuildnetMutedText,
+                color = colors.textSecondary,
                 fontSize = 11.sp,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -266,10 +262,12 @@ private fun ClanEditorField(
     singleLine: Boolean,
     minHeight: Dp = 46.dp
 ) {
+    val colors = currentGuildnetThemeColors
+
     Column {
         Text(
             text = label,
-            color = GuildnetMutedText,
+            color = colors.textSecondary,
             fontSize = 9.sp,
             letterSpacing = 1.sp,
             modifier = Modifier.padding(
@@ -283,10 +281,10 @@ private fun ClanEditorField(
                 .fillMaxWidth()
                 .height(minHeight)
                 .clip(RoundedCornerShape(12.dp))
-                .background(GuildnetSurface)
+                .background(colors.surface)
                 .border(
                     width = 1.dp,
-                    color = GuildnetBorder,
+                    color = colors.border,
                     shape = RoundedCornerShape(12.dp)
                 )
                 .padding(
@@ -306,14 +304,14 @@ private fun ClanEditorField(
                 singleLine = singleLine,
                 maxLines = if (singleLine) 1 else 8,
                 textStyle = TextStyle(
-                    color = GuildnetText,
+                    color = colors.textPrimary,
                     fontSize = 12.sp
                 ),
                 decorationBox = { innerTextField ->
                     if (value.isEmpty()) {
                         Text(
                             text = placeholder,
-                            color = GuildnetMutedText,
+                            color = colors.textSecondary,
                             fontSize = 11.sp
                         )
                     }

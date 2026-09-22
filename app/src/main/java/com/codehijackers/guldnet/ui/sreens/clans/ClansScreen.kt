@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Search
@@ -44,15 +45,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codehijackers.guldnet.model.Clan
 import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
+import com.codehijackers.guldnet.ui.theme.currentGuildnetThemeColors
 import com.codehijackers.guldnet.viewmodel.ClanViewModel
 
-private val GuildnetSurface = Color(0xFF0F1727)
-private val GuildnetBorder = Color(0xFF26344D)
-private val GuildnetPurple = Color(0xFF9857FF)
-private val GuildnetPurpleDark = Color(0xFF241545)
-private val GuildnetText = Color(0xFFF1F3FA)
-private val GuildnetMutedText = Color(0xFF8794AD)
-private val GuildnetRed = Color(0xFFFF5065)
+private val GuildnetHotRed = Color(0xFFFF5065)
 
 @Composable
 fun ClansScreen(
@@ -62,6 +58,7 @@ fun ClansScreen(
     onBackClicked: () -> Unit = {},
     clanViewModel: ClanViewModel = viewModel()
 ) {
+    val colors = currentGuildnetThemeColors
     val strings = currentGuildnetStrings
     val clans by clanViewModel.clans.collectAsState()
 
@@ -99,7 +96,7 @@ fun ClansScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Transparent)
+            .background(colors.background)
     ) {
         Column(
             modifier = Modifier
@@ -118,7 +115,7 @@ fun ClansScreen(
             ) {
                 Text(
                     text = strings.clansForum,
-                    color = GuildnetText,
+                    color = colors.textPrimary,
                     fontSize = 19.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -126,7 +123,7 @@ fun ClansScreen(
                 Icon(
                     imageVector = Icons.Outlined.Search,
                     contentDescription = strings.search,
-                    tint = GuildnetMutedText,
+                    tint = colors.textSecondary,
                     modifier = Modifier.size(21.dp)
                 )
             }
@@ -136,10 +133,10 @@ fun ClansScreen(
                     .fillMaxWidth()
                     .height(41.dp)
                     .clip(RoundedCornerShape(13.dp))
-                    .background(GuildnetSurface)
+                    .background(colors.surface)
                     .border(
                         width = 1.dp,
-                        color = GuildnetBorder,
+                        color = colors.border,
                         shape = RoundedCornerShape(13.dp)
                     )
                     .padding(horizontal = 12.dp),
@@ -148,7 +145,7 @@ fun ClansScreen(
                 Icon(
                     imageVector = Icons.Outlined.Search,
                     contentDescription = null,
-                    tint = Color(0xFF52617D),
+                    tint = colors.textSecondary,
                     modifier = Modifier.size(17.dp)
                 )
 
@@ -164,14 +161,14 @@ fun ClansScreen(
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
                     textStyle = TextStyle(
-                        color = GuildnetText,
+                        color = colors.textPrimary,
                         fontSize = 11.sp
                     ),
                     decorationBox = { innerTextField ->
                         if (searchQuery.isEmpty()) {
                             Text(
                                 text = strings.searchDiscussions,
-                                color = GuildnetMutedText,
+                                color = colors.textSecondary,
                                 fontSize = 11.sp
                             )
                         }
@@ -221,7 +218,7 @@ fun ClansScreen(
                         .clip(
                             RoundedCornerShape(2.dp)
                         )
-                        .background(GuildnetPurple)
+                        .background(colors.primary)
                 )
 
                 Spacer(
@@ -230,7 +227,7 @@ fun ClansScreen(
 
                 Text(
                     text = strings.popularDiscussions.uppercase(),
-                    color = GuildnetText,
+                    color = colors.textPrimary,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.SemiBold,
                     letterSpacing = 0.9.sp
@@ -254,7 +251,7 @@ fun ClansScreen(
                         } else {
                             strings.noDiscussions
                         },
-                        color = GuildnetText,
+                        color = colors.textPrimary,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -269,7 +266,7 @@ fun ClansScreen(
                         } else {
                             strings.startDiscussionWithGuild
                         },
-                        color = GuildnetMutedText,
+                        color = colors.textSecondary,
                         fontSize = 11.sp
                     )
                 }
@@ -309,7 +306,7 @@ fun ClansScreen(
                 )
                 .size(49.dp)
                 .clip(RoundedCornerShape(16.dp))
-                .background(GuildnetPurple)
+                .background(colors.primary)
                 .clickable {
                     onCreateClanClicked()
                 },
@@ -331,15 +328,17 @@ private fun ClanCategoryCard(
     title: String,
     count: String
 ) {
+    val colors = currentGuildnetThemeColors
+
     Column(
         modifier = Modifier
             .width(74.dp)
             .height(86.dp)
             .clip(RoundedCornerShape(13.dp))
-            .background(GuildnetSurface)
+            .background(colors.surface)
             .border(
                 width = 1.dp,
-                color = GuildnetBorder,
+                color = colors.border,
                 shape = RoundedCornerShape(13.dp)
             )
             .padding(
@@ -359,7 +358,7 @@ private fun ClanCategoryCard(
 
         Text(
             text = title,
-            color = GuildnetText,
+            color = colors.textPrimary,
             fontSize = 9.sp,
             fontWeight = FontWeight.Medium,
             maxLines = 1,
@@ -372,7 +371,7 @@ private fun ClanCategoryCard(
 
         Text(
             text = count,
-            color = GuildnetPurple,
+            color = colors.primary,
             fontSize = 8.sp
         )
     }
@@ -385,14 +384,16 @@ private fun ClanForumCard(
     hotText: String,
     onClick: () -> Unit
 ) {
+    val colors = currentGuildnetThemeColors
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(15.dp))
-            .background(GuildnetSurface)
+            .background(colors.surface)
             .border(
                 width = 1.dp,
-                color = GuildnetBorder,
+                color = colors.border,
                 shape = RoundedCornerShape(15.dp)
             )
             .clickable {
@@ -424,7 +425,7 @@ private fun ClanForumCard(
 
         Text(
             text = clan.title,
-            color = GuildnetText,
+            color = colors.textPrimary,
             fontSize = 12.sp,
             fontWeight = FontWeight.SemiBold,
             lineHeight = 17.sp,
@@ -444,14 +445,14 @@ private fun ClanForumCard(
                 modifier = Modifier
                     .size(19.dp)
                     .clip(RoundedCornerShape(5.dp))
-                    .background(GuildnetPurpleDark),
+                    .background(colors.selectedBackground),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = clan.authorName
                         .take(1)
                         .uppercase(),
-                    color = GuildnetPurple,
+                    color = colors.primary,
                     fontSize = 8.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -463,14 +464,14 @@ private fun ClanForumCard(
 
             Text(
                 text = clan.authorName,
-                color = GuildnetMutedText,
+                color = colors.textSecondary,
                 fontSize = 9.sp,
                 modifier = Modifier.weight(1f)
             )
 
             Text(
                 text = "💬 ${clan.upvotes}",
-                color = GuildnetMutedText,
+                color = colors.textSecondary,
                 fontSize = 8.sp
             )
 
@@ -480,7 +481,7 @@ private fun ClanForumCard(
 
             Text(
                 text = "♡ ${clan.upvotes}",
-                color = GuildnetMutedText,
+                color = colors.textSecondary,
                 fontSize = 8.sp
             )
         }
@@ -492,22 +493,24 @@ private fun ClanTag(
     text: String,
     hot: Boolean = false
 ) {
+    val colors = currentGuildnetThemeColors
+
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(5.dp))
             .background(
                 if (hot) {
-                    GuildnetRed.copy(alpha = 0.12f)
+                    GuildnetHotRed.copy(alpha = 0.12f)
                 } else {
-                    GuildnetPurple.copy(alpha = 0.12f)
+                    colors.primary.copy(alpha = 0.12f)
                 }
             )
             .border(
                 width = 1.dp,
                 color = if (hot) {
-                    GuildnetRed.copy(alpha = 0.3f)
+                    GuildnetHotRed.copy(alpha = 0.3f)
                 } else {
-                    GuildnetPurple.copy(alpha = 0.3f)
+                    colors.primary.copy(alpha = 0.3f)
                 },
                 shape = RoundedCornerShape(5.dp)
             )
@@ -519,9 +522,9 @@ private fun ClanTag(
         Text(
             text = text,
             color = if (hot) {
-                GuildnetRed
+                GuildnetHotRed
             } else {
-                GuildnetPurple
+                colors.primary
             },
             fontSize = 8.sp,
             fontWeight = FontWeight.Medium

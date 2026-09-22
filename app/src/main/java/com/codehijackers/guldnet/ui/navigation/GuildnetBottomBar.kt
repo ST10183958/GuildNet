@@ -25,7 +25,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -33,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
+import com.codehijackers.guldnet.ui.theme.currentGuildnetThemeColors
 
 data class GuildnetNavigationItem(
     val route: String,
@@ -44,6 +44,7 @@ data class GuildnetNavigationItem(
 fun GuildnetBottomBar(
     navController: NavHostController
 ) {
+    val colors = currentGuildnetThemeColors
     val strings = currentGuildnetStrings
 
     val navigationItems = listOf(
@@ -76,19 +77,16 @@ fun GuildnetBottomBar(
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-    val currentRoute =
-        navBackStackEntry?.destination?.route
+    val currentRoute = navBackStackEntry?.destination?.route
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(82.dp)
-            .background(
-                Color(0xFF080C16)
-            )
+            .background(colors.surface)
             .border(
                 width = 1.dp,
-                color = Color(0xFF202A3D),
+                color = colors.border,
                 shape = RoundedCornerShape(0.dp)
             )
             .navigationBarsPadding(),
@@ -128,9 +126,9 @@ fun GuildnetBottomBar(
                         .clip(RoundedCornerShape(12.dp))
                         .background(
                             if (selected) {
-                                Color(0xFF241545)
+                                colors.selectedBackground
                             } else {
-                                Color.Transparent
+                                androidx.compose.ui.graphics.Color.Transparent
                             }
                         ),
                     contentAlignment = Alignment.Center
@@ -140,9 +138,9 @@ fun GuildnetBottomBar(
                         contentDescription = item.label,
                         modifier = Modifier.size(26.dp),
                         tint = if (selected) {
-                            Color(0xFF9B5CFF)
+                            colors.primary
                         } else {
-                            Color(0xFF687795)
+                            colors.textSecondary
                         }
                     )
                 }
@@ -150,9 +148,9 @@ fun GuildnetBottomBar(
                 Text(
                     text = item.label,
                     color = if (selected) {
-                        Color(0xFF9B5CFF)
+                        colors.primary
                     } else {
-                        Color(0xFF687795)
+                        colors.textSecondary
                     },
                     fontSize = 11.sp,
                     fontWeight = if (selected) {
@@ -172,7 +170,7 @@ fun GuildnetBottomBar(
                             .height(3.dp)
                             .fillMaxWidth(0.28f)
                             .background(
-                                Color(0xFF9B5CFF),
+                                colors.primary,
                                 RoundedCornerShape(3.dp)
                             )
                     )

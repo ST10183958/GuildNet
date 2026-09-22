@@ -45,15 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
+import com.codehijackers.guldnet.ui.theme.currentGuildnetThemeColors
 import com.codehijackers.guldnet.viewmodel.MessageViewModel
-
-private val GuildnetSurface = Color(0xFF0F1727)
-private val GuildnetSurfaceLight = Color(0xFF121C2E)
-private val GuildnetBorder = Color(0xFF26344D)
-private val GuildnetPurple = Color(0xFF9857FF)
-private val GuildnetPurpleDark = Color(0xFF241545)
-private val GuildnetText = Color(0xFFF1F3FA)
-private val GuildnetMutedText = Color(0xFF8794AD)
 
 @Composable
 fun ChatScreen(
@@ -61,6 +54,7 @@ fun ChatScreen(
     onBackClicked: () -> Unit = {},
     messageViewModel: MessageViewModel = viewModel()
 ) {
+    val colors = currentGuildnetThemeColors
     val strings = currentGuildnetStrings
 
     val messages by messageViewModel.messages.collectAsState()
@@ -86,18 +80,18 @@ fun ChatScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Transparent)
+            .background(colors.background)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(64.dp)
                 .background(
-                    GuildnetSurface.copy(alpha = 0.94f)
+                    colors.surface.copy(alpha = 0.94f)
                 )
                 .border(
                     width = 1.dp,
-                    color = GuildnetBorder
+                    color = colors.border
                 )
                 .padding(horizontal = 10.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -114,7 +108,7 @@ fun ChatScreen(
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
                     contentDescription = strings.back,
-                    tint = GuildnetText,
+                    tint = colors.textPrimary,
                     modifier = Modifier.size(21.dp)
                 )
             }
@@ -127,10 +121,10 @@ fun ChatScreen(
                 modifier = Modifier
                     .size(38.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .background(GuildnetPurpleDark)
+                    .background(colors.selectedBackground)
                     .border(
                         width = 1.dp,
-                        color = GuildnetPurple.copy(alpha = 0.5f),
+                        color = colors.primary.copy(alpha = 0.5f),
                         shape = RoundedCornerShape(10.dp)
                     ),
                 contentAlignment = Alignment.Center
@@ -138,7 +132,7 @@ fun ChatScreen(
                 Icon(
                     imageVector = Icons.Outlined.Group,
                     contentDescription = null,
-                    tint = GuildnetPurple,
+                    tint = colors.primary,
                     modifier = Modifier.size(19.dp)
                 )
             }
@@ -152,7 +146,7 @@ fun ChatScreen(
             ) {
                 Text(
                     text = strings.squadChat,
-                    color = GuildnetText,
+                    color = colors.textPrimary,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -163,7 +157,7 @@ fun ChatScreen(
 
                 Text(
                     text = "${strings.squadLabel} $squadId",
-                    color = GuildnetMutedText,
+                    color = colors.textSecondary,
                     fontSize = 9.sp
                 )
             }
@@ -199,11 +193,11 @@ fun ChatScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    GuildnetSurface.copy(alpha = 0.96f)
+                    colors.surface.copy(alpha = 0.96f)
                 )
                 .border(
                     width = 1.dp,
-                    color = GuildnetBorder
+                    color = colors.border
                 )
                 .navigationBarsPadding()
                 .padding(
@@ -216,10 +210,10 @@ fun ChatScreen(
                 modifier = Modifier
                     .weight(1f)
                     .clip(RoundedCornerShape(13.dp))
-                    .background(GuildnetSurfaceLight)
+                    .background(colors.surfaceVariant)
                     .border(
                         width = 1.dp,
-                        color = GuildnetBorder,
+                        color = colors.border,
                         shape = RoundedCornerShape(13.dp)
                     )
                     .padding(
@@ -234,7 +228,7 @@ fun ChatScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     textStyle = TextStyle(
-                        color = GuildnetText,
+                        color = colors.textPrimary,
                         fontSize = 12.sp
                     ),
                     singleLine = false,
@@ -243,7 +237,7 @@ fun ChatScreen(
                         if (messageText.isEmpty()) {
                             Text(
                                 text = strings.squadChatPlaceholder,
-                                color = GuildnetMutedText,
+                                color = colors.textSecondary,
                                 fontSize = 12.sp
                             )
                         }
@@ -263,17 +257,17 @@ fun ChatScreen(
                     .clip(RoundedCornerShape(12.dp))
                     .background(
                         if (messageText.isNotBlank()) {
-                            GuildnetPurple
+                            colors.primary
                         } else {
-                            GuildnetSurfaceLight
+                            colors.surfaceVariant
                         }
                     )
                     .border(
                         width = 1.dp,
                         color = if (messageText.isNotBlank()) {
-                            GuildnetPurple
+                            colors.primary
                         } else {
-                            GuildnetBorder
+                            colors.border
                         },
                         shape = RoundedCornerShape(12.dp)
                     )
@@ -296,7 +290,7 @@ fun ChatScreen(
                     tint = if (messageText.isNotBlank()) {
                         Color.White
                     } else {
-                        GuildnetMutedText
+                        colors.textSecondary
                     },
                     modifier = Modifier.size(18.dp)
                 )

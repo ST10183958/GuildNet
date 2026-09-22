@@ -42,18 +42,8 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codehijackers.guldnet.model.Squad
 import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
+import com.codehijackers.guldnet.ui.theme.currentGuildnetThemeColors
 import com.codehijackers.guldnet.viewmodel.SquadViewModel
-
-private val GuildnetSurface = Color(0xFF0F1727)
-private val GuildnetSurfaceLight = Color(0xFF121C2E)
-private val GuildnetBorder = Color(0xFF26344D)
-
-private val GuildnetPurple = Color(0xFF9857FF)
-private val GuildnetPurpleDark = Color(0xFF241545)
-
-private val GuildnetText = Color(0xFFF1F3FA)
-private val GuildnetMutedText = Color(0xFF8794AD)
-private val GuildnetGreen = Color(0xFF35D98A)
 
 @Composable
 fun SquadsScreen(
@@ -61,6 +51,7 @@ fun SquadsScreen(
     onCreateSquadClicked: () -> Unit = {},
     squadViewModel: SquadViewModel = viewModel()
 ) {
+    val colors = currentGuildnetThemeColors
     val squads by squadViewModel.squads.collectAsState()
     val strings = currentGuildnetStrings
 
@@ -101,10 +92,9 @@ fun SquadsScreen(
             .background(Color.Transparent)
             .padding(horizontal = 8.dp)
     ) {
-
         Text(
             text = strings.squads,
-            color = GuildnetText,
+            color = colors.textPrimary,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(
@@ -118,20 +108,19 @@ fun SquadsScreen(
                 .fillMaxWidth()
                 .height(41.dp)
                 .clip(RoundedCornerShape(13.dp))
-                .background(GuildnetSurface)
+                .background(colors.surface)
                 .border(
                     width = 1.dp,
-                    color = GuildnetBorder,
+                    color = colors.border,
                     shape = RoundedCornerShape(13.dp)
                 )
                 .padding(horizontal = 13.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Icon(
                 imageVector = Icons.Outlined.Search,
                 contentDescription = strings.search,
-                tint = Color(0xFF52617D),
+                tint = colors.textSecondary,
                 modifier = Modifier.size(17.dp)
             )
 
@@ -147,15 +136,14 @@ fun SquadsScreen(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 textStyle = TextStyle(
-                    color = GuildnetText,
+                    color = colors.textPrimary,
                     fontSize = 12.sp
                 ),
                 decorationBox = { innerTextField ->
-
                     if (searchQuery.isEmpty()) {
                         Text(
                             text = strings.searchSquads,
-                            color = GuildnetMutedText,
+                            color = colors.textSecondary,
                             fontSize = 12.sp
                         )
                     }
@@ -175,11 +163,10 @@ fun SquadsScreen(
                 .height(40.dp)
                 .clip(RoundedCornerShape(12.dp))
                 .background(
-                    GuildnetSurface.copy(alpha = 0.75f)
+                    colors.surface.copy(alpha = 0.75f)
                 )
                 .padding(3.dp)
         ) {
-
             SquadTabButton(
                 text = strings.mySquads,
                 selected = selectedTab == strings.mySquads,
@@ -204,14 +191,12 @@ fun SquadsScreen(
         )
 
         if (filteredSquads.isEmpty()) {
-
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 48.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
                 Text(
                     text = when {
                         searchQuery.isNotBlank() ->
@@ -223,7 +208,7 @@ fun SquadsScreen(
                         else ->
                             strings.noSquadsAvailable
                     },
-                    color = GuildnetMutedText,
+                    color = colors.textSecondary,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Medium
                 )
@@ -232,21 +217,18 @@ fun SquadsScreen(
                     selectedTab == strings.mySquads &&
                     searchQuery.isBlank()
                 ) {
-
                     Spacer(
                         modifier = Modifier.height(7.dp)
                     )
 
                     Text(
                         text = strings.explorePopularSquads,
-                        color = GuildnetMutedText,
+                        color = colors.textSecondary,
                         fontSize = 11.sp
                     )
                 }
             }
-
         } else {
-
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(
@@ -254,25 +236,19 @@ fun SquadsScreen(
                 ),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-
                 items(
                     items = filteredSquads,
                     key = { it.id }
                 ) { squad ->
-
                     GuildnetSquadCard(
                         squad = squad,
-
                         onSquadClicked = {
                             onSquadClicked(squad.id)
                         },
-
                         onChatClicked = {
                             onSquadClicked(squad.id)
                         },
-
                         onJoinClicked = {
-
                             if (squad.isJoined) {
                                 squadViewModel.leaveSquad(
                                     squad.id
@@ -297,13 +273,15 @@ private fun SquadTabButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val colors = currentGuildnetThemeColors
+
     Box(
         modifier = modifier
             .fillMaxSize()
             .clip(RoundedCornerShape(9.dp))
             .background(
                 if (selected) {
-                    GuildnetPurple
+                    colors.primary
                 } else {
                     Color.Transparent
                 }
@@ -318,7 +296,7 @@ private fun SquadTabButton(
             color = if (selected) {
                 Color.White
             } else {
-                GuildnetMutedText
+                colors.textSecondary
             },
             fontSize = 11.sp,
             fontWeight = if (selected) {
@@ -337,16 +315,17 @@ private fun GuildnetSquadCard(
     onChatClicked: () -> Unit,
     onJoinClicked: () -> Unit
 ) {
+    val colors = currentGuildnetThemeColors
     val strings = currentGuildnetStrings
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(GuildnetSurface)
+            .background(colors.surface)
             .border(
                 width = 1.dp,
-                color = GuildnetBorder,
+                color = colors.border,
                 shape = RoundedCornerShape(16.dp)
             )
             .padding(
@@ -354,12 +333,10 @@ private fun GuildnetSquadCard(
                 vertical = 15.dp
             )
     ) {
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             SquadGameIcon(
                 squad = squad
             )
@@ -371,10 +348,9 @@ private fun GuildnetSquadCard(
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-
                 Text(
                     text = squad.name,
-                    color = GuildnetText,
+                    color = colors.textPrimary,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -385,7 +361,7 @@ private fun GuildnetSquadCard(
 
                 Text(
                     text = "${squad.memberCount} ${strings.members}",
-                    color = GuildnetMutedText,
+                    color = colors.textSecondary,
                     fontSize = 10.sp
                 )
             }
@@ -393,12 +369,11 @@ private fun GuildnetSquadCard(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 Box(
                     modifier = Modifier
                         .size(7.dp)
                         .clip(CircleShape)
-                        .background(GuildnetGreen)
+                        .background(Color(0xFF35D98A))
                 )
 
                 Spacer(
@@ -407,7 +382,7 @@ private fun GuildnetSquadCard(
 
                 Text(
                     text = onlineCount(squad).toString(),
-                    color = GuildnetGreen,
+                    color = Color(0xFF35D98A),
                     fontSize = 10.sp
                 )
             }
@@ -421,16 +396,15 @@ private fun GuildnetSquadCard(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-
             Box(
                 modifier = Modifier
                     .weight(1f)
                     .height(39.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .background(GuildnetPurpleDark)
+                    .background(colors.selectedBackground)
                     .border(
                         width = 1.dp,
-                        color = GuildnetPurple.copy(
+                        color = colors.primary.copy(
                             alpha = 0.55f
                         ),
                         shape = RoundedCornerShape(10.dp)
@@ -440,15 +414,13 @@ private fun GuildnetSquadCard(
                     },
                 contentAlignment = Alignment.Center
             ) {
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-
                     Icon(
                         imageVector = Icons.Outlined.ChatBubbleOutline,
                         contentDescription = strings.chat,
-                        tint = GuildnetPurple,
+                        tint = colors.primary,
                         modifier = Modifier.size(15.dp)
                     )
 
@@ -458,7 +430,7 @@ private fun GuildnetSquadCard(
 
                     Text(
                         text = strings.chat,
-                        color = GuildnetPurple,
+                        color = colors.primary,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -472,7 +444,7 @@ private fun GuildnetSquadCard(
                     .clip(RoundedCornerShape(10.dp))
                     .border(
                         width = 1.dp,
-                        color = GuildnetBorder,
+                        color = colors.border,
                         shape = RoundedCornerShape(10.dp)
                     )
                     .clickable {
@@ -480,10 +452,9 @@ private fun GuildnetSquadCard(
                     },
                 contentAlignment = Alignment.Center
             ) {
-
                 Text(
                     text = strings.view,
-                    color = GuildnetMutedText,
+                    color = colors.textSecondary,
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium
                 )
@@ -496,13 +467,13 @@ private fun GuildnetSquadCard(
 private fun SquadGameIcon(
     squad: Squad
 ) {
+    val colors = currentGuildnetThemeColors
     val name = squad.name.lowercase()
 
     val backgroundColor: Color
     val borderColor: Color
 
     when {
-
         "apex" in name -> {
             backgroundColor = Color(0xFF28171E)
             borderColor = Color(0xFF71313F)
@@ -520,8 +491,8 @@ private fun SquadGameIcon(
         }
 
         else -> {
-            backgroundColor = Color(0xFF172238)
-            borderColor = GuildnetBorder
+            backgroundColor = colors.surfaceVariant
+            borderColor = colors.border
         }
     }
 
@@ -537,12 +508,11 @@ private fun SquadGameIcon(
             ),
         contentAlignment = Alignment.Center
     ) {
-
         Text(
             text = squad.name
                 .take(3)
                 .uppercase(),
-            color = GuildnetText,
+            color = colors.textPrimary,
             fontSize = 8.sp,
             fontWeight = FontWeight.Bold
         )

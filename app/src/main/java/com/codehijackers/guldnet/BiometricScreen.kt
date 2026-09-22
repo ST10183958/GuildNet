@@ -13,6 +13,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,6 +22,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import com.codehijackers.guldnet.repository.LanguageRepository
+import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
+import com.codehijackers.guldnet.ui.theme.currentGuildnetThemeColors
 
 @Composable
 fun BiometricScreen(
@@ -29,13 +34,14 @@ fun BiometricScreen(
     onUsePasswordClick: () -> Unit = {},
     onCancelClick: () -> Unit = {}
 ) {
-
     val context = LocalContext.current
-
     val activity = context as? FragmentActivity
 
-    LaunchedEffect(Unit) {
+    val language by LanguageRepository.language.collectAsState()
+    val strings = currentGuildnetStrings
+    val colors = currentGuildnetThemeColors
 
+    LaunchedEffect(language) {
         if (activity == null) {
             return@LaunchedEffect
         }
@@ -48,9 +54,7 @@ fun BiometricScreen(
                         BiometricManager.Authenticators.BIOMETRIC_WEAK
             )
 
-        if (
-            canAuthenticate != BiometricManager.BIOMETRIC_SUCCESS
-        ) {
+        if (canAuthenticate != BiometricManager.BIOMETRIC_SUCCESS) {
             return@LaunchedEffect
         }
 
@@ -83,21 +87,15 @@ fun BiometricScreen(
 
                 override fun onAuthenticationFailed() {
                     super.onAuthenticationFailed()
-
-                    // The biometric didn't match.
-                    // Android will normally allow the user
-                    // to try again.
                 }
             }
         )
 
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
             .setTitle("Guildnet")
-            .setSubtitle("Authenticate to continue")
-            .setDescription(
-                "Use your device biometric security to sign in."
-            )
-            .setNegativeButtonText("Use Password")
+            .setSubtitle(strings.authenticateToContinue)
+            .setDescription(strings.biometricDescription)
+            .setNegativeButtonText(strings.usePassword)
             .build()
 
         biometricPrompt.authenticate(promptInfo)
@@ -114,20 +112,19 @@ private fun BiometricContent(
     onBackClick: () -> Unit,
     onCancelClick: () -> Unit
 ) {
-
-    val darkBg = Color(0xFF0B0E14)
-    val textBodyColor = Color(0xFF94A3B8)
+    val colors = currentGuildnetThemeColors
+    val strings = currentGuildnetStrings
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(darkBg)
+            .background(colors.background)
     ) {
 
         Icon(
             imageVector = Icons.Default.ArrowBack,
-            contentDescription = "Back",
-            tint = Color.White,
+            contentDescription = strings.back,
+            tint = colors.textPrimary,
             modifier = Modifier
                 .padding(24.dp)
                 .size(28.dp)
@@ -143,8 +140,8 @@ private fun BiometricContent(
         ) {
 
             Text(
-                text = "Biometric Auth",
-                color = Color.White,
+                text = strings.biometricAuth,
+                color = colors.textPrimary,
                 fontSize = 28.sp
             )
 
@@ -153,8 +150,8 @@ private fun BiometricContent(
             )
 
             Text(
-                text = "Authenticate to continue",
-                color = textBodyColor,
+                text = strings.authenticateToContinue,
+                color = colors.textSecondary,
                 fontSize = 14.sp
             )
 
@@ -166,7 +163,7 @@ private fun BiometricContent(
                 modifier = Modifier
                     .size(160.dp)
                     .background(
-                        Color(0xFF332047),
+                        colors.selectedBackground,
                         CircleShape
                     ),
                 contentAlignment = Alignment.Center
@@ -183,8 +180,8 @@ private fun BiometricContent(
             )
 
             Text(
-                text = "Use your device biometric",
-                color = Color.White,
+                text = strings.useDeviceBiometric,
+                color = colors.textPrimary,
                 fontSize = 15.sp
             )
 
@@ -193,8 +190,8 @@ private fun BiometricContent(
             )
 
             Text(
-                text = "Fingerprint or face recognition",
-                color = textBodyColor,
+                text = strings.fingerprintOrFace,
+                color = colors.textSecondary,
                 fontSize = 13.sp
             )
 
@@ -203,8 +200,8 @@ private fun BiometricContent(
             )
 
             Text(
-                text = "Cancel",
-                color = textBodyColor,
+                text = strings.cancel,
+                color = colors.textSecondary,
                 fontSize = 16.sp,
                 modifier = Modifier.clickable {
                     onCancelClick()

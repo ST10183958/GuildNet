@@ -10,7 +10,7 @@ import androidx.room.RoomDatabase
         UserEntity::class,
         AppSettingsEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class GuildnetDatabase : RoomDatabase() {

@@ -189,6 +189,15 @@ data class GuildnetStrings(
     val velvetBloomDescription: String,
 
     val themeSettingsDescription: String,
+
+    val biometricAuth: String,
+    val authenticateToContinue: String,
+    val biometricDescription: String,
+    val useDeviceBiometric: String,
+    val fingerprintOrFace: String,
+    val usePassword: String
+
+
 )
 
 fun guildnetStrings(
@@ -220,7 +229,7 @@ fun guildnetStrings(
             username = "Username",
             bio = "Bio",
 
-            language = "Language",
+            language = "Settings",
             English = "English",
             isiZulu = "isiZulu",
 
@@ -383,6 +392,13 @@ fun guildnetStrings(
             sabeinsDescription = "Black, red and gold",
             velvetBloomDescription = "Royal pink and velvet purple",
             themeSettingsDescription = "Choose the visual style used across Guildnet.",
+            biometricAuth = "Biometric Auth",
+            authenticateToContinue = "Authenticate to continue",
+            biometricDescription = "Use your device biometric security to sign in.",
+            useDeviceBiometric = "Use your device biometric",
+            fingerprintOrFace = "Fingerprint or face recognition",
+            usePassword = "Use Password"
+
         )
 
         AppLanguage.ZULU -> GuildnetStrings(
@@ -408,7 +424,7 @@ fun guildnetStrings(
             username = "Igama Lomsebenzisi",
             bio = "Mayelana nami",
 
-            language = "Ulimi",
+            language = "Izilungiselo",
             English = "English",
             isiZulu = "isiZulu",
 
@@ -571,6 +587,13 @@ fun guildnetStrings(
             velvetBloomDescription = "Okuphinki kweRoyal nokunsomi kwevelvet",
 
             themeSettingsDescription = "Khetha isitayela esibonakalayo esisetshenziswa kuyo yonke i-Guildnet.",
+
+            biometricAuth = "Ukuqinisekiswa nge-Biometric",
+            authenticateToContinue = "Qinisekisa ukuze uqhubeke",
+            biometricDescription = "Sebenzisa ukuphepha kwe-biometric kwedivayisi yakho ukuze ungene.",
+            useDeviceBiometric = "Sebenzisa i-biometric yedivayisi yakho",
+            fingerprintOrFace = "Izigxivizo zeminwe noma ukubonwa kobuso",
+            usePassword = "Sebenzisa Iphasiwedi"
         )
     }
 }

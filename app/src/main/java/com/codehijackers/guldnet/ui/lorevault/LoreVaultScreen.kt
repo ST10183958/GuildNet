@@ -43,15 +43,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.codehijackers.guldnet.model.Guide
 import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
+import com.codehijackers.guldnet.ui.theme.currentGuildnetThemeColors
 import com.codehijackers.guldnet.viewmodel.GuideViewModel
-
-private val GuildnetSurface = Color(0xFF0F1727)
-private val GuildnetBorder = Color(0xFF26344D)
-private val GuildnetPurple = Color(0xFF9857FF)
-private val GuildnetPurpleDark = Color(0xFF241545)
-private val GuildnetText = Color(0xFFF1F3FA)
-private val GuildnetMutedText = Color(0xFF8794AD)
 
 @Composable
 fun LoreVaultScreen(
@@ -61,6 +56,7 @@ fun LoreVaultScreen(
     onBackClicked: () -> Unit = {},
     guideViewModel: GuideViewModel = viewModel()
 ) {
+    val colors = currentGuildnetThemeColors
     val strings = currentGuildnetStrings
     val guides by guideViewModel.guides.collectAsState()
 
@@ -115,7 +111,7 @@ fun LoreVaultScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Transparent)
+            .background(colors.background)
             .padding(horizontal = 13.dp)
     ) {
         Row(
@@ -133,14 +129,14 @@ fun LoreVaultScreen(
             ) {
                 Text(
                     text = strings.lore,
-                    color = GuildnetText,
+                    color = colors.textPrimary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
 
                 Text(
                     text = strings.vault,
-                    color = GuildnetPurple,
+                    color = colors.primary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -158,7 +154,7 @@ fun LoreVaultScreen(
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = strings.createGuide,
-                    tint = GuildnetPurple,
+                    tint = colors.primary,
                     modifier = Modifier.size(21.dp)
                 )
             }
@@ -169,10 +165,10 @@ fun LoreVaultScreen(
                 .fillMaxWidth()
                 .height(41.dp)
                 .clip(RoundedCornerShape(13.dp))
-                .background(GuildnetSurface)
+                .background(colors.surface)
                 .border(
                     width = 1.dp,
-                    color = GuildnetBorder,
+                    color = colors.border,
                     shape = RoundedCornerShape(13.dp)
                 )
                 .padding(horizontal = 12.dp),
@@ -181,7 +177,7 @@ fun LoreVaultScreen(
             Icon(
                 imageVector = Icons.Outlined.Search,
                 contentDescription = strings.search,
-                tint = Color(0xFF52617D),
+                tint = colors.textSecondary,
                 modifier = Modifier.size(17.dp)
             )
 
@@ -197,14 +193,14 @@ fun LoreVaultScreen(
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 textStyle = TextStyle(
-                    color = GuildnetText,
+                    color = colors.textPrimary,
                     fontSize = 11.sp
                 ),
                 decorationBox = { innerTextField ->
                     if (searchQuery.isEmpty()) {
                         Text(
                             text = strings.searchGuidesLore,
-                            color = GuildnetMutedText,
+                            color = colors.textSecondary,
                             fontSize = 11.sp
                         )
                     }
@@ -250,7 +246,7 @@ fun LoreVaultScreen(
             ) {
                 Text(
                     text = strings.noGuidesFound,
-                    color = GuildnetText,
+                    color = colors.textPrimary,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -261,7 +257,7 @@ fun LoreVaultScreen(
 
                 Text(
                     text = strings.tryAnotherSearchCategory,
-                    color = GuildnetMutedText,
+                    color = colors.textSecondary,
                     fontSize = 11.sp
                 )
             }
@@ -344,20 +340,22 @@ private fun LoreCategoryChip(
     selected: Boolean,
     onClick: () -> Unit
 ) {
+    val colors = currentGuildnetThemeColors
+
     Box(
         modifier = Modifier
             .height(33.dp)
             .clip(RoundedCornerShape(18.dp))
             .background(
                 if (selected) {
-                    GuildnetPurple
+                    colors.primary
                 } else {
-                    GuildnetSurface
+                    colors.surface
                 }
             )
             .border(
                 width = if (selected) 0.dp else 1.dp,
-                color = GuildnetBorder,
+                color = colors.border,
                 shape = RoundedCornerShape(18.dp)
             )
             .clickable {
@@ -373,7 +371,7 @@ private fun LoreCategoryChip(
             color = if (selected) {
                 Color.White
             } else {
-                GuildnetMutedText
+                colors.textSecondary
             },
             fontSize = 10.sp,
             fontWeight = if (selected) {
@@ -389,6 +387,8 @@ private fun LoreCategoryChip(
 private fun LoreSectionHeader(
     title: String
 ) {
+    val colors = currentGuildnetThemeColors
+
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -397,7 +397,7 @@ private fun LoreSectionHeader(
                 .width(3.dp)
                 .height(15.dp)
                 .clip(RoundedCornerShape(2.dp))
-                .background(GuildnetPurple)
+                .background(colors.primary)
         )
 
         Spacer(
@@ -406,7 +406,7 @@ private fun LoreSectionHeader(
 
         Text(
             text = title.uppercase(),
-            color = GuildnetText,
+            color = colors.textPrimary,
             fontSize = 11.sp,
             fontWeight = FontWeight.SemiBold,
             letterSpacing = 0.9.sp
@@ -416,21 +416,25 @@ private fun LoreSectionHeader(
 
 @Composable
 private fun FeaturedGuideCard(
-    guide: com.codehijackers.guldnet.model.Guide,
+    guide: Guide,
     featuredText: String,
     byText: String,
     minReadText: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val colors = currentGuildnetThemeColors
+
     Column(
         modifier = modifier
             .height(126.dp)
             .clip(RoundedCornerShape(15.dp))
-            .background(GuildnetPurpleDark.copy(alpha = 0.55f))
+            .background(
+                colors.selectedBackground.copy(alpha = 0.55f)
+            )
             .border(
                 width = 1.dp,
-                color = GuildnetPurple.copy(alpha = 0.5f),
+                color = colors.primary.copy(alpha = 0.5f),
                 shape = RoundedCornerShape(15.dp)
             )
             .clickable {
@@ -442,7 +446,7 @@ private fun FeaturedGuideCard(
             modifier = Modifier
                 .clip(RoundedCornerShape(5.dp))
                 .background(
-                    GuildnetPurple.copy(alpha = 0.13f)
+                    colors.primary.copy(alpha = 0.13f)
                 )
                 .padding(
                     horizontal = 8.dp,
@@ -451,7 +455,7 @@ private fun FeaturedGuideCard(
         ) {
             Text(
                 text = featuredText,
-                color = GuildnetPurple,
+                color = colors.primary,
                 fontSize = 8.sp,
                 fontWeight = FontWeight.Medium
             )
@@ -463,7 +467,7 @@ private fun FeaturedGuideCard(
 
         Text(
             text = guide.title,
-            color = GuildnetText,
+            color = colors.textPrimary,
             fontSize = 11.sp,
             fontWeight = FontWeight.SemiBold,
             maxLines = 2,
@@ -480,7 +484,7 @@ private fun FeaturedGuideCard(
         ) {
             Text(
                 text = "$byText ${guide.authorName}",
-                color = GuildnetMutedText,
+                color = colors.textSecondary,
                 fontSize = 8.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -488,7 +492,7 @@ private fun FeaturedGuideCard(
 
             Text(
                 text = "${readTime(guide.content)} $minReadText",
-                color = GuildnetMutedText,
+                color = colors.textSecondary,
                 fontSize = 8.sp
             )
         }
@@ -497,20 +501,22 @@ private fun FeaturedGuideCard(
 
 @Composable
 private fun GuideListCard(
-    guide: com.codehijackers.guldnet.model.Guide,
+    guide: Guide,
     byText: String,
     viewsText: String,
     minReadText: String,
     onClick: () -> Unit
 ) {
+    val colors = currentGuildnetThemeColors
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(15.dp))
-            .background(GuildnetSurface)
+            .background(colors.surface)
             .border(
                 width = 1.dp,
-                color = GuildnetBorder,
+                color = colors.border,
                 shape = RoundedCornerShape(15.dp)
             )
             .clickable {
@@ -529,7 +535,7 @@ private fun GuideListCard(
                 modifier = Modifier
                     .clip(RoundedCornerShape(5.dp))
                     .background(
-                        GuildnetPurple.copy(alpha = 0.12f)
+                        colors.primary.copy(alpha = 0.12f)
                     )
                     .padding(
                         horizontal = 8.dp,
@@ -538,7 +544,7 @@ private fun GuideListCard(
             ) {
                 Text(
                     text = guide.category,
-                    color = GuildnetPurple,
+                    color = colors.primary,
                     fontSize = 8.sp,
                     fontWeight = FontWeight.Medium
                 )
@@ -550,7 +556,7 @@ private fun GuideListCard(
 
             Text(
                 text = guide.title,
-                color = GuildnetText,
+                color = colors.textPrimary,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
                 maxLines = 2,
@@ -563,7 +569,7 @@ private fun GuideListCard(
 
             Text(
                 text = "$byText ${guide.authorName}  •  ${guide.viewCount} $viewsText  •  ${readTime(guide.content)} $minReadText",
-                color = GuildnetMutedText,
+                color = colors.textSecondary,
                 fontSize = 8.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -573,7 +579,7 @@ private fun GuideListCard(
         Icon(
             imageVector = Icons.Default.Bookmark,
             contentDescription = null,
-            tint = GuildnetPurple,
+            tint = colors.primary,
             modifier = Modifier
                 .padding(
                     top = 2.dp,

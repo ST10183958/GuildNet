@@ -42,16 +42,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
 import com.codehijackers.guldnet.ui.screens.clans.components.ClanResponseCard
+import com.codehijackers.guldnet.ui.theme.currentGuildnetThemeColors
 import com.codehijackers.guldnet.viewmodel.ClanResponseViewModel
 import com.codehijackers.guldnet.viewmodel.ClanViewModel
-
-private val GuildnetSurface = Color(0xFF0F1727)
-private val GuildnetSurfaceLight = Color(0xFF121C2E)
-private val GuildnetBorder = Color(0xFF26344D)
-private val GuildnetPurple = Color(0xFF9857FF)
-private val GuildnetPurpleDark = Color(0xFF241545)
-private val GuildnetText = Color(0xFFF1F3FA)
-private val GuildnetMutedText = Color(0xFF8794AD)
 
 @Composable
 fun ClanDetailsScreen(
@@ -60,6 +53,7 @@ fun ClanDetailsScreen(
     clanViewModel: ClanViewModel = viewModel(),
     responseViewModel: ClanResponseViewModel = viewModel()
 ) {
+    val colors = currentGuildnetThemeColors
     val strings = currentGuildnetStrings
 
     val clans by clanViewModel.clans.collectAsState()
@@ -77,7 +71,7 @@ fun ClanDetailsScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Transparent)
+                .background(colors.background)
                 .padding(13.dp)
         ) {
             Row(
@@ -92,7 +86,7 @@ fun ClanDetailsScreen(
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
                     contentDescription = strings.back,
-                    tint = GuildnetText
+                    tint = colors.textPrimary
                 )
 
                 Spacer(
@@ -101,7 +95,7 @@ fun ClanDetailsScreen(
 
                 Text(
                     text = strings.back,
-                    color = GuildnetMutedText,
+                    color = colors.textSecondary,
                     fontSize = 11.sp
                 )
             }
@@ -112,7 +106,7 @@ fun ClanDetailsScreen(
 
             Text(
                 text = strings.discussionNotFound,
-                color = GuildnetText,
+                color = colors.textPrimary,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -128,7 +122,7 @@ fun ClanDetailsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Transparent)
+            .background(colors.background)
     ) {
         Row(
             modifier = Modifier
@@ -148,7 +142,7 @@ fun ClanDetailsScreen(
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
                     contentDescription = strings.back,
-                    tint = GuildnetText
+                    tint = colors.textPrimary
                 )
 
                 Spacer(
@@ -157,7 +151,7 @@ fun ClanDetailsScreen(
 
                 Text(
                     text = strings.clansForum,
-                    color = GuildnetText,
+                    color = colors.textPrimary,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -165,7 +159,7 @@ fun ClanDetailsScreen(
 
             Text(
                 text = strings.discussion,
-                color = GuildnetMutedText,
+                color = colors.textSecondary,
                 fontSize = 9.sp
             )
         }
@@ -197,17 +191,17 @@ fun ClanDetailsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(15.dp))
-                        .background(GuildnetSurface)
+                        .background(colors.surface)
                         .border(
                             width = 1.dp,
-                            color = GuildnetBorder,
+                            color = colors.border,
                             shape = RoundedCornerShape(15.dp)
                         )
                         .padding(15.dp)
                 ) {
                     Text(
                         text = clan.content,
-                        color = GuildnetText,
+                        color = colors.textPrimary,
                         fontSize = 12.sp,
                         lineHeight = 19.sp
                     )
@@ -225,7 +219,7 @@ fun ClanDetailsScreen(
                             .width(3.dp)
                             .height(15.dp)
                             .clip(RoundedCornerShape(2.dp))
-                            .background(GuildnetPurple)
+                            .background(colors.primary)
                     )
 
                     Spacer(
@@ -234,7 +228,7 @@ fun ClanDetailsScreen(
 
                     Text(
                         text = strings.responses,
-                        color = GuildnetText,
+                        color = colors.textPrimary,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.SemiBold,
                         letterSpacing = 0.9.sp
@@ -260,7 +254,7 @@ fun ClanDetailsScreen(
 
                 Text(
                     text = strings.addResponse,
-                    color = GuildnetMutedText,
+                    color = colors.textSecondary,
                     fontSize = 9.sp,
                     letterSpacing = 0.9.sp,
                     modifier = Modifier.padding(
@@ -273,10 +267,10 @@ fun ClanDetailsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(13.dp))
-                        .background(GuildnetSurface)
+                        .background(colors.surface)
                         .border(
                             width = 1.dp,
-                            color = GuildnetBorder,
+                            color = colors.border,
                             shape = RoundedCornerShape(13.dp)
                         )
                         .padding(
@@ -294,14 +288,14 @@ fun ClanDetailsScreen(
                         singleLine = false,
                         maxLines = 4,
                         textStyle = TextStyle(
-                            color = GuildnetText,
+                            color = colors.textPrimary,
                             fontSize = 11.sp
                         ),
                         decorationBox = { innerTextField ->
                             if (responseText.isEmpty()) {
                                 Text(
                                     text = strings.joinDiscussion,
-                                    color = GuildnetMutedText,
+                                    color = colors.textSecondary,
                                     fontSize = 11.sp
                                 )
                             }
@@ -320,9 +314,9 @@ fun ClanDetailsScreen(
                             .clip(RoundedCornerShape(10.dp))
                             .background(
                                 if (responseText.isNotBlank()) {
-                                    GuildnetPurple
+                                    colors.primary
                                 } else {
-                                    GuildnetSurfaceLight
+                                    colors.surfaceVariant
                                 }
                             )
                             .clickable(
@@ -344,7 +338,7 @@ fun ClanDetailsScreen(
                             tint = if (responseText.isNotBlank()) {
                                 Color.White
                             } else {
-                                GuildnetMutedText
+                                colors.textSecondary
                             },
                             modifier = Modifier.size(17.dp)
                         )
@@ -367,6 +361,8 @@ private fun ClanDetailsHeader(
     responseCount: Int,
     categoryText: String
 ) {
+    val colors = currentGuildnetThemeColors
+
     Column {
         ClanTag(
             text = categoryText
@@ -378,7 +374,7 @@ private fun ClanDetailsHeader(
 
         Text(
             text = title,
-            color = GuildnetText,
+            color = colors.textPrimary,
             fontSize = 20.sp,
             lineHeight = 26.sp,
             fontWeight = FontWeight.Bold
@@ -395,14 +391,14 @@ private fun ClanDetailsHeader(
                 modifier = Modifier
                     .size(23.dp)
                     .clip(CircleShape)
-                    .background(GuildnetPurpleDark),
+                    .background(colors.selectedBackground),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = authorName
                         .take(1)
                         .uppercase(),
-                    color = GuildnetPurple,
+                    color = colors.primary,
                     fontSize = 8.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -414,7 +410,7 @@ private fun ClanDetailsHeader(
 
             Text(
                 text = authorName,
-                color = GuildnetMutedText,
+                color = colors.textSecondary,
                 fontSize = 9.sp
             )
 
@@ -424,7 +420,7 @@ private fun ClanDetailsHeader(
 
             Text(
                 text = "▲ $upvotes",
-                color = GuildnetMutedText,
+                color = colors.textSecondary,
                 fontSize = 9.sp
             )
 
@@ -434,7 +430,7 @@ private fun ClanDetailsHeader(
 
             Text(
                 text = "💬 $responseCount",
-                color = GuildnetMutedText,
+                color = colors.textSecondary,
                 fontSize = 9.sp
             )
         }
@@ -445,15 +441,17 @@ private fun ClanDetailsHeader(
 private fun ClanTag(
     text: String
 ) {
+    val colors = currentGuildnetThemeColors
+
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(5.dp))
             .background(
-                GuildnetPurple.copy(alpha = 0.12f)
+                colors.primary.copy(alpha = 0.12f)
             )
             .border(
                 width = 1.dp,
-                color = GuildnetPurple.copy(alpha = 0.3f),
+                color = colors.primary.copy(alpha = 0.3f),
                 shape = RoundedCornerShape(5.dp)
             )
             .padding(
@@ -463,7 +461,7 @@ private fun ClanTag(
     ) {
         Text(
             text = text,
-            color = GuildnetPurple,
+            color = colors.primary,
             fontSize = 8.sp,
             fontWeight = FontWeight.Medium
         )

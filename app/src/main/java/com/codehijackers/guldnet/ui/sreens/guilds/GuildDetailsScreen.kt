@@ -1,5 +1,6 @@
 package com.codehijackers.guldnet.ui.screens.guilds
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -19,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.codehijackers.guldnet.ui.theme.currentGuildnetThemeColors
 import com.codehijackers.guldnet.viewmodel.GuildViewModel
 
 @Composable
@@ -30,6 +33,7 @@ fun GuildDetailsScreen(
     onPostsClicked: () -> Unit = {},
     guildViewModel: GuildViewModel = viewModel()
 ) {
+    val colors = currentGuildnetThemeColors
     val guilds by guildViewModel.guilds.collectAsState()
 
     val guild = guilds.find { it.id == guildId }
@@ -38,11 +42,13 @@ fun GuildDetailsScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(colors.background)
                 .padding(24.dp),
             verticalArrangement = Arrangement.Center
         ) {
             Text(
                 text = "Guild not found",
+                color = colors.textPrimary,
                 style = MaterialTheme.typography.headlineMedium
             )
 
@@ -53,7 +59,10 @@ fun GuildDetailsScreen(
             OutlinedButton(
                 onClick = onBackClicked
             ) {
-                Text("Back")
+                Text(
+                    text = "Back",
+                    color = colors.textPrimary
+                )
             }
         }
 
@@ -63,16 +72,18 @@ fun GuildDetailsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(colors.background)
             .padding(16.dp)
     ) {
-
         Text(
             text = guild.name,
+            color = colors.textPrimary,
             style = MaterialTheme.typography.headlineMedium
         )
 
         Text(
             text = guild.game,
+            color = colors.textSecondary,
             style = MaterialTheme.typography.labelLarge,
             modifier = Modifier.padding(top = 4.dp)
         )
@@ -82,19 +93,27 @@ fun GuildDetailsScreen(
         )
 
         Card(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = colors.surface
+            ),
+            border = androidx.compose.foundation.BorderStroke(
+                width = 1.dp,
+                color = colors.border
+            )
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
-
                 Text(
                     text = guild.description,
+                    color = colors.textPrimary,
                     style = MaterialTheme.typography.bodyLarge
                 )
 
                 Text(
                     text = "${guild.memberCount} members",
+                    color = colors.textSecondary,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = 12.dp)
                 )
@@ -105,6 +124,7 @@ fun GuildDetailsScreen(
                     } else {
                         "You are not a member of this Guild"
                     },
+                    color = colors.textSecondary,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = 8.dp)
                 )
@@ -140,6 +160,7 @@ fun GuildDetailsScreen(
 
         Text(
             text = "Guild Features",
+            color = colors.textPrimary,
             style = MaterialTheme.typography.titleLarge
         )
 
@@ -158,14 +179,20 @@ fun GuildDetailsScreen(
             onClick = onClansClicked,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Clans")
+            Text(
+                text = "Clans",
+                color = colors.textPrimary
+            )
         }
 
         OutlinedButton(
             onClick = onLoreVaultClicked,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("LoreVault")
+            Text(
+                text = "LoreVault",
+                color = colors.textPrimary
+            )
         }
 
         Spacer(
@@ -179,7 +206,10 @@ fun GuildDetailsScreen(
             OutlinedButton(
                 onClick = onBackClicked
             ) {
-                Text("Back")
+                Text(
+                    text = "Back",
+                    color = colors.textPrimary
+                )
             }
         }
     }

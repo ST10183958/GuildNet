@@ -1,5 +1,6 @@
 package com.codehijackers.guldnet.ui.screens.posts
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
+import com.codehijackers.guldnet.ui.theme.currentGuildnetThemeColors
 
 @Composable
 fun CreatePostScreen(
@@ -30,6 +33,7 @@ fun CreatePostScreen(
     ) -> Unit = { _, _ -> },
     onBackClicked: () -> Unit = {}
 ) {
+    val colors = currentGuildnetThemeColors
     val strings = currentGuildnetStrings
 
     var title by remember {
@@ -47,16 +51,19 @@ fun CreatePostScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(colors.background)
             .padding(24.dp),
         verticalArrangement = Arrangement.Top
     ) {
         Text(
             text = strings.createPost,
+            color = colors.textPrimary,
             style = MaterialTheme.typography.headlineMedium
         )
 
         Text(
             text = strings.startDiscussionWithGuild,
+            color = colors.textSecondary,
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(top = 4.dp)
         )
@@ -71,13 +78,31 @@ fun CreatePostScreen(
                 title = it
             },
             label = {
-                Text(strings.postTitle)
+                Text(
+                    text = strings.postTitle,
+                    color = colors.textSecondary
+                )
             },
             placeholder = {
-                Text(strings.postTitlePlaceholder)
+                Text(
+                    text = strings.postTitlePlaceholder,
+                    color = colors.textSecondary
+                )
             },
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = colors.surface,
+                unfocusedContainerColor = colors.surface,
+                disabledContainerColor = colors.surfaceVariant,
+                focusedBorderColor = colors.primary,
+                unfocusedBorderColor = colors.border,
+                focusedLabelColor = colors.primary,
+                unfocusedLabelColor = colors.textSecondary,
+                focusedTextColor = colors.textPrimary,
+                unfocusedTextColor = colors.textPrimary,
+                cursorColor = colors.primary
+            )
         )
 
         Spacer(
@@ -90,13 +115,31 @@ fun CreatePostScreen(
                 content = it
             },
             label = {
-                Text(strings.content)
+                Text(
+                    text = strings.content,
+                    color = colors.textSecondary
+                )
             },
             placeholder = {
-                Text(strings.postContentPlaceholder)
+                Text(
+                    text = strings.postContentPlaceholder,
+                    color = colors.textSecondary
+                )
             },
             modifier = Modifier.fillMaxWidth(),
-            minLines = 6
+            minLines = 6,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = colors.surface,
+                unfocusedContainerColor = colors.surface,
+                disabledContainerColor = colors.surfaceVariant,
+                focusedBorderColor = colors.primary,
+                unfocusedBorderColor = colors.border,
+                focusedLabelColor = colors.primary,
+                unfocusedLabelColor = colors.textSecondary,
+                focusedTextColor = colors.textPrimary,
+                unfocusedTextColor = colors.textPrimary,
+                cursorColor = colors.primary
+            )
         )
 
         Spacer(
@@ -113,7 +156,9 @@ fun CreatePostScreen(
             enabled = isValid,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(strings.createPost)
+            Text(
+                text = strings.createPost
+            )
         }
 
         Spacer(
@@ -124,7 +169,10 @@ fun CreatePostScreen(
             onClick = onBackClicked,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(strings.cancel)
+            Text(
+                text = strings.cancel,
+                color = colors.textPrimary
+            )
         }
     }
 }

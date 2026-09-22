@@ -41,16 +41,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.codehijackers.guldnet.ui.localization.currentGuildnetStrings
+import com.codehijackers.guldnet.ui.theme.currentGuildnetThemeColors
 import com.codehijackers.guldnet.viewmodel.ProfileUiState
 import com.codehijackers.guldnet.viewmodel.ProfileViewModel
-
-private val GuildnetSurface = Color(0xFF0F1727)
-private val GuildnetSurfaceLight = Color(0xFF121C2E)
-private val GuildnetBorder = Color(0xFF26344D)
-private val GuildnetPurple = Color(0xFF9857FF)
-private val GuildnetPurpleDark = Color(0xFF241545)
-private val GuildnetText = Color(0xFFF1F3FA)
-private val GuildnetMutedText = Color(0xFF8794AD)
 
 @Composable
 fun ProfileScreen(
@@ -61,12 +54,14 @@ fun ProfileScreen(
     onAppearanceClicked: () -> Unit = {},
     onLogoutClicked: () -> Unit = {}
 ) {
+    val colors = currentGuildnetThemeColors
     val strings = currentGuildnetStrings
     val state by profileViewModel.uiState.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(colors.background)
             .verticalScroll(rememberScrollState())
             .padding(
                 horizontal = 10.dp,
@@ -80,7 +75,7 @@ fun ProfileScreen(
         ) {
             Text(
                 text = strings.profile,
-                color = GuildnetText,
+                color = colors.textPrimary,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -97,7 +92,7 @@ fun ProfileScreen(
                 Icon(
                     imageVector = Icons.Outlined.Settings,
                     contentDescription = strings.settings,
-                    tint = GuildnetMutedText,
+                    tint = colors.textSecondary,
                     modifier = Modifier.size(21.dp)
                 )
             }
@@ -124,7 +119,9 @@ fun ProfileScreen(
             modifier = Modifier.height(20.dp)
         )
 
-        ProfileSectionLabel(strings.account)
+        ProfileSectionLabel(
+            text = strings.account
+        )
 
         Spacer(
             modifier = Modifier.height(8.dp)
@@ -153,10 +150,10 @@ fun ProfileScreen(
                         },
                         colors = SwitchDefaults.colors(
                             checkedThumbColor = Color.White,
-                            checkedTrackColor = GuildnetPurple,
-                            uncheckedThumbColor = GuildnetMutedText,
-                            uncheckedTrackColor = GuildnetSurfaceLight,
-                            uncheckedBorderColor = GuildnetBorder
+                            checkedTrackColor = colors.primary,
+                            uncheckedThumbColor = colors.textSecondary,
+                            uncheckedTrackColor = colors.surfaceVariant,
+                            uncheckedBorderColor = colors.border
                         )
                     )
                 },
@@ -177,24 +174,20 @@ fun ProfileScreen(
             modifier = Modifier.height(20.dp)
         )
 
-        ProfileSectionLabel(strings.preferences)
+        ProfileSectionLabel(
+            text = strings.preferences
+        )
 
         Spacer(
             modifier = Modifier.height(8.dp)
         )
 
         ProfileActionGroup {
-            ProfileActionRow(
-                icon = Icons.Outlined.Settings,
-                title = strings.theme,
-                value = state.theme,
-                onClick = onAppearanceClicked
-            )
+
 
             ProfileActionRow(
                 icon = Icons.Outlined.Language,
                 title = strings.language,
-                value = state.language,
                 onClick = onSettingsClicked
             )
         }
@@ -209,14 +202,16 @@ fun ProfileScreen(
 private fun ProfileHeader(
     state: ProfileUiState
 ) {
+    val colors = currentGuildnetThemeColors
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(17.dp))
-            .background(GuildnetSurface)
+            .background(colors.surface)
             .border(
                 width = 1.dp,
-                color = GuildnetBorder,
+                color = colors.border,
                 shape = RoundedCornerShape(17.dp)
             )
             .padding(
@@ -236,10 +231,10 @@ private fun ProfileHeader(
                         .size(70.dp)
                         .align(Alignment.Center)
                         .clip(CircleShape)
-                        .background(GuildnetPurple)
+                        .background(colors.primary)
                         .border(
                             width = 2.dp,
-                            color = Color(0xFFB477FF),
+                            color = colors.accent,
                             shape = CircleShape
                         ),
                     contentAlignment = Alignment.Center
@@ -257,17 +252,17 @@ private fun ProfileHeader(
                         .size(22.dp)
                         .align(Alignment.BottomEnd)
                         .clip(CircleShape)
-                        .background(GuildnetPurpleDark)
+                        .background(colors.selectedBackground)
                         .border(
                             width = 1.dp,
-                            color = GuildnetPurple,
+                            color = colors.primary,
                             shape = CircleShape
                         ),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = "+",
-                        color = GuildnetPurple,
+                        color = colors.primary,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -280,7 +275,7 @@ private fun ProfileHeader(
 
             Text(
                 text = state.displayName,
-                color = GuildnetText,
+                color = colors.textPrimary,
                 fontSize = 17.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -291,7 +286,7 @@ private fun ProfileHeader(
 
             Text(
                 text = state.email,
-                color = GuildnetMutedText,
+                color = colors.textSecondary,
                 fontSize = 10.sp
             )
 
@@ -318,13 +313,15 @@ private fun ProfileHeader(
 private fun ProfilePill(
     text: String
 ) {
+    val colors = currentGuildnetThemeColors
+
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(20.dp))
-            .background(GuildnetPurpleDark)
+            .background(colors.selectedBackground)
             .border(
                 width = 1.dp,
-                color = GuildnetPurple.copy(alpha = 0.55f),
+                color = colors.primary.copy(alpha = 0.55f),
                 shape = RoundedCornerShape(20.dp)
             )
             .padding(
@@ -334,7 +331,7 @@ private fun ProfilePill(
     ) {
         Text(
             text = text,
-            color = GuildnetPurple,
+            color = colors.primary,
             fontSize = 9.sp,
             fontWeight = FontWeight.Medium
         )
@@ -346,6 +343,8 @@ private fun ProfileStats(
     state: ProfileUiState,
     strings: com.codehijackers.guldnet.ui.localization.GuildnetStrings
 ) {
+    val colors = currentGuildnetThemeColors
+
     val stats = listOf(
         state.matches to strings.matches,
         state.winRate to strings.winRate,
@@ -363,10 +362,10 @@ private fun ProfileStats(
                     .weight(1f)
                     .height(69.dp)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(GuildnetSurface)
+                    .background(colors.surface)
                     .border(
                         width = 1.dp,
-                        color = GuildnetBorder,
+                        color = colors.border,
                         shape = RoundedCornerShape(12.dp)
                     )
                     .padding(
@@ -378,7 +377,7 @@ private fun ProfileStats(
             ) {
                 Text(
                     text = value,
-                    color = GuildnetText,
+                    color = colors.textPrimary,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -389,7 +388,7 @@ private fun ProfileStats(
 
                 Text(
                     text = label,
-                    color = GuildnetMutedText,
+                    color = colors.textSecondary,
                     fontSize = 8.sp
                 )
             }
@@ -401,9 +400,11 @@ private fun ProfileStats(
 private fun ProfileSectionLabel(
     text: String
 ) {
+    val colors = currentGuildnetThemeColors
+
     Text(
         text = text,
-        color = Color(0xFF657394),
+        color = colors.textSecondary,
         fontSize = 10.sp,
         fontWeight = FontWeight.Medium,
         letterSpacing = 1.sp,
@@ -417,14 +418,16 @@ private fun ProfileSectionLabel(
 private fun ProfileActionGroup(
     content: @Composable () -> Unit
 ) {
+    val colors = currentGuildnetThemeColors
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(15.dp))
-            .background(GuildnetSurface)
+            .background(colors.surface)
             .border(
                 width = 1.dp,
-                color = GuildnetBorder,
+                color = colors.border,
                 shape = RoundedCornerShape(15.dp)
             )
     ) {
@@ -440,6 +443,8 @@ private fun ProfileActionRow(
     trailing: (@Composable () -> Unit)? = null,
     onClick: () -> Unit
 ) {
+    val colors = currentGuildnetThemeColors
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -453,7 +458,7 @@ private fun ProfileActionRow(
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = GuildnetPurple,
+            tint = colors.primary,
             modifier = Modifier.size(18.dp)
         )
 
@@ -463,7 +468,7 @@ private fun ProfileActionRow(
 
         Text(
             text = title,
-            color = GuildnetText,
+            color = colors.textPrimary,
             fontSize = 12.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.weight(1f)
@@ -472,7 +477,7 @@ private fun ProfileActionRow(
         if (value != null) {
             Text(
                 text = value,
-                color = GuildnetMutedText,
+                color = colors.textSecondary,
                 fontSize = 10.sp
             )
 
@@ -491,7 +496,7 @@ private fun ProfileActionRow(
             Icon(
                 imageVector = Icons.Outlined.ChevronRight,
                 contentDescription = null,
-                tint = Color(0xFF52617D),
+                tint = colors.border,
                 modifier = Modifier.size(17.dp)
             )
         }
